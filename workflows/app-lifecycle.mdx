@@ -1,0 +1,39 @@
+---
+title: "App lifecycle"
+description: "Follow this opinionated loop to build, preview, and deploy apps with the Major CLI."
+---
+
+Use this workflow whenever you’re spinning up a new internal tool or pushing a feature. It mirrors how the CLI itself is structured.
+
+<Steps>
+  <Step title="Authenticate & pick an org">
+    Run `major user login` once per laptop (tokens auto-refresh) and `major org select` whenever you need to scope work to a different business unit.
+  </Step>
+  <Step title="Create or clone the app">
+    - `major app create` scaffolds from templates, provisions a GitHub repo, attaches resources, and generates your first `.env`.
+    - `major app clone` is ideal when you just joined an existing project; it pulls latest code and re-syncs the env for you.
+  </Step>
+  <Step title="Iterate locally">
+    - Use `major app start` to install deps, mint a JWT, and boot `pnpm dev`.
+    - Edit code/UI as usual; requests to internal resources automatically tunnel through Major.
+    - Need to open the UI editor to adjust access or flows? Run `major app editor` from the repo root.
+  </Step>
+  <Step title="Refresh resources as needed">
+    Call `major resource manage` whenever you attach or remove databases/APIs. The CLI rewrites `RESOURCES.md` (or your Vite plugin) and regenerates `.env`.
+  </Step>
+  <Step title="Deploy with confidence">
+    `major app deploy` checks git status, prompts for a commit message if needed, pushes main, then creates a new version and streams deployment status until it’s live.
+  </Step>
+</Steps>
+
+## When to deviate
+
+| Scenario | Recommended tweak |
+| --- | --- |
+| Hotfix on an existing deployment | Skip `app create` and `resource manage`; pull the repo, make the change, and go straight to `app deploy`. |
+| Pairing with another engineer | Both engineers should run `major app start` separately so tokens stay scoped per person. |
+| Testing against staging resources | Create a staging org in the editor, then `major org select` before you run local commands. |
+
+<Callout icon="sparkles">
+This lifecycle is short enough to repeat multiple times per day. Quick deploys are encouraged—you can always roll forward because access policies are centrally managed in the editor.
+</Callout>
