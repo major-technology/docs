@@ -1,0 +1,44 @@
+---
+title: "Local development"
+description: "Understand how the Major CLI keeps local apps secure while talking to managed resources."
+---
+
+Major assumes every internal tool begins life on a developer laptop, so the CLI focuses on making local dev feel instant while still enforcing the same controls as prod.
+
+## The request path
+
+1. `major app start` regenerates `.env` by calling the Major API for the signed variables your app needs.
+2. We mint a short-lived JWT per developer and store it in that `.env`. Your runtime reads it like any other secret.
+3. Whenever the app reaches for a database, queue, or API you attached, the traffic goes **local app → Major API gateway → resource**.
+4. The gateway verifies the JWT, enforces RBAC, and either proxies the request or denies it.
+
+Because the token comes from the CLI and is scoped to the default organization, you never expose production credentials directly on a laptop.
+
+<Callout icon="shield-check" color="blue">
+Every `.env` also includes metadata like the application ID and organization ID. We use this to audit which engineer touched which resource—even in local dev.
+</Callout>
+
+## Environment files and helpers
+
+- **`.env`** – Always regenerate via `major app start` or `major app clone`. Do not hand-edit secrets; they will be overwritten on the next sync.
+- **`RESOURCES.md` / Vite resource client** – `major resource manage` keeps this file (or plugin) in sync so you know exactly which internal resources are wired up.
+- **Node + pnpm guardrails** – The `major app` command group checks for Node 22.12 and pnpm because that combo matches the managed runtime we deploy to.
+
+## Connecting new resources
+
+1. Register the resource in the Major App Editor (`major app editor` opens the correct page).
+2. Run `major resource manage` from the app directory.
+3. Select the new resource, confirm scopes, and let the CLI refresh `.env`/`RESOURCES.md`.
+4. Restart your dev server (the JWT + resource proxy cache will reload automatically).
+
+## Common troubleshooting
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| Requests return 401 locally | JWT expired or default org changed | Run `major app start` again to mint a new token, or `major org select` to switch orgs. |
+| Resource connection silently fails | Resource not attached to the app | Re-run `major resource manage` and ensure the resource is selected. |
+| pnpm fails before the dev server starts | Node/pnpm missing or outdated | Install Node 22.12+ and pnpm globally; rerun the command. |
+
+<Note>
+Your local `.env` is scoped to you. If you need to share environment values with a teammate, point them to `major app start`—never commit the generated file.
+</Note>

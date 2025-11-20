@@ -1,0 +1,42 @@
+---
+title: "major org"
+description: "Switch between organizations and inspect membership from the CLI."
+---
+
+The `org` commands help you discover, select, and confirm organizations. They are thin wrappers over the org APIs but they keep your local keychain in sync so other commands know which org to target.
+
+| Command | Purpose |
+| --- | --- |
+| `major org list` | Show every org you belong to and which one is marked as default. |
+| `major org select` | Pick a new default org and store it locally. |
+| `major org whoami` | Print the currently stored org without hitting the API. |
+
+## `major org list`
+
+```bash
+major org list
+```
+
+- Calls the API to fetch every org the authenticated user belongs to.
+- Marks the default org (pulled from the keychain) inline.
+- Useful when you’re unsure which org name to select or want to confirm the org even exists.
+
+## `major org select`
+
+```bash
+major org select
+```
+
+- Fetches your orgs, opens an interactive picker, and stores the chosen org ID + name in the keychain.
+- Subsequent commands (`major app create`, `major resource manage`, etc.) read this value automatically.
+
+Run this whenever you start working on a different business unit, environment (ex: staging), or client account.
+
+## `major org whoami`
+
+```bash
+major org whoami
+```
+
+- Reads the stored default org and prints it. If none exists, it tells you immediately.
+- Handy in scripts where you simply need the org ID without hitting the API.

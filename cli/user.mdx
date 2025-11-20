@@ -1,0 +1,50 @@
+---
+title: "major user"
+description: "Authenticate to Major, manage your session, and inspect who you are logged in as."
+---
+
+The `user` group handles authentication. Tokens are stored in your OS keychain, never in plaintext files.
+
+| Command | Purpose |
+| --- | --- |
+| `major user login` | Start the device-code flow, store your CLI token, and pick a default org. |
+| `major user logout` | Revoke the token server-side and delete it locally. |
+| `major user whoami` | Verify which account and org the CLI will use. |
+
+## `major user login`
+
+```bash
+major user login
+```
+
+- Opens the Major SSO approval page in your browser. If the browser fails, the CLI prints the URL so you can copy it elsewhere.
+- Polls the API until the code is approved, then stores the resulting token in the keychain.
+- Fetches the organizations you belong to and lets you pick a default one (stored locally so future commands inherit it).
+- Prints next steps (`major app clone` / `major app create`).
+
+<Note>
+You can re-run `login` anytime. The CLI will simply refresh the token and prompt for an org again.
+</Note>
+
+## `major user logout`
+
+```bash
+major user logout
+```
+
+- Calls the API to revoke your session.
+- Removes the token and default-organization metadata from the keychain.
+- Does **not** delete your local repos; it just severs authentication.
+
+Run this before you hand a laptop to someone else or if you need to switch accounts entirely.
+
+## `major user whoami`
+
+```bash
+major user whoami
+```
+
+- Calls `/verify` on the API with your stored token.
+- Prints your email and the default org name + ID (if one is set).
+
+Use it when debugging permission issues or confirming that `major org select` actually updated your context.

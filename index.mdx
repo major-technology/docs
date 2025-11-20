@@ -1,97 +1,68 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Major CLI overview"
+description: "Deploy, secure, and manage every internal tool you build with the Major CLI."
 ---
 
-## Setting up
+Major lets you deploy internal tools directly from your laptop while keeping access governed in one place. Engineers who build for their teammates use the CLI to:
 
-Get your documentation site up and running in minutes.
+1. **Deploy code instantly** – scaffold apps from templates, push with a single command, and ship a new version in minutes.
+2. **Manage access & permissions** – assign roles in the web editor and ensure every action respects RBAC.
+3. **Connect to internal resources securely** – route database and API traffic through the Major control plane instead of punching new holes in your network.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+<Callout icon="lock" color="blue">
+Local traffic always flows `local app → Major API → resource`. When you run `major app start`, we mint a short-lived JWT in your `.env` file so every request is authenticated through the platform.
+</Callout>
 
-## Make it yours
+## What you can do with the CLI
 
-Design a docs site that looks great and empowers your users.
+<CardGroup cols={2}>
+  <Card title="Operate entire app lifecycles" icon="rocket" href="/workflows/app-lifecycle">
+    Create, clone, iterate locally, and deploy with observability into every step.
+  </Card>
+  <Card title="Secure resource access" icon="shield-check" href="/workflows/resource-connections">
+    Map databases, queues, and internal APIs to applications with managed credentials.
+  </Card>
+  <Card title="Standardize environments" icon="circle-nodes" href="/concepts/local-development">
+    Generate env files, proxy traffic through Major, and keep local + cloud parity.
+  </Card>
+  <Card title="Centralize RBAC" icon="id-card-clip" href="/concepts/access-control">
+    Manage who can view, edit, or run each application from the Major App Editor.
+  </Card>
+</CardGroup>
+
+## Start building
 
 <Columns cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
+    title="Quickstart"
+    icon="list-check"
+    href="/quickstart"
   >
-    Edit your docs locally and preview them in real time.
+    Install the CLI, authenticate, and deploy your first app in less than ten minutes.
   </Card>
   <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
+    title="Command reference"
     icon="terminal"
-    href="/api-reference/introduction"
+    href="/cli/app"
   >
-    Auto-generate API documentation from OpenAPI specifications.
+    Learn every CLI command, its prerequisites, and what happens behind the scenes.
+  </Card>
+  <Card
+    title="Local development model"
+    icon="diagram-project"
+    href="/concepts/local-development"
+  >
+    Understand how JWTs, proxies, and managed resources keep dev environments secure.
+  </Card>
+  <Card
+    title="Manage access in the editor"
+    icon="window"
+    href="/concepts/access-control"
+  >
+    Use `major app editor` to assign roles, invite teammates, and approve reviews.
   </Card>
 </Columns>
 
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<Note>
+Need something that is not documented yet? Ping us from the in-product support panel or email <a href="mailto:support@major.build">support@major.build</a>.
+</Note>

@@ -1,68 +1,63 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Major",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#2563EB",
+    "light": "#60A5FA",
+    "dark": "#1E3A8A"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "CLI Guide",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Overview",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "quickstart"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Core concepts",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "concepts/local-development",
+              "concepts/access-control"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Workflows",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "workflows/app-lifecycle",
+              "workflows/resource-connections"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Command reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "App commands",
             "pages": [
-              "api-reference/introduction"
+              "cli/app",
+              "cli/resource"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Access & orgs",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "cli/user",
+              "cli/org",
+              "cli/git"
+            ]
+          },
+          {
+            "group": "Maintenance",
+            "pages": [
+              "cli/update"
             ]
           }
         ]
@@ -71,14 +66,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "App editor",
+          "href": "https://app.major.build",
+          "icon": "window"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "CLI repository",
+          "href": "https://github.com/major-technology/cli",
+          "icon": "github"
         }
       ]
     }
@@ -91,13 +86,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@major.build"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Launch Major",
+      "href": "https://app.major.build"
     }
   },
   "contextual": {
