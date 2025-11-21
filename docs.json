@@ -7,7 +7,7 @@
     "light": "#60A5FA",
     "dark": "#1E3A8A"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "navigation": {
     "tabs": [
       {
@@ -18,13 +18,6 @@
             "pages": [
               "index",
               "quickstart"
-            ]
-          },
-          {
-            "group": "Core concepts",
-            "pages": [
-              "concepts/local-development",
-              "concepts/access-control"
             ]
           },
           {
@@ -50,8 +43,7 @@
             "group": "Access & orgs",
             "pages": [
               "cli/user",
-              "cli/org",
-              "cli/git"
+              "cli/org"
             ]
           },
           {

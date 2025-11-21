@@ -7,17 +7,8 @@ description: "Upgrade the CLI to the latest released version."
 major update
 ```
 
-This command figures out how you installed the CLI and upgrades it in-place.
+**When to use:** getting the latest features and fixes.
 
-## What it detects
+**What happens:**
 
-- **Homebrew installs** – If `brew list major` succeeds, we run `brew update && brew upgrade major`.
-- **Direct installs** – Otherwise we pipe the official install script (`curl -fsSL ... | bash`).
-
-The command prints styled status messages so you always know which path ran and whether anything changed.
-
-## Best practices
-
-- Run `major update` after upgrading Node or pnpm to make sure the CLI’s version check logic is up to date.
-- Use it in CI agents too; it’s safe to run multiple times because the script exits early if the installed version already matches the latest release.
-- After updating, run `major --version` to confirm.
+Checks for updates and upgrades the Major CLI to the latest version, preserving your installation method (Homebrew or script).
