@@ -1,0 +1,25 @@
+---
+title: "Resources"
+description: "Connect and manage shared infrastructure."
+---
+
+Resources allow you to securely connect your internal tools to your infrastructure (databases, APIs, etc.).
+
+## Organization-Level Resources
+
+You can define resources at the organization level. Once configured, these resources become available for use by **any application** in your organization.
+
+### Managing Resources
+1. Navigate to **Organization Settings > Resources**.
+2. Click **Add Resource** and select the type (Postgres, REST API, etc.).
+3. Configure the connection details and credentials.
+
+<Note>
+Resource credentials are encrypted and never exposed to the client-side application code.
+</Note>
+
+### Using Resources
+In the App Editor, you can bind these pre-configured resources to your application. The platform handles the secure connection and authentication automatically.
+
+To interact with these resources in your code, use the [`@major-tech/resource-client`](https://www.npmjs.com/package/@major-tech/resource-client) library. It provides a simple, secure interface to query your connected infrastructure.
+

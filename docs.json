@@ -61,6 +61,25 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Web Dashboard",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "web/index"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "web/editor",
+              "web/permissions",
+              "web/resources"
+            ]
+          }
+        ]
       }
     ],
     "global": {

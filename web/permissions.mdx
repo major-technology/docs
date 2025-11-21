@@ -1,0 +1,41 @@
+---
+title: "Access Control"
+description: "Manage permissions for apps, groups, and your organization."
+---
+
+Major provides a robust Role-Based Access Control (RBAC) system to secure your internal tools.
+
+## Application Permissions
+
+You can manage permissions on a per-application basis. The creator of an app automatically receives **Owner** permissions.
+
+### Available Roles
+
+- **Owner**: Full control, including deleting the app and managing permissions.
+- **Edit**: Can modify the app in the editor and create new versions.
+- **View**: Can run and use the deployed application.
+
+### Sharing Access
+You can share access to your application with specific:
+- **Individuals**: Invite users by email.
+- **Groups**: Grant access to entire teams at once.
+
+## Groups
+
+Groups allow you to manage permissions for sets of users efficiently.
+
+- **Inheritance**: All members of a group inherit the permissions granted to the group.
+- **Default Permissions**: Groups can be configured to have default permissions (e.g., View) on all new apps created in the organization.
+
+### All Users Group
+Every organization includes a special **All Users** group containing every member of the organization.
+- By default, this group is set to have **View** permissions on every new app, making internal tools open-by-default within the company.
+- You can modify this setting if you prefer a more restrictive default.
+
+## Organization Settings
+
+Admins can configure organization-wide access policies.
+
+### Domain Access
+In the organization settings, you can configure the application to automatically grant access to any user signing in with a matching company email domain (e.g., `@yourcompany.com`).
+
