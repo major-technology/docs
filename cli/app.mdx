@@ -3,19 +3,19 @@ title: "major app"
 description: "Create, run, and deploy applications with the Major CLI."
 ---
 
-`major app` is the largest command group in the CLI. It assumes you have Node **22.12+**, pnpm, and Git installed—the command enforces these prerequisites before it runs.
+`major app` is the main command group for managing your applications. It ensures you have the necessary tools installed before running.
 
 | Subcommand | Purpose |
 | --- | --- |
-| `major app create` | Scaffold a new app + repo from a template and attach resources. |
-| `major app clone` | Pull an existing org app and sync env files/resources. |
-| `major app start` | Install deps, mint a JWT, and launch the dev server. |
-| `major app deploy` | Commit/push changes, create a new version, and stream deployment status. |
-| `major app info` | Print the application ID for the repo you’re in. |
-| `major app editor` | Open the App Editor for the current app. |
+| `major app create` | Create a new app from a template. |
+| `major app clone` | Download and set up an existing app. |
+| `major app start` | Start the development server. |
+| `major app deploy` | Deploy changes to production. |
+| `major app info` | Show the current application ID. |
+| `major app editor` | Open the App Editor in your browser. |
 
 <Callout icon="circle-info">
-Every subcommand figures out the current application by looking at your git remote. Make sure `origin` points to the Major-managed repo before you run them.
+Most commands work by detecting which application you are in. Make sure you are in the correct directory.
 </Callout>
 
 ## `major app create`
@@ -24,20 +24,15 @@ Every subcommand figures out the current application by looking at your git remo
 major app create
 ```
 
-**When to use:** starting a brand-new internal tool.
+**When to use:** creating a brand-new internal app.
 
 **What happens:**
 
 1. Prompts for application name + description.
-2. Fetches templates from the Major API (Vite is prioritized) and lets you pick one.
-3. Calls `POST /applications` to create the app + GitHub repo, then swaps the template into that repo.
-4. Ensures you have repo access (invites you via GitHub if necessary and walks you through accepting it).
-5. Lets you select internal resources to attach; writes them into the platform immediately.
-6. Pushes the initialized code, moves it into `./<app-name>`, generates `.env`, and prints next steps (`start`, `deploy`, `editor`).
-
-<Note>
-Configure `major git config` ahead of time so we already know your GitHub username when it’s time to invite you to the repo.
-</Note>
+2. Allows you to choose an app template to use.
+3. Creates the app scaffolding and grants you access to the scaffolded app.
+4. Lets you configure which resources you want your app to have access to.
+5. Generates a `.env` file so you can start developing locally.
 
 ## `major app clone`
 
@@ -45,15 +40,14 @@ Configure `major git config` ahead of time so we already know your GitHub userna
 major app clone
 ```
 
-**When to use:** onboarding to an existing app or refreshing a stale local copy.
+**When to use:** onboarding to an existing app or updating your local copy.
 
 **What happens:**
 
-- Lists every application inside your default organization and lets you pick one.
-- Determines a destination folder based on the app name (falls back to the GitHub repo name if a folder already exists).
-- Clones the repo (or `git pull`s if it’s already there) using SSH when possible, HTTPS otherwise.
-- Automatically invites you to the GitHub repo if access fails and retries until it succeeds.
-- Regenerates `.env` and `RESOURCES.md` (or updates the Vite helper) so your local environment matches prod.
+1. Lists available applications in your organization.
+2. Clones the repository (or pulls the latest changes if it exists).
+3. Ensures you have access to the GitHub repository.
+4. Sets up your local environment configuration to match production.
 
 ## `major app start`
 
@@ -61,15 +55,13 @@ major app clone
 major app start
 ```
 
-**When to use:** any time you need a clean local environment or a fresh JWT.
+**When to use:** starting development locally.
 
 **What happens:**
 
-1. Calls the API for the latest environment variables, including a short-lived JWT that proxies requests through Major.
-2. Writes everything into `.env` in the repo root.
-3. Runs `pnpm install` and then `pnpm dev`, piping stdout/stderr to your terminal.
-
-If you fail Node/pnpm requirements the command tells you what to install before retrying.
+1. Fetches the latest environment variables and credentials.
+2. Updates your local `.env` file.
+3. Installs dependencies and starts the development server.
 
 ## `major app deploy`
 
@@ -77,17 +69,14 @@ If you fail Node/pnpm requirements the command tells you what to install before 
 major app deploy
 ```
 
-**When to use:** shipping any change to production.
+**When to use:** publishing changes to production.
 
 **What happens:**
 
-1. Verifies you’re in a git repo that belongs to a known application.
-2. Checks for uncommitted work. If found, it prompts for a commit message, stages everything, commits, and pushes to `main` for you.
-3. Grabs the default organization from your keychain.
-4. Calls `POST /applications/{id}/versions` and starts polling deployment status (`BUNDLING → BUILDING → DEPLOYING → DEPLOYED`).
-5. Streams a spinner + status messages via Bubble Tea. When the deployment finishes, it prints the live URL.
-
-If the status ends in `*_FAILED`, we print the error payload from the API so you can debug quickly.
+1. Prompts you to commit any unsaved changes.
+2. Pushes your code to the remote repository.
+3. Triggers a new build and deployment.
+4. Streams the deployment status and provides the live URL.
 
 ## `major app info`
 
@@ -95,7 +84,7 @@ If the status ends in `*_FAILED`, we print the error payload from the API so you
 major app info
 ```
 
-Returns the application ID for the repo you are currently in. Helpful when you’re wiring automation or referencing the ID in scripts.
+Returns the unique ID of the current application.
 
 ## `major app editor`
 
@@ -103,10 +92,4 @@ Returns the application ID for the repo you are currently in. Helpful when you�
 major app editor
 ```
 
-Opens `https://app.major.build/apps/<application-id>/edit` in your default browser (based on whatever `frontend_uri` your CLI config points at). Use it to:
-
-- Manage access (RBAC) for the app.
-- Configure environments, resources, and reviewers.
-- Preview UI changes through the web experience.
-
-If the browser fails to open automatically, the CLI prints the URL so you can copy it manually.
+Opens the App Editor in your browser, where you can manage access, resources, and app settings.

@@ -3,12 +3,12 @@ title: "major resource"
 description: "Manage resource attachments from your terminal."
 ---
 
-Use the `resource` group when you need to add or edit the databases/APIs an app can touch.
+Use the `resource` group to manage the databases and APIs your app can access.
 
 | Command | Purpose |
 | --- | --- |
-| `major resource create` | Open the App Editor directly on the "Add resource" screen. |
-| `major resource manage` | Attach/detach resources for the current app and sync local files. |
+| `major resource create` | Create a new resource via the web UI. |
+| `major resource manage` | Attach or detach resources for the current app. |
 
 ## `major resource create`
 
@@ -16,8 +16,11 @@ Use the `resource` group when you need to add or edit the databases/APIs an app 
 major resource create
 ```
 
-- Looks up the CLI config’s `frontend_uri` and opens `<frontend_uri>/resources?action=add` in your browser.
-- Use it when you already know a new resource needs to exist but you’re not yet ready to attach it to an app.
+**When to use:** creating a new database or API resource.
+
+**What happens:**
+
+Opens the resource creation page in your browser.
 
 ## `major resource manage`
 
@@ -25,19 +28,10 @@ major resource create
 major resource manage
 ```
 
-**Prereqs:** logged in, default org selected, and run from inside an app repo.
+**When to use:** changing which resources your app is connected to.
 
-**Flow:**
+**What happens:**
 
-1. The CLI determines your application ID (via the git remote) and fetches its current resource bindings.
-2. You select which resources to attach using an interactive menu.
-3. After the API updates succeed, the CLI:
-   - Updates Vite projects via the Major client helper **or**
-   - Regenerates `RESOURCES.md` for frameworks like Next.js.
-4. Old files are deleted automatically so your repo only shows the latest configuration.
-
-Run this whenever:
-
-- Security granted the app new scopes.
-- You removed a resource in the editor and need to reflect that locally.
-- A teammate added resources while you were heads-down and you want your environment to match theirs.
+1. Fetches the current resources for your app.
+2. Lets you attach or detach resources using an interactive menu.
+3. Updates your local configuration to match the new settings.

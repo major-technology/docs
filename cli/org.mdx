@@ -3,13 +3,13 @@ title: "major org"
 description: "Switch between organizations and inspect membership from the CLI."
 ---
 
-The `org` commands help you discover, select, and confirm organizations. They are thin wrappers over the org APIs but they keep your local keychain in sync so other commands know which org to target.
+The `org` commands help you view and select organizations.
 
 | Command | Purpose |
 | --- | --- |
-| `major org list` | Show every org you belong to and which one is marked as default. |
-| `major org select` | Pick a new default org and store it locally. |
-| `major org whoami` | Print the currently stored org without hitting the API. |
+| `major org list` | List all your organizations. |
+| `major org select` | Select a default organization. |
+| `major org whoami` | Show the current organization. |
 
 ## `major org list`
 
@@ -17,9 +17,11 @@ The `org` commands help you discover, select, and confirm organizations. They ar
 major org list
 ```
 
-- Calls the API to fetch every org the authenticated user belongs to.
-- Marks the default org (pulled from the keychain) inline.
-- Useful when you’re unsure which org name to select or want to confirm the org even exists.
+**When to use:** viewing your available organizations.
+
+**What happens:**
+
+Lists all organizations you belong to and highlights the currently selected one.
 
 ## `major org select`
 
@@ -27,10 +29,13 @@ major org list
 major org select
 ```
 
-- Fetches your orgs, opens an interactive picker, and stores the chosen org ID + name in the keychain.
-- Subsequent commands (`major app create`, `major resource manage`, etc.) read this value automatically.
+**When to use:** switching between organizations.
 
-Run this whenever you start working on a different business unit, environment (ex: staging), or client account.
+**What happens:**
+
+1. Lists your available organizations.
+2. Allows you to select a new default organization.
+3. Updates your local configuration.
 
 ## `major org whoami`
 
@@ -38,5 +43,8 @@ Run this whenever you start working on a different business unit, environment (e
 major org whoami
 ```
 
-- Reads the stored default org and prints it. If none exists, it tells you immediately.
-- Handy in scripts where you simply need the org ID without hitting the API.
+**When to use:** checking which organization is currently selected.
+
+**What happens:**
+
+Displays the name and ID of the currently selected organization.

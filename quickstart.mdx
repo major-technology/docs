@@ -3,46 +3,35 @@ title: "Quickstart"
 description: "Install the Major CLI, connect your org, and deploy your first internal tool."
 ---
 
-This walkthrough mirrors the structure of the Claude Code quickstart so the flow feels familiar while staying specific to Major. 🚀
-
 ## Prerequisites
 
 - macOS or Linux with Git installed.
 - Node.js **22.12+** and **pnpm** (the `major app` commands enforce these versions automatically).
-- Access to a Major organization (you’ll pick it during login).
 
 <Tip icon="key">
-If you plan to connect databases or APIs, make sure you already have those resources registered in the Major App Editor so you can attach them during app creation.
+If you plan to connect databases or APIs, make sure you already have those resources registered in https://app.major.build so you can attach them during app creation.
 </Tip>
 
 ## Step 1 — Install the CLI
 
-Choose the path that matches how you manage tooling:
+<CodeGroup>
+  ```bash curl (Recommended)
+  curl -fsSL https://install.major.build | bash
+  ```
 
-<Columns cols={2}>
-  <Card title="Homebrew" icon="beer-mug-empty">
-    ```bash
-    brew install major-technology/major/major
-    ```
-  </Card>
-  <Card title="Install script (curl)" icon="code">
-    ```bash
-    curl -fsSL https://raw.githubusercontent.com/major-technology/cli/main/install.sh | bash
-    ```
-  </Card>
-</Columns>
+  ```bash Homebrew
+  brew tap major-technology/tap
+  brew install major-technology/tap/major
+  ```
+</CodeGroup>
 
-Both options place the `major` binary on your PATH. Confirm with `major --version`.
+Confirm with `major --version`.
 
 ## Step 2 — Authenticate and set your org
 
 ```bash
 major user login
 ```
-
-- We launch a device-code flow in your browser so you can use SSO.
-- After you approve the login, the CLI stores a short-lived token plus refresh info in your keychain.
-- You’ll be prompted to select a **default organization** (`major org select` can change it later).
 
 <Note>
 `major user whoami` verifies your session and shows the org that scoped env variables and deployments will use.
@@ -59,7 +48,7 @@ Pick whichever best matches your workflow:
     ```
     
     - Choose a template (Vite is the default).
-    - Major provisions a GitHub repo, wires up the template, and invites you as a collaborator (we’ll prompt for your GitHub username if it isn’t cached from `major git config`).
+    - Major provisions a GitHub repo, wires up the template, and invites you as a collaborator.
     - Select the resources (databases, APIs) the app should reach. We store the mapping for deployments and local dev.
   </Accordion>
   <Accordion title="Clone an existing app" icon="clone">
@@ -68,7 +57,7 @@ Pick whichever best matches your workflow:
     ```
     
     - Choose from your organization’s applications.
-    - We clone (or pull) the repo, invite you if needed, and regenerate `.env` + `RESOURCES.md` so you’re ready to run.
+    - We clone (or pull) the repo, invite you if needed, and regenerate `.env` + your resource clients so that you're ready to run.
   </Accordion>
 </AccordionGroup>
 
@@ -90,7 +79,19 @@ You can view or edit the app from the UI anytime with:
 major app editor
 ```
 
-## Step 5 — Deploy
+## Step 5 — Configure Resources
+
+Configure the resources you want your app to interact with.
+
+```bash
+major resource create
+```
+
+<Tip>
+  We highly recommend reading [Resource connections](/workflows/resource-connections) to understand how resource connections work.
+</Tip>
+
+## Step 6 — Deploy
 
 ```bash
 major app deploy
@@ -98,24 +99,13 @@ major app deploy
 
 Major will:
 
-1. Ensure you’re inside a Git repository that matches a known application.
-2. Prompt for a commit message if it sees unstaged work, then stage/commit/push for you.
-3. Create a new version through the API and stream deployment status (bundling → building → deploying).
-4. Print the production URL when the status flips to `DEPLOYED`.
-
-<Callout icon="sparkles">
-Treat deployments as cheap. You can redeploy as often as you’d push to GitHub—Major reuses the same resources and RBAC policies, so there’s nothing else to configure.
-</Callout>
+1. Prompt for a commit message if it sees unstaged work, then stage/commit/push for you.
+2. Create a new version through the API and stream deployment status (bundling → building → deploying).
+3. Print the production URL when the status flips to `DEPLOYED`.
 
 ## Where to go next
 
 <CardGroup cols={2}>
-  <Card title="Local development model" icon="diagram-project" href="/concepts/local-development">
-    Learn how the CLI keeps your local environment in sync with cloud environments.
-  </Card>
-  <Card title="Access control" icon="shield-check" href="/concepts/access-control">
-    See how the Major App Editor drives RBAC for people, apps, and resources.
-  </Card>
   <Card title="App lifecycle workflow" icon="arrows-rotate" href="/workflows/app-lifecycle">
     Follow the recommended loop from template to deployment.
   </Card>
@@ -123,3 +113,4 @@ Treat deployments as cheap. You can redeploy as often as you’d push to GitHub�
     Dive deep into every command, its flags, and side effects.
   </Card>
 </CardGroup>
+

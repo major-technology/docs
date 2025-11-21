@@ -3,45 +3,37 @@ title: "Resource connections"
 description: "Attach databases, APIs, and queues to your apps while keeping RBAC enforced."
 ---
 
-Every internal tool eventually needs data. Major keeps that process safe by forcing all resource connections through a single workflow.
+## Architecture
 
-## 1. Model the resource in the App Editor
+```mermaid
+flowchart TD
+    subgraph Local ["Local Environment"]
+        App["Your App"]
+        Client["@major-tech/resource-client"]
+    end
 
-1. Run `major app editor`.
-2. Head to **Resources → Add resource**.
-3. Choose the resource type (Postgres, REST API, etc.) and let Major store the credentials.
-4. Assign scopes (read-only, read/write) and default role access.
+    Gateway["Major API Gateway"]
+    Resource[("Your Resource")]
 
-<Note>
-`major resource create` is simply a shortcut that opens the "Add resource" screen in your browser.
-</Note>
+    App -- "Uses" --> Client
+    Client -- "Authenticated Request<br/>(MAJOR_JWT_TOKEN)" --> Gateway
+    Gateway -- "Proxy" --> Resource
 
-## 2. Attach the resource to an app
+    click Client "https://www.npmjs.com/package/@major-tech/resource-client"
 
-- During `major app create`, we prompt you to pick resources before the repo is even cloned.
-- For existing apps, run `major resource manage` from the repo root. You’ll get a multi-select list of every resource you can access.
-
-Depending on the template:
-
-- **Vite apps** – The CLI injects resource metadata via the Major client so you can import helpers directly in code.
-- **Next.js / others** – We regenerate `RESOURCES.md` with details on connection strings, scopes, and usage instructions.
-
-## 3. Regenerate environment variables
-
-Attaching a resource updates secrets, so always re-run:
-
-```bash
-major app start
+    style Local fill:transparent,stroke:#999,stroke-dasharray: 5 5
+    style Client fill:#fff,stroke:#333,stroke-width:2px
+    style Gateway fill:#fff,stroke:#333,stroke-width:2px
+    style Resource fill:#fff,stroke:#333,stroke-width:2px
 ```
 
-This writes the new credentials + JWT to `.env` and restarts your dev server with the updated proxy rules.
+- **Secure Flow**: Your local environment connects to the Major API, which then proxies requests to your actual resources.
+- **Authentication**: This process is powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you as a user are permitted to access.
+- **Generated Clients**: We generate resource clients for you. You'll find one per resource you connect to the app in `/src/clients`. 
 
-## 4. Deploy confident changes
+## Workflow Tips
 
-When you call `major app deploy`, the platform already knows which resources your app is allowed to touch. Deployments fail fast if the app tries to reference a resource it doesn’t own, which keeps production safe.
+- Run `major resource create` to open the UI to create new resources.
+- Run `major resource manage` to select which resources to connect to the app.
+- `major app start` will regenerate your env token for you.
 
-## Tips
-
-- Keep `major git config` up to date so repository invites succeed when new teammates need access to resource-enabled apps.
-- Treat `RESOURCES.md` as documentation: it stays auto-generated, so you always know which databases and APIs a service depends on.
-- Use the App Editor to revoke a resource, then run `major resource manage` to pull those changes locally.

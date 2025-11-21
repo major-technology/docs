@@ -3,9 +3,9 @@ title: "Major CLI overview"
 description: "Deploy, secure, and manage every internal tool you build with the Major CLI."
 ---
 
-Major lets you deploy internal tools directly from your laptop while keeping access governed in one place. Engineers who build for their teammates use the CLI to:
+Major lets you deploy internal tools directly from your laptop while keeping access governed in one place. Engineers who build internal apps use the CLI to:
 
-1. **Deploy code instantly** – scaffold apps from templates, push with a single command, and ship a new version in minutes.
+1. **Deploy code instantly** – scaffold apps from templates, push with a single command, and ship a new version in seconds.
 2. **Manage access & permissions** – assign roles in the web editor and ensure every action respects RBAC.
 3. **Connect to internal resources securely** – route database and API traffic through the Major control plane instead of punching new holes in your network.
 
@@ -22,12 +22,6 @@ Local traffic always flows `local app → Major API → resource`. When you run 
   <Card title="Secure resource access" icon="shield-check" href="/workflows/resource-connections">
     Map databases, queues, and internal APIs to applications with managed credentials.
   </Card>
-  <Card title="Standardize environments" icon="circle-nodes" href="/concepts/local-development">
-    Generate env files, proxy traffic through Major, and keep local + cloud parity.
-  </Card>
-  <Card title="Centralize RBAC" icon="id-card-clip" href="/concepts/access-control">
-    Manage who can view, edit, or run each application from the Major App Editor.
-  </Card>
 </CardGroup>
 
 ## Start building
@@ -38,7 +32,7 @@ Local traffic always flows `local app → Major API → resource`. When you run 
     icon="list-check"
     href="/quickstart"
   >
-    Install the CLI, authenticate, and deploy your first app in less than ten minutes.
+    Install the CLI, authenticate, and deploy your first app in less than five minutes.
   </Card>
   <Card
     title="Command reference"
@@ -46,20 +40,6 @@ Local traffic always flows `local app → Major API → resource`. When you run 
     href="/cli/app"
   >
     Learn every CLI command, its prerequisites, and what happens behind the scenes.
-  </Card>
-  <Card
-    title="Local development model"
-    icon="diagram-project"
-    href="/concepts/local-development"
-  >
-    Understand how JWTs, proxies, and managed resources keep dev environments secure.
-  </Card>
-  <Card
-    title="Manage access in the editor"
-    icon="window"
-    href="/concepts/access-control"
-  >
-    Use `major app editor` to assign roles, invite teammates, and approve reviews.
   </Card>
 </Columns>
 

@@ -3,13 +3,14 @@ title: "major user"
 description: "Authenticate to Major, manage your session, and inspect who you are logged in as."
 ---
 
-The `user` group handles authentication. Tokens are stored in your OS keychain, never in plaintext files.
+The `user` group handles authentication. Tokens are stored securely in your OS keychain.
 
 | Command | Purpose |
 | --- | --- |
-| `major user login` | Start the device-code flow, store your CLI token, and pick a default org. |
-| `major user logout` | Revoke the token server-side and delete it locally. |
-| `major user whoami` | Verify which account and org the CLI will use. |
+| `major user login` | Log in and select an organization. |
+| `major user logout` | Log out and remove credentials. |
+| `major user whoami` | Show current user and organization. |
+| `major user gitconfig` | Set your GitHub username. |
 
 ## `major user login`
 
@@ -17,13 +18,16 @@ The `user` group handles authentication. Tokens are stored in your OS keychain, 
 major user login
 ```
 
-- Opens the Major SSO approval page in your browser. If the browser fails, the CLI prints the URL so you can copy it elsewhere.
-- Polls the API until the code is approved, then stores the resulting token in the keychain.
-- Fetches the organizations you belong to and lets you pick a default one (stored locally so future commands inherit it).
-- Prints next steps (`major app clone` / `major app create`).
+**When to use:** authenticating with Major.
+
+**What happens:**
+
+1. Opens the login page in your browser.
+2. Securely stores your session token.
+3. Prompts you to select your default organization.
 
 <Note>
-You can re-run `login` anytime. The CLI will simply refresh the token and prompt for an org again.
+You can re-run `login` anytime to refresh your token or switch organizations.
 </Note>
 
 ## `major user logout`
@@ -32,11 +36,12 @@ You can re-run `login` anytime. The CLI will simply refresh the token and prompt
 major user logout
 ```
 
-- Calls the API to revoke your session.
-- Removes the token and default-organization metadata from the keychain.
-- Does **not** delete your local repos; it just severs authentication.
+**When to use:** signing out or switching accounts.
 
-Run this before you hand a laptop to someone else or if you need to switch accounts entirely.
+**What happens:**
+
+1. Revokes your session.
+2. Removes your stored credentials.
 
 ## `major user whoami`
 
@@ -44,7 +49,22 @@ Run this before you hand a laptop to someone else or if you need to switch accou
 major user whoami
 ```
 
-- Calls `/verify` on the API with your stored token.
-- Prints your email and the default org name + ID (if one is set).
+**When to use:** checking your current login status.
 
-Use it when debugging permission issues or confirming that `major org select` actually updated your context.
+**What happens:**
+
+Displays your email and current organization.
+
+## `major user gitconfig`
+
+```bash
+major user gitconfig
+```
+
+**When to use:** setting up or updating your GitHub username.
+
+**What happens:**
+
+1. Shows your currently stored username (if any).
+2. Prompts you to enter or update your GitHub username.
+3. Saves the username so Major can automatically invite you to new repositories.
