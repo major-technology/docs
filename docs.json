@@ -72,6 +72,27 @@
             ]
           }
         ]
+      },
+            {
+        "tab": "Resource Client",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "resource-client/index"
+            ]
+          },
+          {
+            "group": "Clients",
+            "pages": [
+              "resource-client/postgres",
+              "resource-client/dynamodb",
+              "resource-client/s3",
+              "resource-client/custom-api",
+              "resource-client/hubspot"
+            ]
+          }
+        ]
       }
     ],
     "global": {

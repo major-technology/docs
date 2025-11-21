@@ -1,0 +1,99 @@
+---
+title: "Custom API"
+description: "Call external APIs securely."
+---
+
+The `CustomApiResourceClient` allows you to make HTTP requests to external APIs that you have configured as resources in Major.
+
+## Usage
+
+```typescript
+import { myApiClient } from "./clients";
+
+const result = await myApiClient.invoke("POST", "/v1/orders", "create-order", {
+  body: { type: "json", value: { productId: "p_123", quantity: 1 } },
+  headers: { "X-Custom-Auth": "secret" },
+  query: { currency: "USD" },
+});
+
+if (result.ok) {
+  console.log("Status:", result.result.status);
+  if (result.result.body.kind === "json") {
+    console.log("Response:", result.result.body.value);
+  }
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="method" type="string" required>
+  The HTTP method to use: `"GET"`, `"POST"`, `"PUT"`, `"PATCH"`, or `"DELETE"`.
+</ParamField>
+
+<ParamField path="path" type="string" required>
+  The URL path to append to the resource's base URL.
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="query" type="Record<string, string | string[]>">
+      Query parameters to append to the URL.
+    </ParamField>
+    <ParamField path="headers" type="Record<string, string>">
+      Additional HTTP headers to send with the request.
+    </ParamField>
+    <ParamField path="body" type="BodyPayload">
+      The request body. Can be JSON, text, or bytes.
+      <Expandable title="BodyPayload">
+        <ParamField path="type" type='"json" | "text" | "bytes"' required />
+        <ParamField path="value" type="unknown">
+          Required for json/text types.
+        </ParamField>
+        <ParamField path="base64" type="string">
+          Required for bytes type.
+        </ParamField>
+        <ParamField path="contentType" type="string">
+          Required for bytes type.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds (default: 30000).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+On success (`ok: true`), the `result` object contains:
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="status" type="number">
+  The HTTP status code returned by the API.
+</ResponseField>
+
+<ResponseField name="body" type="ResponseBody">
+  The response body.
+  <Expandable title="ResponseBody">
+    <ResponseField name="kind" type='"json" | "text" | "bytes"' />
+    <ResponseField name="value" type="unknown">
+      Present for json/text types.
+    </ResponseField>
+    <ResponseField name="base64" type="string">
+      Present for bytes type.
+    </ResponseField>
+    <ResponseField name="contentType" type="string">
+      Present for bytes type.
+    </ResponseField>
+  </Expandable>
+</ResponseField>

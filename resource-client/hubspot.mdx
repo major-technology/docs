@@ -1,0 +1,78 @@
+---
+title: "HubSpot"
+description: "Interact with the HubSpot CRM API."
+---
+
+The `HubSpotResourceClient` is a specialized client for interacting with the HubSpot API, providing a convenient way to access CRM objects and other HubSpot features.
+
+## Usage
+
+```typescript
+import { myHubSpotClient } from "./clients";
+
+const result = await myHubSpotClient.invoke(
+  "GET",
+  "/crm/v3/objects/contacts",
+  "list-contacts",
+  {
+    query: { limit: "10" },
+  }
+);
+
+if (result.ok && result.result.body.kind === "json") {
+  console.log("Contacts:", result.result.body.value);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="method" type="string" required>
+  The HTTP method to use: `"GET"`, `"POST"`, `"PUT"`, `"PATCH"`, or `"DELETE"`.
+</ParamField>
+
+<ParamField path="path" type="string" required>
+  The HubSpot API path (e.g., `/crm/v3/objects/contacts`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="query" type="Record<string, string | string[]>">
+      Query parameters.
+    </ParamField>
+    <ParamField path="body" type="object">
+      The request body. Only JSON is supported.
+      <Expandable title="properties">
+        <ParamField path="type" type='"json"' required />
+        <ParamField path="value" type="unknown" required>
+          The JSON payload.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds (default: 30000).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+The output format is the same as the [Custom API](/resource-client/custom-api#outputs) client.
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="status" type="number">
+  The HTTP status code.
+</ResponseField>
+
+<ResponseField name="body" type="ResponseBody">
+  The response body (typically JSON).
+</ResponseField>

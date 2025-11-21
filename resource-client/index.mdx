@@ -1,0 +1,109 @@
+---
+title: "Overview"
+description: "Type-safe, zero-dependency client for accessing your Major resources."
+---
+
+The `@major-tech/resource-client` package provides a type-safe, zero-dependency way to interact with your Major resources (Postgres, DynamoDB, S3, etc.) from your application code.
+
+## Features
+
+- **Type-safe**: Full TypeScript support for all operations.
+- **Universal**: Works in Node.js, browser, and edge environments.
+- **Zero-dependency**: Lightweight and fast.
+
+## Client Generation
+
+You typically do not need to instantiate clients manually. Major generates singleton instances for you, which are available at `src/clients/` (or `client/`).
+
+### Using the CLI
+
+You can add resources and generate clients using the Major CLI.
+
+<Card title="Manage Resources" icon="box" href="/cli/resource">
+  Learn how to add and manage resources using the `major resource` command.
+</Card>
+
+### Using the Web Editor
+
+If you are developing in the Major Web Editor, the Major AI assistant will automatically add resources and generate the necessary client code for you as you build your application.
+
+## Usage
+
+Each resource type has a specific client class with a tailored `invoke` function signature. See the specific pages for details on each client:
+
+<CardGroup cols={2}>
+  <Card title="Postgres" icon="database" href="/resource-client/postgres">
+    Execute SQL queries against PostgreSQL databases.
+  </Card>
+  <Card title="DynamoDB" icon="table" href="/resource-client/dynamodb">
+    Perform DynamoDB operations like GetItem and PutItem.
+  </Card>
+  <Card title="S3 Storage" icon="hard-drive" href="/resource-client/s3">
+    Manage files and buckets in S3-compatible storage.
+  </Card>
+  <Card title="Custom API" icon="globe" href="/resource-client/custom-api">
+    Call external APIs securely.
+  </Card>
+  <Card title="HubSpot" icon="hubspot" href="/resource-client/hubspot">
+    Interact with the HubSpot CRM API.
+  </Card>
+</CardGroup>
+
+## Error Handling
+
+There are two types of errors you may encounter when using the Resource Client:
+
+1.  **Client Invocation Errors**: These occur when the client fails to communicate with the Major platform (e.g., network issues, protocol errors, authentication failures). These are thrown as `ResourceInvokeError` exceptions.
+2.  **API/Resource Errors**: These occur when the client successfully communicates with Major, but the underlying resource returns an error (e.g., database query failed, 404 Not Found from an API). These are returned as a successful response with `ok: false`.
+
+### Handling Strategy
+
+You should wrap your `invoke` calls in a `try/catch` block to handle `ResourceInvokeError`, and check the `.ok` property of the result to handle resource errors.
+
+```typescript
+import { ResourceInvokeError } from "@major-tech/resource-client";
+
+try {
+  const result = await client.invoke(...);
+
+  if (!result.ok) {
+    // Handle Resource Error (e.g. database query failed)
+    console.error("Resource Error:", result.error.message);
+    // result.error structure:
+    // {
+    //   message: string;
+    //   httpStatus?: number;
+    // }
+    return;
+  }
+
+  // Success!
+  console.log(result.result);
+
+} catch (e) {
+  if (e instanceof ResourceInvokeError) {
+    // Handle Client Invocation Error (e.g. network failed)
+    console.error("Invocation Error:", e.message);
+    console.error("Status:", e.httpStatus);
+    console.error("Request ID:", e.requestId);
+  } else {
+    // Handle unexpected errors
+    console.error("Unknown Error:", e);
+  }
+}
+```
+
+### Error Response Structure
+
+When `result.ok` is `false`, the response follows this structure:
+
+```typescript
+interface InvokeFailure {
+  ok: false;
+  requestId: string;
+  error: {
+    message: string; // Description of the error
+    httpStatus?: number; // HTTP status code from the resource (if applicable)
+  };
+}
+```

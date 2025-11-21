@@ -1,0 +1,63 @@
+---
+title: "DynamoDB"
+description: "Interact with your DynamoDB tables."
+---
+
+The `DynamoDBResourceClient` provides a simplified interface for performing operations on your DynamoDB tables.
+
+## Usage
+
+```typescript
+import { myDynamoClient } from "./clients";
+
+const result = await myDynamoClient.invoke(
+  "GetItem",
+  {
+    TableName: "users",
+    Key: { id: { S: "123" } },
+  },
+  "get-user"
+);
+
+if (result.ok) {
+  console.log(result.result.data);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="command" type="string" required>
+  The DynamoDB command to execute. Supported commands include `"GetItem"`,
+  `"PutItem"`, `"UpdateItem"`, `"DeleteItem"`, `"Query"`, `"Scan"`, etc.
+</ParamField>
+
+<ParamField path="params" type="Record<string, unknown>" required>
+  The parameters for the command, matching the AWS SDK input shape (e.g.,
+  `TableName`, `Key`, `Item`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="timeoutMs" type="number">
+  Optional timeout in milliseconds.
+</ParamField>
+
+## Outputs
+
+On success (`ok: true`), the `result` object contains:
+
+<ResponseField name="kind" type='"database"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="command" type="string">
+  The command that was executed.
+</ResponseField>
+
+<ResponseField name="data" type="unknown">
+  The result data from DynamoDB (e.g., the `Item` from a `GetItem` call).
+</ResponseField>

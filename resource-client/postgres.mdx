@@ -1,0 +1,60 @@
+---
+title: "Postgres"
+description: "Execute SQL queries against your PostgreSQL database."
+---
+
+The `PostgresResourceClient` allows you to execute SQL queries against your PostgreSQL database resources.
+
+## Usage
+
+```typescript
+import { myPostgresClient } from "./clients";
+
+const result = await myPostgresClient.invoke(
+  "SELECT * FROM users WHERE id = $1",
+  [123],
+  "get-user"
+);
+
+if (result.ok) {
+  console.log(result.result.rows);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="sql" type="string" required>
+  The SQL query string to execute. Use `$1`, `$2`, etc., for parameterized
+  queries.
+</ParamField>
+
+<ParamField path="params" type="(string | number | boolean | null)[]">
+  An array of values for the parameterized query.
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation, used for tracing and logging. Must
+  match `[a-zA-Z0-9][a-zA-Z0-9._:-]*`.
+</ParamField>
+
+<ParamField path="timeoutMs" type="number">
+  Optional timeout in milliseconds for the query execution.
+</ParamField>
+
+## Outputs
+
+On success (`ok: true`), the `result` object contains:
+
+<ResponseField name="kind" type='"database"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="rows" type="Record<string, unknown>[]">
+  An array of objects representing the rows returned by the query.
+</ResponseField>
+
+<ResponseField name="rowsAffected" type="number">
+  The number of rows affected by the query (e.g., for INSERT, UPDATE, DELETE).
+</ResponseField>

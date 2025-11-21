@@ -1,0 +1,99 @@
+---
+title: "S3 Storage"
+description: "Manage files and buckets in S3-compatible storage."
+---
+
+The `S3ResourceClient` allows you to perform operations on S3 buckets, such as listing objects, uploading files, and generating presigned URLs.
+
+## Usage
+
+```typescript
+import { myS3Client } from "./clients";
+
+// List objects in a bucket
+const listResult = await myS3Client.invoke(
+  "ListObjectsV2",
+  { Bucket: "my-bucket", Prefix: "uploads/" },
+  "list-files"
+);
+
+if (listResult.ok) {
+  console.log(listResult.result.data);
+}
+
+// Generate a presigned URL for uploading a file
+const urlResult = await myS3Client.invoke(
+  "GeneratePresignedUrl",
+  { Bucket: "my-bucket", Key: "new-file.jpg", expiresIn: 3600 },
+  "get-upload-url"
+);
+
+if (urlResult.ok && "presignedUrl" in urlResult.result) {
+  console.log("Upload URL:", urlResult.result.presignedUrl);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="command" type="string" required>
+  The S3 command to execute. Supported commands include `"ListObjectsV2"`,
+  `"HeadObject"`, `"GetObjectTagging"`, `"PutObjectTagging"`, `"DeleteObject"`,
+  `"DeleteObjects"`, `"CopyObject"`, `"ListBuckets"`, `"GetBucketLocation"`,
+  `"GeneratePresignedUrl"`.
+</ParamField>
+
+<ParamField path="params" type="Record<string, unknown>" required>
+  The parameters for the command, matching the AWS SDK input shape (e.g., `
+  {(Bucket, Key, Prefix)}`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+On success (`ok: true`), the `result` object structure depends on the command.
+
+### Standard Commands
+
+For most commands (e.g., `ListObjectsV2`, `HeadObject`):
+
+<ResponseField name="kind" type='"storage"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="command" type="string">
+  The command that was executed.
+</ResponseField>
+
+<ResponseField name="data" type="unknown">
+  The result data from S3.
+</ResponseField>
+
+### GeneratePresignedUrl
+
+For the `GeneratePresignedUrl` command:
+
+<ResponseField name="kind" type='"storage"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="presignedUrl" type="string">
+  The generated presigned URL.
+</ResponseField>
+
+<ResponseField name="expiresAt" type="string">
+  The expiration timestamp of the URL.
+</ResponseField>
