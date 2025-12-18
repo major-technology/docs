@@ -1,0 +1,48 @@
+---
+title: "Major CLI overview"
+description: "Deploy, secure, and manage every internal tool you build with the Major CLI."
+---
+
+Major lets you deploy internal tools directly from your laptop while keeping access governed in one place. Engineers who build internal apps use the CLI to:
+
+1. **Deploy code instantly** – scaffold apps from templates, push with a single command, and ship a new version in seconds.
+2. **Manage access & permissions** – assign roles in the web editor and ensure every action respects RBAC.
+3. **Connect to internal resources securely** – route database and API traffic through the Major control plane instead of punching new holes in your network.
+
+<Callout icon="lock" color="blue">
+Local traffic always flows `local app → Major API → resource`. When you run `major app start`, we mint a short-lived JWT in your `.env` file so every request is authenticated through the platform.
+</Callout>
+
+## What you can do with the CLI
+
+<CardGroup cols={2}>
+  <Card title="Operate entire app lifecycles" icon="rocket" href="/workflows/app-lifecycle">
+    Create, clone, iterate locally, and deploy with observability into every step.
+  </Card>
+  <Card title="Secure resource access" icon="shield-check" href="/workflows/resource-connections">
+    Map databases, queues, and internal APIs to applications with managed credentials.
+  </Card>
+</CardGroup>
+
+## Start building
+
+<Columns cols={2}>
+  <Card
+    title="Quickstart"
+    icon="list-check"
+    href="/quickstart"
+  >
+    Install the CLI, authenticate, and deploy your first app in less than five minutes.
+  </Card>
+  <Card
+    title="Command reference"
+    icon="terminal"
+    href="/cli/app"
+  >
+    Learn every CLI command, its prerequisites, and what happens behind the scenes.
+  </Card>
+</Columns>
+
+<Note>
+Need something that is not documented yet? Ping us from the in-product support panel or email <a href="mailto:support@major.build">support@major.build</a>.
+</Note>

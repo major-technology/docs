@@ -1,0 +1,120 @@
+---
+title: "Quickstart: CLI"
+description: "Install the Major CLI and deploy your first internal tool in minutes."
+---
+
+This guide walks you through building and deploying an internal tool using the Major CLI.
+
+## Prerequisites
+
+- macOS or Linux with Git installed
+- Node.js **22.12+** and **pnpm**
+
+## Step 1 — Install the CLI
+
+<CodeGroup>
+  ```bash curl (Recommended)
+  curl -fsSL https://install.major.build | bash
+  ```
+
+  ```bash Homebrew
+  brew tap major-technology/tap
+  brew install major-technology/tap/major
+  ```
+</CodeGroup>
+
+Confirm with `major --version`.
+
+## Step 2 — Authenticate
+
+```bash
+major user login
+```
+
+This opens the login page in your browser. Sign up or sign in, then select your organization.
+
+<Note>
+Run `major user whoami` anytime to check your current session and organization.
+</Note>
+
+## Step 3 — Create an app
+
+```bash
+major demo create
+```
+
+This creates a demo app with a pre-configured database and sample dashboard. Alternatively, you can also:
+
+<AccordionGroup>
+  <Accordion title="Create from a blank template" icon="wand-magic-sparkles">
+    ```bash
+    major app create
+    ```
+
+    - Choose a template (Vite is the default).
+    - Major provisions a GitHub repo, wires up the template, and invites you as a collaborator.
+    - Select the resources (databases, APIs) the app should reach.
+  </Accordion>
+  <Accordion title="Clone an existing app" icon="clone">
+    ```bash
+    major app clone
+    ```
+
+    - Choose from your organization's applications.
+    - We clone (or pull) the repo, invite you if needed, and regenerate `.env` + your resource clients so that you're ready to run.
+  </Accordion>
+</AccordionGroup>
+
+## Step 4 — Run locally
+
+```bash
+major app start
+```
+
+This command:
+- Mints a new JWT and writes environment variables to `.env`
+- Runs `pnpm install` to sync dependencies
+- Starts `pnpm dev` so your local server connects to your resources through Major
+
+Your app is now running locally with full access to connected resources.
+
+## Step 5 — Configure resources
+
+Configure the resources you want your app to interact with.
+
+```bash
+major resource manage
+```
+
+<Tip>
+  Read [Resources](/getting-started/core-concepts#resources) to understand how resource connections work.
+</Tip>
+
+## Step 6 — Deploy
+
+```bash
+major app deploy
+```
+
+Major will:
+1. Prompt for a commit message if there are unstaged changes
+2. Stage, commit, and push to GitHub
+3. Build and deploy your app
+4. Print the production URL when complete
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="book" href="/getting-started/core-concepts">
+    Learn about Apps, Resources, and RBAC.
+  </Card>
+  <Card title="CLI Reference" icon="terminal" href="/cli/app">
+    Explore all available CLI commands.
+  </Card>
+  <Card title="Web Dashboard" icon="browser" href="/getting-started/quickstart-web">
+    Try building in the browser instead.
+  </Card>
+  <Card title="Resource Client" icon="database" href="/resource-client/index">
+    Learn how to query databases and APIs from your code.
+  </Card>
+</CardGroup>

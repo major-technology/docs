@@ -28,3 +28,45 @@ You can view a complete history of your application's versions. Each version is 
 ### One-Click Deploy
 Deploying to production is instant. Navigate to the version you want to ship and click **Deploy**. The new version becomes available to all users with access immediately.
 
+## Plan Mode
+
+Plan Mode is a safety feature that lets you review AI-proposed changes before they're applied to your code.
+
+### How it works
+
+When you start an AI session, it begins in **Plan Mode**:
+
+1. **Exploration** — The AI reads your files and analyzes your codebase (read-only)
+2. **Plan creation** — The AI summarizes its understanding and outlines proposed changes
+3. **Review** — You see the plan in the **Plan** tab on the right panel
+4. **Decision** — You choose to approve, reject, or provide feedback
+
+### The Plan tab
+
+When the AI creates a plan, it appears in the **Plan** tab alongside the Web, Code, and Logs tabs. The plan shows:
+
+- Summary of the proposed changes
+- Files that will be created or modified
+- Implementation approach
+
+### Making a decision
+
+After reviewing the plan, you have three options:
+
+- **Approve** — The AI proceeds with the implementation
+- **Reject** — The session stays in Plan Mode; no changes are made
+- **Give Feedback** — Tell the AI what to adjust, and it revises the plan
+
+### After approval
+
+Once you approve a plan:
+
+- The session switches to **Accept Edits** mode
+- The AI implements the changes
+- You see edits appear in real-time in the code panel
+- You can still request modifications as the AI works
+
+<Tip>
+Plan Mode ensures you always understand what changes will be made. Use it to catch misunderstandings before code is written.
+</Tip>
+

@@ -1,0 +1,203 @@
+---
+title: "Google Sheets"
+description: "Read and write data in Google Sheets spreadsheets."
+---
+
+The Google Sheets client lets you interact with Google Sheets spreadsheets. It uses OAuth for authentication, so you connect your Google account once and Major handles token management.
+
+For full API details, see the [Google Sheets API documentation](https://developers.google.com/sheets/api/reference/rest).
+
+## Setup
+
+### 1. Create the resource
+
+1. Go to **Organization Settings > Resources**
+2. Click **Add Resource** and select **Google Sheets**
+3. Choose the access scope:
+   - **Read only** — Can read spreadsheet data
+   - **Read and write** — Can read and modify spreadsheet data
+4. Click **Connect to Google** to authorize access
+5. Select the spreadsheet you want to connect
+
+### 2. Attach to your app
+
+Use `major resource manage` (CLI) or the web editor to attach the resource to your app. Major generates a client in `src/clients/`.
+
+## Usage
+
+Import the generated client and use the helper methods:
+
+```typescript
+import { sheetsClient } from './clients';
+```
+
+### Reading values
+
+```typescript
+const result = await sheetsClient.getValues(
+  'Sheet1!A1:D10',
+  'fetch-data',
+  { valueRenderOption: 'FORMATTED_VALUE' }
+);
+
+if (result.ok) {
+  const rows = result.result.values;
+  console.log(rows);
+}
+```
+
+**Parameters:**
+- `range` — The A1 notation range to read (e.g., `Sheet1!A1:D10`)
+- `operationName` — A name for logging and debugging
+- `options` — Optional settings like `valueRenderOption`
+
+**Value render options:**
+- `FORMATTED_VALUE` — Values as they appear in the UI (with formatting)
+- `UNFORMATTED_VALUE` — Raw values without formatting
+- `FORMULA` — Formulas instead of calculated values
+
+### Appending rows
+
+```typescript
+const result = await sheetsClient.appendValues(
+  'Sheet1!A:D',
+  [
+    ['John', 'Doe', 'john@example.com', '2024-01-15'],
+    ['Jane', 'Smith', 'jane@example.com', '2024-01-16']
+  ],
+  'append-users',
+  { valueInputOption: 'USER_ENTERED' }
+);
+
+if (result.ok) {
+  console.log('Rows appended:', result.result.updates.updatedRows);
+}
+```
+
+**Parameters:**
+- `range` — The range to append to (rows are added after existing data)
+- `values` — 2D array of values to append
+- `operationName` — A name for logging and debugging
+- `options` — Optional settings like `valueInputOption`
+
+**Value input options:**
+- `USER_ENTERED` — Values are parsed as if typed by a user (dates, numbers, formulas)
+- `RAW` — Values are stored exactly as provided
+
+### Updating values
+
+```typescript
+const result = await sheetsClient.updateValues(
+  'Sheet1!A1:B2',
+  [
+    ['Updated A1', 'Updated B1'],
+    ['Updated A2', 'Updated B2']
+  ],
+  'update-cells',
+  { valueInputOption: 'USER_ENTERED' }
+);
+
+if (result.ok) {
+  console.log('Cells updated:', result.result.updatedCells);
+}
+```
+
+**Parameters:**
+- `range` — The range to update
+- `values` — 2D array of new values
+- `operationName` — A name for logging and debugging
+- `options` — Optional settings
+
+### Batch reading
+
+Read multiple ranges in a single request:
+
+```typescript
+const result = await sheetsClient.batchGetValues(
+  ['Sheet1!A1:B10', 'Sheet2!A1:C5'],
+  'batch-read'
+);
+
+if (result.ok) {
+  result.result.valueRanges.forEach((range) => {
+    console.log(range.range, range.values);
+  });
+}
+```
+
+## Low-level API
+
+For operations not covered by helper methods, use `invoke()` directly:
+
+```typescript
+const result = await sheetsClient.invoke(
+  'GET',
+  '/values/Sheet1!A1:D10',
+  'fetch-data',
+  {
+    query: { valueRenderOption: 'FORMATTED_VALUE' }
+  }
+);
+```
+
+### Supported API paths
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/values/{range}` | Read a range |
+| PUT | `/values/{range}` | Update a range |
+| POST | `/values/{range}:append` | Append rows |
+| GET | `/values:batchGet` | Batch read multiple ranges |
+| POST | `/values:batchUpdate` | Batch update multiple ranges |
+| POST | `/:batchUpdate` | Batch update (formatting, etc.) |
+
+<Note>
+The spreadsheet ID is configured in the resource and does not need to be included in API paths.
+</Note>
+
+## Error handling
+
+```typescript
+import { ResourceInvokeError } from '@major-tech/resource-client';
+
+try {
+  const result = await sheetsClient.getValues('Sheet1!A1:D10', 'fetch-data');
+
+  if (!result.ok) {
+    // Resource returned an error (e.g., invalid range)
+    console.error('Sheets error:', result.error.message);
+    return;
+  }
+
+  // Success
+  console.log(result.result.values);
+
+} catch (e) {
+  if (e instanceof ResourceInvokeError) {
+    // Client-level error (e.g., OAuth not completed)
+    console.error('Invocation error:', e.message);
+  }
+}
+```
+
+### Common errors
+
+| Error | Cause |
+| --- | --- |
+| 401 Unauthorized | OAuth not completed—reconnect the resource |
+| 400 Bad Request | Invalid range or API path |
+| 403 Forbidden | Write operation on a read-only resource |
+| 404 Not Found | Spreadsheet or sheet not found |
+
+## Scope and permissions
+
+When creating the resource, you choose between:
+
+- **Read only** — `GET` requests only
+- **Read and write** — Full read/write access
+
+The scope is enforced at the API level. If you try to write with a read-only resource, you'll get a 403 error.
+
+<Tip>
+Major uses the most restrictive Google OAuth scope (`drive.file`), which only grants access to the specific spreadsheet you selected—not your entire Drive.
+</Tip>

@@ -1,48 +1,84 @@
 ---
-title: "Major CLI overview"
-description: "Deploy, secure, and manage every internal tool you build with the Major CLI."
+title: "What is Major?"
+description: "Build, deploy, and share internal tools faster with AI-powered development and secure resource access."
 ---
 
-Major lets you deploy internal tools directly from your laptop while keeping access governed in one place. Engineers who build internal apps use the CLI to:
+Major is an AI-powered platform for building and deploying internal tools. It combines a live code editor with integrated AI assistance, secure resource management, and one-command deployments.
 
-1. **Deploy code instantly** – scaffold apps from templates, push with a single command, and ship a new version in seconds.
-2. **Manage access & permissions** – assign roles in the web editor and ensure every action respects RBAC.
-3. **Connect to internal resources securely** – route database and API traffic through the Major control plane instead of punching new holes in your network.
-
-<Callout icon="lock" color="blue">
-Local traffic always flows `local app → Major API → resource`. When you run `major app start`, we mint a short-lived JWT in your `.env` file so every request is authenticated through the platform.
-</Callout>
-
-## What you can do with the CLI
+## What Major does for you
 
 <CardGroup cols={2}>
-  <Card title="Operate entire app lifecycles" icon="rocket" href="/workflows/app-lifecycle">
-    Create, clone, iterate locally, and deploy with observability into every step.
+  <Card title="Deploy instantly" icon="rocket">
+    Ship internal tools in seconds. No infrastructure setup, no CI/CD pipelines to configure.
   </Card>
-  <Card title="Secure resource access" icon="shield-check" href="/workflows/resource-connections">
-    Map databases, queues, and internal APIs to applications with managed credentials.
+  <Card title="Connect resources securely" icon="shield-check">
+    Access databases and APIs without managing secrets. Credentials never touch your code.
+  </Card>
+  <Card title="Build with AI" icon="sparkles">
+    Get AI assistance that understands your entire codebase and can implement features directly.
+  </Card>
+  <Card title="Control access" icon="users">
+    Manage who can view, edit, and deploy each app with built-in RBAC.
   </Card>
 </CardGroup>
 
-## Start building
+## How Major is different
 
-<Columns cols={2}>
-  <Card
-    title="Quickstart"
-    icon="list-check"
-    href="/quickstart"
-  >
-    Install the CLI, authenticate, and deploy your first app in less than five minutes.
-  </Card>
-  <Card
-    title="Command reference"
-    icon="terminal"
-    href="/cli/app"
-  >
-    Learn every CLI command, its prerequisites, and what happens behind the scenes.
-  </Card>
-</Columns>
+### No secrets in your code
 
-<Note>
-Need something that is not documented yet? Ping us from the in-product support panel or email <a href="mailto:support@major.build">support@major.build</a>.
-</Note>
+Traditional development requires managing `.env` files, rotating credentials, and hoping nobody commits secrets to git. Major eliminates this entirely.
+
+Resources (databases, APIs, storage) are configured once in the dashboard. Your code uses generated clients that authenticate automatically through the Major platform. The same code works locally, in the web editor, and in production.
+
+```typescript
+// No connection strings, no API keys, no .env files
+import { myDatabaseClient } from './clients';
+
+const result = await myDatabaseClient.invoke(
+  'SELECT * FROM users WHERE id = $1',
+  [userId],
+  'fetch-user'
+);
+```
+
+### AI that understands your code
+
+The Major editor includes an AI assistant with full context of your application. It can:
+
+- Explain complex logic in your codebase
+- Implement new features by writing code directly
+- Refactor components while maintaining existing patterns
+
+### Unified experience everywhere
+
+Whether you're developing locally with the CLI or in the browser with the web editor, the experience is consistent:
+
+- Same resource access
+- Same deployment commands
+- Same version control (every app is backed by GitHub)
+
+## Choose your workflow
+
+Major supports two development paths. Pick the one that fits your style:
+
+<CardGroup cols={2}>
+  <Card title="CLI Workflow" icon="terminal" href="/getting-started/quickstart-cli">
+    Develop in your local IDE with full control. Use `major app start` to run locally and `major app deploy` to ship.
+  </Card>
+  <Card title="Web Dashboard" icon="browser" href="/getting-started/quickstart-web">
+    Build entirely in the browser with the live editor. Get AI assistance and deploy with a single click.
+  </Card>
+</CardGroup>
+
+Both workflows use the same underlying platform. You can switch between them anytime or use them together.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="book" href="/getting-started/core-concepts">
+    Learn about Apps, Resources, RBAC, and Environments.
+  </Card>
+  <Card title="Get Started" icon="play" href="/getting-started/quickstart-cli">
+    Jump into building your first app.
+  </Card>
+</CardGroup>
