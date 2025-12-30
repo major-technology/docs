@@ -5,10 +5,15 @@ description: "Manage resource attachments from your terminal."
 
 Use the `resource` group to manage the databases and APIs your app can access.
 
+<Tip>
+For more information on how resources work, see [Resources](/web/resources) in the web documentation.
+</Tip>
+
 | Command | Purpose |
 | --- | --- |
 | `major resource create` | Create a new resource via the web UI. |
 | `major resource manage` | Attach or detach resources for the current app. |
+| `major resource env` | View and switch resource environments. |
 
 ## `major resource create`
 
@@ -35,3 +40,27 @@ major resource manage
 1. Fetches the current resources for your app.
 2. Lets you attach or detach resources using an interactive menu.
 3. Updates your local configuration to match the new settings.
+
+## `major resource env`
+
+```bash
+major resource env
+```
+
+**When to use:** switching between environments (e.g., development, staging, production) to change which resource instances your app connects to.
+
+**What happens:**
+
+1. Displays your current environment selection.
+2. If multiple environments are available, lets you select a different one from an interactive menu.
+3. Updates both your local development environment and the Major web app to use the selected environment.
+
+<Note>
+Each environment can have different resources and configuration values. Switching environments affects where your application connects to—both locally and when running in dev mode on Major.
+</Note>
+
+After switching environments, run `major app start` to apply the changes locally.
+
+<Card title="Learn more about Environments" icon="layers" href="/web/environments">
+  See how to create and manage environments for your organization.
+</Card>
