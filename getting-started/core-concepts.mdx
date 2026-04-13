@@ -138,6 +138,15 @@ Groups let you manage permissions for sets of users efficiently:
 - **Default permissions** — Configure groups to have automatic access to new apps
 - **All Users group** — Every organization member, useful for open-by-default apps
 
+## Source Control
+
+Major versions your app code in Git. By default, Major hosts your repositories so you can start building without any external accounts. When you're ready, you can connect your own GitHub organization — Major will use your GitHub App installation for all repository operations from that point forward.
+
+Either way, you own the code. Repositories created through Major are standard Git repositories you can clone, branch, and manage with any Git tooling.
+
+When code is pushed to the main branch, Major automatically scans your app for database queries and keeps the Queries panel in the editor up to date. This gives you a live catalog of every SQL query in your codebase without any manual tracking.
+
+
 ## How they work together
 
 1. **Admins** configure resources and grant permissions to users and groups

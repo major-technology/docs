@@ -7,16 +7,35 @@ The Major Editor provides a collaborative environment to modify your application
 
 ## Live Editor
 
-You can edit any application via a live editing session in the browser. Changes are reflected instantly in the preview pane.
+The Major Editor is your primary workspace for modifying and deploying applications. It is organized into panels — each panel surfaces a different aspect of your app.
 
-### AI Assistance
-The editor includes an AI assistant that has full context of your application code. You can ask it to:
-- Explain complex logic
-- Refactor components
-- Implement new features directly in the codebase
+## Live Editor
 
-### Real-time Preview
-Every editing session includes a live preview of the application's latest version, allowing you to verify changes immediately before deploying.
+Open the editor from the dashboard by selecting an app and clicking **Open Editor**. Changes you make are reflected in the preview panel in real time.
+
+## Plan Mode
+
+Plan Mode is a safety feature that lets you review AI-proposed changes before they're applied to your code. When Plan Mode is on, the AI describes what it intends to change and waits for your approval before writing any files.
+
+Toggle Plan Mode from the toolbar at the top of the editor.
+
+## Panels
+
+The editor sidebar gives you access to specialized panels for inspecting and managing different parts of your app.
+
+### Queries
+
+The **Queries** panel shows every database query discovered in your application's codebase. Queries are organized by resource, and each entry includes the invocation key and the file location where it appears.
+
+You can edit a query string directly from this panel. Changes are saved back to your source code.
+
+The panel updates automatically whenever commits are pushed to the main branch, so it always reflects your current codebase.
+
+## Version Control & Deployment
+
+Major integrates with GitHub to version-control your applications. See [Source Control](/getting-started/core-concepts#source-control) for an overview of how repository hosting works.
+
+Deployments are triggered from the editor toolbar. Each deployment is tied to a specific Git commit, giving you a full audit trail of what shipped and when.
 
 ## Version Control & Deployment
 
