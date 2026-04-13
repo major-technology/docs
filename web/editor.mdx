@@ -7,26 +7,32 @@ The Major Editor provides a collaborative environment to modify your application
 
 ## Live Editor
 
-You can edit any application via a live editing session in the browser. Changes are reflected instantly in the preview pane.
+The Major Editor is a browser-based environment for building, inspecting, and deploying your applications. It is organized into panels — each panel gives you a focused view of one aspect of your app.
 
-### AI Assistance
-The editor includes an AI assistant that has full context of your application code. You can ask it to:
-- Explain complex logic
-- Refactor components
-- Implement new features directly in the codebase
+## Panels
 
-### Real-time Preview
-Every editing session includes a live preview of the application's latest version, allowing you to verify changes immediately before deploying.
+### Code & AI Assistant
+
+Open any application in the editor to start a live editing session. Changes you make are reflected in the preview panel immediately. The AI assistant (chat icon) can propose edits; use [Plan Mode](#plan-mode) to review those proposals before they're applied.
+
+### Queries
+
+The **Queries** panel displays every database query discovered in your application's codebase. Queries are organized by resource and show the invocation key and source file location. You can edit query strings directly from this panel.
+
+Major populates the Queries panel automatically when commits are pushed to your app's main branch. No manual cataloging is needed.
 
 ## Version Control & Deployment
 
-Major integrates with GitHub to version control your applications.
+## Deployments
 
-### Version History
-You can view a complete history of your application's versions. Each version is linked to a commit, ensuring full traceability of changes.
+Major integrates with GitHub to version-control your applications. Every deploy is tied to a commit, giving you a full history of what shipped and when.
 
-### One-Click Deploy
-Deploying to production is instant. Navigate to the version you want to ship and click **Deploy**. The new version becomes available to all users with access immediately.
+To deploy from the editor:
+
+1. Click **Deploy** in the top-right toolbar.
+2. Major builds from the current branch and promotes the build to your selected environment.
+
+For source control configuration — including connecting your own GitHub organization — see [Source Control in Core Concepts](/getting-started/core-concepts#source-control).
 
 ## Plan Mode
 
