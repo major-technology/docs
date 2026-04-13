@@ -30,6 +30,10 @@ Apps follow a simple lifecycle:
 
 ## Resources
 
+### Query extraction
+
+Major automatically scans your application's TypeScript/JavaScript source code for SQL queries each time you push to the main branch. Discovered queries are cataloged and visible in the **Queries** panel inside the app editor. This requires your repository to be connected via the GitHub webhook integration.
+
 **Resources** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
 
 ### Architecture
