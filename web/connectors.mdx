@@ -23,6 +23,19 @@ In the App Editor, you can bind these pre-configured connectors to your applicat
 
 The AI assistant will automatically generate and use resource clients when you ask it to interact with your connected connectors.
 
+### Snowflake
+Create Snowflake database connections using key-pair (JWT) authentication. Configure account, database, schema, warehouse, and role settings per environment, and test connections before saving.
+
+### Microsoft SQL Server
+Connect to Microsoft SQL Server (MSSQL) databases. The platform supports list schemas, tables, and columns discovery, plus read-only query execution via the AI Coder interface.
+
+### Managed PostgreSQL
+Provision fully managed PostgreSQL databases directly through the platform. Click "Provision Managed Database" in the Resources UI to create a new instance. The database is exposed as a Resource and can be configured per-environment. Behind the scenes, the platform orchestrates Kubernetes deployment and manages credentials and schema provisioning.
+
+### AWS Identity-Based Authentication
+For S3 and DynamoDB resources, you can now use Assume Role Identities instead of access keys. Create an identity in the web UI, review the generated trust policy for your IAM role, and select identity-based authentication when configuring your resource. This approach is more secure and avoids managing long-lived credentials.
+
+
 ## Per-Environment Configuration
 
 When editing a connector, you can configure each environment independently. This lets you use different credentials or endpoints for staging and production.

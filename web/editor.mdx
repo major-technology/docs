@@ -39,6 +39,13 @@ You can edit a query string directly from this panel. Changes are saved back to 
 
 The panel updates automatically whenever commits are pushed to the main branch, so it always reflects your current codebase.
 
+### DynamoDB Query Editing
+When editing DynamoDB queries, you can now modify both the query string and the parameter object as key-value pairs using Add/Remove buttons. The query preview displays the command method (e.g., `GetItem`) alongside parsed parameters. Values marked with `__expr` are dynamic code references and cannot be edited directly; you can test with static values instead.
+
+### Query Result Formatting
+DynamoDB query results are now formatted and displayed in a readable table instead of raw JSON, with proper formatting of attribute values (strings, numbers, booleans, sets, etc.) displayed in a structured view.
+
+
 ## Version Control & Deployment
 
 Major integrates with GitHub to version-control your applications. See [Source Control](/getting-started/core-concepts#source-control) for an overview of how repository hosting works.

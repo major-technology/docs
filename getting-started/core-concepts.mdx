@@ -133,6 +133,11 @@ Groups let you manage permissions for sets of users efficiently:
 - **Default permissions** — Configure groups to have automatic access to new apps
 - **All Users group** — Every organization member, useful for open-by-default apps
 
+<!-- DOCS-BOT: please review — verify that identity-based auth should live here or if it needs its own section -->
+
+Major also supports identity-based authentication for AWS resources. Instead of managing access keys, you can assume cross-account IAM roles via Assume Role Identities. This workflow lets you securely connect external AWS accounts by creating an identity, viewing the generated trust policy for your IAM role, and optionally using identity-based authentication for S3 and DynamoDB resources.
+
+
 ## How they work together
 
 1. **Admins** configure connectors and grant permissions to users and groups

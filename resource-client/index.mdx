@@ -110,3 +110,15 @@ interface InvokeFailure {
   };
 }
 ```
+
+## Snowflake
+
+The SnowflakeResourceClient allows you to execute SQL queries against Snowflake databases. Use the `execute`, `status`, and `cancel` methods to submit queries, check long-running query status, and cancel running statements. The client supports async execution, result pagination, and detailed error handling.
+
+## Microsoft SQL Server
+
+The MSSQLResourceClient provides query execution and schema discovery against Microsoft SQL Server databases. Use discovery tools to list schemas, tables, and columns, and execute read-only queries via the AI Coder interface.
+
+## Managed PostgreSQL
+
+Managed PostgreSQL databases are exposed as PostgreSQL resources and use the standard PostgresResourceClient interface. Configure per-environment credentials and connection details in the web UI or CLI.
