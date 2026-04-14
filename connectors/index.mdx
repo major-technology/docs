@@ -1,0 +1,106 @@
+---
+title: "Connectors"
+description: "Connect your apps to databases, APIs, and storage services."
+---
+
+Connectors are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
+
+## How connectors work
+
+```mermaid
+flowchart TD
+    subgraph YourApp ["Your App"]
+        App["Application Code"]
+        Client["@major-tech/resource-client"]
+    end
+
+    Gateway["Major API Gateway"]
+    Resource[("Your Resource")]
+
+    App -- "Uses" --> Client
+    Client -- "Authenticated Request<br/>(MAJOR_JWT_TOKEN)" --> Gateway
+    Gateway -- "Proxy" --> Resource
+
+    click Client "https://www.npmjs.com/package/@major-tech/resource-client"
+
+    style YourApp fill:transparent,stroke:#999,stroke-dasharray: 5 5
+    style Client fill:#fff,stroke:#333,stroke-width:2px
+    style Gateway fill:#fff,stroke:#333,stroke-width:2px
+    style Resource fill:#fff,stroke:#333,stroke-width:2px
+```
+
+- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
+- **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
+- **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
+
+## Setting up a connector
+
+1. Navigate to **Organization Settings > Connectors**
+2. Click **Add Connector** and select the type
+3. Configure the connection details and credentials
+4. Attach the connector to your app via the web editor or `major resource manage`
+
+<Note>
+Resource credentials are encrypted and never exposed to the client-side application code.
+</Note>
+
+## Per-environment configuration
+
+When editing a connector, you can configure each environment independently. This lets you use different credentials or endpoints for staging and production.
+
+| Environment | Host | Database |
+| --- | --- | --- |
+| default | prod.example.com | myapp_prod |
+| staging | staging.example.com | myapp_staging |
+
+<Card title="Learn more about Environments" icon="layer-group" href="/web/environments">
+  See how to create and manage environments for your organization.
+</Card>
+
+## Identity-based authentication
+
+For S3 and DynamoDB resources, you can use Assume Role Identities instead of access keys. Create an identity in the web UI, review the generated trust policy for your IAM role, and select identity-based authentication when configuring your resource. This approach is more secure and avoids managing long-lived credentials.
+
+## Available connectors
+
+<CardGroup cols={3}>
+  <Card title="PostgreSQL" icon="database" href="/connectors/postgres">
+    SQL database queries
+  </Card>
+  <Card title="DynamoDB" icon="table" href="/connectors/dynamodb">
+    AWS NoSQL database
+  </Card>
+  <Card title="S3 Storage" icon="hard-drive" href="/connectors/s3">
+    Object storage and files
+  </Card>
+  <Card title="Snowflake" icon="snowflake" href="/connectors/snowflake">
+    Data warehouse queries
+  </Card>
+  <Card title="Microsoft SQL Server" icon="database" href="/connectors/mssql">
+    SQL Server queries
+  </Card>
+  <Card title="BigQuery" icon="database" href="/connectors/bigquery">
+    Google BigQuery datasets
+  </Card>
+  <Card title="Neo4j" icon="circle-nodes" href="/connectors/neo4j">
+    Graph database queries
+  </Card>
+  <Card title="AWS Lambda" icon="bolt" href="/connectors/lambda">
+    Serverless function invocation
+  </Card>
+  <Card title="Custom API" icon="globe" href="/connectors/custom-api">
+    Any REST API
+  </Card>
+  <Card title="Salesforce" icon="cloud" href="/connectors/salesforce">
+    CRM data and SOQL
+  </Card>
+  <Card title="HubSpot" icon="hubspot" href="/connectors/hubspot">
+    CRM integration
+  </Card>
+  <Card title="Outreach" icon="bullhorn" href="/connectors/outreach">
+    Sales engagement
+  </Card>
+  <Card title="Google Sheets" icon="table-cells" href="/connectors/google-sheets">
+    Spreadsheet access
+  </Card>
+</CardGroup>

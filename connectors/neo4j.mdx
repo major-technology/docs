@@ -1,0 +1,54 @@
+---
+title: "Neo4j"
+description: "Run Cypher queries against Neo4j graph databases."
+---
+
+The `Neo4jResourceClient` allows you to execute Cypher queries against Neo4j graph databases for node and relationship operations.
+
+## Usage
+
+```typescript
+import { myNeo4jClient } from "./clients";
+
+const result = await myNeo4jClient.invoke(
+  "MATCH (u:User {id: $id}) RETURN u",
+  { id: "123" },
+  "get-user"
+);
+
+if (result.ok) {
+  console.log(result.result.rows);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="cypher" type="string" required>
+  The Cypher query string to execute. Use `$paramName` for parameterized queries.
+</ParamField>
+
+<ParamField path="params" type="Record<string, unknown>">
+  An object of named parameters for the Cypher query.
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation, used for tracing and logging.
+</ParamField>
+
+<ParamField path="timeoutMs" type="number">
+  Optional timeout in milliseconds for the query execution.
+</ParamField>
+
+## Outputs
+
+On success (`ok: true`), the `result` object contains:
+
+<ResponseField name="kind" type='"database"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="rows" type="Record<string, unknown>[]">
+  An array of objects representing the records returned by the query.
+</ResponseField>

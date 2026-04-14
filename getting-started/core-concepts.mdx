@@ -23,6 +23,10 @@ Apps follow a simple lifecycle:
 
 Every app is backed by a Git repository. Major hosts repositories by default, but you can connect your own GitHub organization at any time. Either way, the code is yours — clone, branch, and manage it with any Git tooling.
 
+### Managed Resources
+
+Need a database for your app? Major can provision and host one for you — no external setup required. Ask the AI assistant to provision a managed database and your app gets its own PostgreSQL instance, ready to use with the same generated clients as any other connector. Managed resources are tied to your app's lifecycle and can be configured per-environment.
+
 # Connectors
 
 **Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
@@ -55,48 +59,13 @@ flowchart TD
 - **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
 - **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
 
-### Supported resource types
-
-<CardGroup cols={3}>
-  <Card title="PostgreSQL" icon="database">
-    SQL database queries
-  </Card>
-  <Card title="DynamoDB" icon="table">
-    AWS NoSQL database
-  </Card>
-  <Card title="S3 Storage" icon="hard-drive">
-    Object storage and files
-  </Card>
-  <Card title="Custom API" icon="globe">
-    Any REST API
-  </Card>
-  <Card title="HubSpot" icon="hubspot">
-    CRM integration
-  </Card>
-  <Card title="Google Sheets" icon="table-cells">
-    Spreadsheet access
-  </Card>
-</CardGroup>
-
-### Using connectors in code
-
-```typescript
-import { myDatabaseClient } from './clients';
-
-const result = await myDatabaseClient.invoke(
-  'SELECT * FROM users WHERE active = true',
-  [],
-  'fetch-active-users'
-);
-
-if (result.ok) {
-  console.log(result.result.rows);
-}
-```
-
 <Tip>
 Credentials flow through the Major platform. Your app never sees connection strings or API keys.
 </Tip>
+
+<Card title="Browse all connectors" icon="server" href="/connectors">
+  See setup guides and client documentation for all supported connectors.
+</Card>
 
 ## RBAC (Role-Based Access Control)
 
@@ -133,11 +102,6 @@ Groups let you manage permissions for sets of users efficiently:
 - **Default permissions** — Configure groups to have automatic access to new apps
 - **All Users group** — Every organization member, useful for open-by-default apps
 
-<!-- DOCS-BOT: please review — verify that identity-based auth should live here or if it needs its own section -->
-
-Major also supports identity-based authentication for AWS resources. Instead of managing access keys, you can assume cross-account IAM roles via Assume Role Identities. This workflow lets you securely connect external AWS accounts by creating an identity, viewing the generated trust policy for your IAM role, and optionally using identity-based authentication for S3 and DynamoDB resources.
-
-
 ## How they work together
 
 1. **Admins** configure connectors and grant permissions to users and groups
@@ -150,7 +114,7 @@ Major also supports identity-based authentication for AWS resources. Instead of 
   <Card title="Get Started" icon="play" href="/getting-started/quickstart-cli">
     Build your first app with the CLI.
   </Card>
-  <Card title="Resource Client" icon="code" href="/resource-client/index">
-    Learn how to use generated clients in your code.
+  <Card title="Connectors" icon="server" href="/connectors">
+    Browse all connectors with setup and usage docs.
   </Card>
 </CardGroup>

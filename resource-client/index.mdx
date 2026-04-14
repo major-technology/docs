@@ -1,9 +1,9 @@
 ---
-title: "Overview"
+title: "Resource Client"
 description: "Type-safe, zero-dependency client for accessing your Major connectors."
 ---
 
-The `@major-tech/resource-client` package provides a type-safe, zero-dependency way to interact with your Major connectors (Postgres, DynamoDB, S3, etc.) from your application code.
+The `@major-tech/resource-client` package provides a type-safe, zero-dependency way to interact with your Major connectors from your application code.
 
 ## Features
 
@@ -27,30 +27,13 @@ You can add connectors and generate clients using the Major CLI.
 
 If you are developing in the Major Web Editor, the Major AI assistant will automatically add connectors and generate the necessary client code for you as you build your application.
 
-## Usage
+## Per-connector usage
 
-Each resource type has a specific client class with a tailored `invoke` function signature. See the specific pages for details on each client:
+Each connector type has a specific client class with a tailored `invoke` function signature. See the individual connector pages for usage details, inputs, and outputs:
 
-<CardGroup cols={2}>
-  <Card title="Postgres" icon="database" href="/resource-client/postgres">
-    Execute SQL queries against PostgreSQL databases.
-  </Card>
-  <Card title="DynamoDB" icon="table" href="/resource-client/dynamodb">
-    Perform DynamoDB operations like GetItem and PutItem.
-  </Card>
-  <Card title="S3 Storage" icon="hard-drive" href="/resource-client/s3">
-    Manage files and buckets in S3-compatible storage.
-  </Card>
-  <Card title="Custom API" icon="globe" href="/resource-client/custom-api">
-    Call external APIs securely.
-  </Card>
-  <Card title="HubSpot" icon="hubspot" href="/resource-client/hubspot">
-    Interact with the HubSpot CRM API.
-  </Card>
-  <Card title="Google Sheets" icon="table-cells" href="/resource-client/google-sheets">
-    Read and write data in Google Sheets spreadsheets.
-  </Card>
-</CardGroup>
+<Card title="Connectors" icon="server" href="/connectors">
+  Browse all available connectors with setup and client documentation.
+</Card>
 
 ## Error Handling
 
@@ -110,15 +93,3 @@ interface InvokeFailure {
   };
 }
 ```
-
-## Snowflake
-
-The SnowflakeResourceClient allows you to execute SQL queries against Snowflake databases. Use the `execute`, `status`, and `cancel` methods to submit queries, check long-running query status, and cancel running statements. The client supports async execution, result pagination, and detailed error handling.
-
-## Microsoft SQL Server
-
-The MSSQLResourceClient provides query execution and schema discovery against Microsoft SQL Server databases. Use discovery tools to list schemas, tables, and columns, and execute read-only queries via the AI Coder interface.
-
-## Managed PostgreSQL
-
-Managed PostgreSQL databases are exposed as PostgreSQL resources and use the standard PostgresResourceClient interface. Configure per-environment credentials and connection details in the web UI or CLI.
