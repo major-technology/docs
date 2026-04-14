@@ -5,25 +5,33 @@ description: "Build, preview, and ship your internal tools."
 
 The Major Editor provides a collaborative environment to modify your applications and manage deployments.
 
-## Live Editor
+# Building with AI
 
-The Major Editor is your primary workspace for modifying and deploying applications. It is organized into panels — each panel surfaces a different aspect of your app.
-
-## Live Editor
-
-Open the editor from the dashboard by selecting an app and clicking **Open Editor**. Changes you make are reflected in the preview panel in real time.
+The editor includes an AI assistant with full context of your application code. You describe what you want to build or change in the chat panel, and the AI reads your codebase, asks clarifying questions if anything is ambiguous, and works through the implementation with you.
 
 ## Plan Mode
 
-Plan Mode is a safety feature that lets you review AI-proposed changes before they're applied to your code. When Plan Mode is on, the AI describes what it intends to change and waits for your approval before writing any files.
+When you send a request, the AI starts in Plan Mode — it analyzes your codebase and proposes a set of changes before touching any code.
 
-Toggle Plan Mode from the toolbar at the top of the editor.
+The plan appears in the **Plan** tab alongside Web, Code, and Logs. It includes a summary of what will change, which files are affected, and the implementation approach.
 
-## Panels
+From there you can approve the plan to let the AI start building, reject it to stay in Plan Mode with no changes made, or give feedback to have it revise. Once approved, the session switches to **Accept Edits** mode and you see changes appear in real-time in the code and preview panels.
 
-The editor sidebar gives you access to specialized panels for inspecting and managing different parts of your app.
+## Preview & Inspection
 
-### Queries
+Every editing session runs a live preview of your application in the right panel. As the AI makes changes, the preview updates automatically so you can verify behavior before committing.
+
+The panel includes three tabs:
+
+- **Preview** — the running application, updated in real-time as changes are made
+- **Code** — the generated source code for your application
+- **Log** — runtime logs from the application, useful for debugging errors or verifying behavior
+
+# Tools
+
+The editor sidebar gives you access to specialized tools for inspecting and managing different parts of your app.
+
+## Queries
 
 The **Queries** panel shows every database query discovered in your application's codebase. Queries are organized by resource, and each entry includes the invocation key and the file location where it appears.
 
@@ -37,55 +45,8 @@ Major integrates with GitHub to version-control your applications. See [Source C
 
 Deployments are triggered from the editor toolbar. Each deployment is tied to a specific Git commit, giving you a full audit trail of what shipped and when.
 
-## Version Control & Deployment
-
-Major integrates with GitHub to version control your applications.
-
 ### Version History
 You can view a complete history of your application's versions. Each version is linked to a commit, ensuring full traceability of changes.
 
 ### One-Click Deploy
 Deploying to production is instant. Navigate to the version you want to ship and click **Deploy**. The new version becomes available to all users with access immediately.
-
-## Plan Mode
-
-Plan Mode is a safety feature that lets you review AI-proposed changes before they're applied to your code.
-
-### How it works
-
-When you start an AI session, it begins in **Plan Mode**:
-
-1. **Exploration** — The AI reads your files and analyzes your codebase (read-only)
-2. **Plan creation** — The AI summarizes its understanding and outlines proposed changes
-3. **Review** — You see the plan in the **Plan** tab on the right panel
-4. **Decision** — You choose to approve, reject, or provide feedback
-
-### The Plan tab
-
-When the AI creates a plan, it appears in the **Plan** tab alongside the Web, Code, and Logs tabs. The plan shows:
-
-- Summary of the proposed changes
-- Files that will be created or modified
-- Implementation approach
-
-### Making a decision
-
-After reviewing the plan, you have three options:
-
-- **Approve** — The AI proceeds with the implementation
-- **Reject** — The session stays in Plan Mode; no changes are made
-- **Give Feedback** — Tell the AI what to adjust, and it revises the plan
-
-### After approval
-
-Once you approve a plan:
-
-- The session switches to **Accept Edits** mode
-- The AI implements the changes
-- You see edits appear in real-time in the code panel
-- You can still request modifications as the AI works
-
-<Tip>
-Plan Mode ensures you always understand what changes will be made. Use it to catch misunderstandings before code is written.
-</Tip>
-

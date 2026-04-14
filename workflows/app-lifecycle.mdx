@@ -8,16 +8,16 @@ description: "Follow this opinionated loop to build, preview, and deploy apps wi
     Run `major user login` to authenticate into your account.
   </Step>
   <Step title="Create or clone the app">
-    - `major app create` scaffolds from templates, provisions a GitHub repo, attaches resources, and generates your first `.env`.
+    - `major app create` scaffolds from templates, provisions a GitHub repo, attaches connectors, and generates your first `.env`.
     - `major app clone` to clone into any existing application in your org.
   </Step>
   <Step title="Iterate locally">
     - Use `major app start` to install deps, mint a JWT, and boot `pnpm dev`.
-    - Edit code/UI as usual; requests to internal resources automatically tunnel through Major.
+    - Edit code/UI as usual; requests to internal connectors automatically tunnel through Major.
     - Use any existing IDE or setups you have locally to develop code with full context into your application stack.
   </Step>
-  <Step title="Refresh resources as needed">
-    Call `major resource manage` whenever you attach or remove databases/APIs. The CLI will autogenerate clients for you to use against those resources
+  <Step title="Refresh connectors as needed">
+    Call `major resource manage` whenever you attach or remove databases/APIs. The CLI will autogenerate clients for you to use against those connectors
   </Step>
   <Step title="Deploy with confidence">
     `major app deploy` checks git status, prompts for a commit message if needed, pushes main, then creates a new version and streams deployment status until it's live.

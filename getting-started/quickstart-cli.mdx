@@ -53,7 +53,7 @@ This creates a demo app with a pre-configured database and sample dashboard. Alt
 
     - Choose a template (Vite is the default).
     - Major provisions a GitHub repo, wires up the template, and invites you as a collaborator.
-    - Select the resources (databases, APIs) the app should reach.
+    - Select the connectors (databases, APIs) the app should reach.
   </Accordion>
   <Accordion title="Clone an existing app" icon="clone">
     ```bash
@@ -74,20 +74,20 @@ major app start
 This command:
 - Mints a new JWT and writes environment variables to `.env`
 - Runs `pnpm install` to sync dependencies
-- Starts `pnpm dev` so your local server connects to your resources through Major
+- Starts `pnpm dev` so your local server connects to your connectors through Major
 
-Your app is now running locally with full access to connected resources.
+Your app is now running locally with full access to connected connectors.
 
-## Step 5 — Configure resources
+## Step 5 — Configure connectors
 
-Configure the resources you want your app to interact with.
+Configure the connectors you want your app to interact with.
 
 ```bash
 major resource manage
 ```
 
 <Tip>
-  Read [Resources](/getting-started/core-concepts#resources) to understand how resource connections work.
+  Read [Connectors](/getting-started/core-concepts#connectors) to understand how resource connections work.
 </Tip>
 
 ## Step 6 — Deploy
@@ -106,7 +106,7 @@ Major will:
 
 <CardGroup cols={2}>
   <Card title="Core Concepts" icon="book" href="/getting-started/core-concepts">
-    Learn about Apps, Resources, and RBAC.
+    Learn about Apps, Connectors, and RBAC.
   </Card>
   <Card title="CLI Reference" icon="terminal" href="/cli/app">
     Explore all available CLI commands.
