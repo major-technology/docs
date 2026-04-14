@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Major",
   "colors": {
-    "primary": "#2563EB",
-    "light": "#60A5FA",
-    "dark": "#1E3A8A"
+    "primary": "#02906f",
+    "light": "#3fa78d",
+    "dark": "#006551"
   },
   "favicon": "/favicon.ico",
   "navigation": {
@@ -70,7 +70,10 @@
               "web/managed-databases",
               "web/webhooks",
               "web/theming",
-              "web/env-vars"
+              "web/env-vars",
+              "web/ai-proxy",
+              "web/errors",
+              "web/integrations"
             ]
           }
         ]
@@ -95,7 +98,7 @@
           },
           {
             "group": "Storage & Compute",
-            "pages": ["connectors/s3", "connectors/lambda"]
+            "pages": ["connectors/s3", "connectors/lambda", "connectors/sqs"]
           },
           {
             "group": "CRM & Sales",
@@ -104,13 +107,15 @@
               "connectors/hubspot",
               "connectors/outreach",
               "connectors/gong",
-              "connectors/dynamics-365"
+              "connectors/dynamics-365",
+              "connectors/ringcentral"
             ]
           },
           {
             "group": "Productivity",
             "pages": [
               "connectors/google-sheets",
+              "connectors/google-calendar",
               "connectors/google-analytics",
               "connectors/slack"
             ]

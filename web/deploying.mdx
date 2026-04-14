@@ -21,9 +21,21 @@ The **Share** button lets you manage access to your app with granular role-based
 
 Deploy apps publicly (no authentication required) or privately (auth-gated). Public apps are accessible to anyone with the URL. Private apps require users to sign in and have the appropriate permissions.
 
+## Login Redirects
+
+When a user visits a private app while logged out, Major redirects them to sign in. After they log in, they're redirected back to the app they originally visited. This works with both custom slug-based hostnames (e.g., `my-app.apps.prod.major.build`) and hash-based hostnames.
+
 ## Custom URL Slugs
 
 When deploying for the first time, you can choose a custom subdomain for your app (e.g., `my-app.apps.prod.major.build`). Existing apps can update their URL slug in application settings.
+
+## Per-User OAuth in Deployed Apps
+
+If your app uses resources configured for **per-user** authentication, Major automatically enforces an OAuth gate. When a user accesses the app without a connected OAuth account, they're redirected to the `/connect` page to authorize access.
+
+Users can manage their connected accounts from **Settings > Connected Accounts**.
+
+See [Per-User OAuth](/web/permissions#per-user-oauth) for details on how this works.
 
 ## Version History
 
@@ -35,4 +47,4 @@ When you redeploy a previously deployed version, you can force a fresh build wit
 
 ## Build Progress
 
-While the AI is building your app, a tips overlay displays helpful guidance about connectors, sharing, iterative prompting, and published app URLs. Use the navigation controls to cycle through tips and learn best practices as you wait for the build to complete.
+While the AI is building your app, a tips overlay displays helpful guidance about connectors, sharing, iterative prompting, and published app URLs. If your app uses Slack, the overlay prompts you to deploy it with a relevant app slug after the build completes. Use the navigation controls to cycle through tips and learn best practices as you wait for the build to complete.

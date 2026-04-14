@@ -44,12 +44,68 @@ You can share access to connectors with specific:
 - **Individuals**: Invite users by email.
 - **Groups**: Grant access to entire teams at once.
 
+## Inviting Members
+
+Go to **Settings > Members** and click **Invite Members** to open the invitation dialog. You can:
+
+- Paste multiple email addresses at once (comma or newline-separated)
+- Select a role to assign to all invitees
+- Send batch invitations
+
+The dialog shows real-time progress for each email address (pending, sending, success, or failed) and displays a summary when complete. Email addresses are deduplicated automatically, and validation errors appear inline if needed.
+
+### Accepting an Invitation
+
+When you receive an invitation and sign up as a new user, your account is automatically added to the organization with the role specified in the invitation. You'll see a success confirmation and be redirected to your organization dashboard. No additional action is required to accept the invitation.
+
+## Per-User OAuth
+
+Some connectors (like Google Calendar) support per-user OAuth, allowing end-users to authenticate with their own accounts instead of using shared credentials.
+
+### Authentication Modes
+
+When configuring a resource, you choose between two modes:
+
+- **Shared** — One shared OAuth account for all app users. The person deploying the app provides the credentials.
+- **Per-user** — Each user authorizes their own account. Major redirects unauthenticated users to a `/connect` page to complete OAuth.
+
+### Connected Accounts
+
+Users can view and manage their authorized OAuth accounts via the **Connected Accounts** settings page. From there, they can:
+
+- View all connected services
+- Disconnect individual OAuth credentials
+- Re-authenticate if credentials expire
+
+When a user disconnects an account, they lose access to any app features that require that connection.
+
+### OAuth Gate in Deployed Apps
+
+If you deploy an app configured for per-user OAuth and a user hasn't connected their account, Major redirects them to the `/connect` page. After they authorize access, they're returned to the app.
+
+If users try to invoke a resource before connecting their account, they'll receive an error prompting them to complete OAuth.
+
 ## Groups
 
 Groups allow you to manage permissions for sets of users efficiently.
 
 - **Inheritance**: All members of a group inherit the permissions granted to the group.
 - **Default Permissions**: Groups can be configured to have default permissions (e.g., View) on all new apps created in the organization.
+- **Group Settings**: Access group details, manage members, view applications and connectors through the group settings page. The Members, Details, Applications, and Connectors tabs display all associated data for your group.
+
+### Creating Groups
+
+The **Create Group** button in Settings > Groups is visible to all users. Admin users (those with `canCreateApplications` permission) can create groups. Non-admin users see the button disabled with a tooltip that says "Only organization admins can create groups."
+
+### Managing Group Members
+
+Organization admins can add both organization members and pending invitees to groups. When you add a pending invitee to a group, they automatically become a group member once they accept their organization invitation.
+
+The group members page displays all members with their status:
+- Active members show their name and email
+- Pending members (invitees not yet accepted) display a "Pending" badge
+
+When inviting users to a group, the add-members dialog shows both current organization members and pending invitees, letting you pre-add invitees before they join.
 
 ### All Users Group
 Every organization includes a special **All Users** group containing every member of the organization.

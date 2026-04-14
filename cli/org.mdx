@@ -48,3 +48,39 @@ major org whoami
 **What happens:**
 
 Displays the name and ID of the currently selected organization.
+
+## Organization resources via MCP
+
+The CLI exposes organization-level resources through MCP endpoints. You can authenticate using Bearer tokens and access organization resources without requiring an application context.
+
+**Available org-level MCP capabilities:**
+
+- List all resources in your organization.
+- Check AI proxy status for resources.
+- Get app status across your organization.
+- Read resource context documents.
+- Interact with resources through MCP tools.
+- Select and manage environments for resource operations.
+
+**Authentication:**
+
+Authenticate to org-level MCP endpoints using a Bearer token. Include your token in the request header:
+
+```bash
+Authorization: Bearer <your-token>
+```
+
+The CLI MCP server enforces resource permissions consistently across both app-level and org-level access modes through unified permission checking.
+
+### Environment selection in MCP
+
+The org-scoped MCP provides tools to select which environment resource tools operate in:
+
+- `set_environment` – Switch the active environment for resource operations. The choice persists across sessions.
+- `get_environment` – Check which environment is currently active.
+
+By default, resource operations use the default build environment. Use these tools to work with resources in a different environment, such as staging or production. This environment selection is separate from the per-app environment choice available in the web editor.
+
+<Card title="Learn more about Resources" icon="box" href="/cli/resource">
+  See how to manage connectors and resources for your applications.
+</Card>

@@ -11,7 +11,7 @@ description: "Create, run, and deploy applications with the Major CLI."
 | `major app clone` | Download and set up an existing app. |
 | `major app start` | Start the development server. |
 | `major app deploy` | Deploy changes to production. |
-| `major app info` | Show the current application ID. |
+| `major app info` | Show the current application's metadata. |
 | `major app editor` | Open the App Editor in your browser. |
 
 <Callout icon="circle-info">
@@ -30,9 +30,10 @@ major app create
 
 1. Prompts for application name + description.
 2. Allows you to choose an app template to use.
-3. Creates the app scaffolding and grants you access to the scaffolded app.
-4. Lets you configure which connectors you want your app to have access to.
-5. Generates a `.env` file so you can start developing locally.
+3. Lets you select a theme for the app (or uses your organization's default).
+4. Creates the app scaffolding and grants you access to the scaffolded app.
+5. Lets you configure which connectors you want your app to have access to.
+6. Generates a `.env` file so you can start developing locally.
 
 ## `major app clone`
 
@@ -84,7 +85,7 @@ major app deploy
 major app info
 ```
 
-Returns the unique ID of the current application.
+Displays metadata for the current application, including its name, deployment status, and live URL.
 
 ## `major app editor`
 
@@ -93,3 +94,15 @@ major app editor
 ```
 
 Opens the App Editor in your browser, where you can manage access, connectors, and app settings.
+
+## App deployment via MCP
+
+AI assistants in app-coder sessions use the `deploy_app` MCP tool to deploy your app from GitHub. Before deploying, the orchestrator instructs you to commit and push your code. The tool then deploys the latest version of your application and includes built-in permission checks to ensure only authorized users can trigger deployments.
+
+**deploy_app tool:**
+
+- Deploys the latest version of your app from GitHub.
+- Enforces permission checks for deployment access.
+- Supports optional URL slug overrides to customize your app's deployment URL.
+
+To use this tool in an AI-coder session, the AI assistant will call `deploy_app` with your application context. Deployments respect your organization's RBAC settings.
