@@ -1,9 +1,9 @@
 ---
-title: "Editor & Deployments"
-description: "Build, preview, and ship your internal tools."
+title: "Editor"
+description: "Build apps with AI assistance in the live editor."
 ---
 
-The Major Editor provides a collaborative environment to modify your applications and manage deployments.
+The Major Editor provides a collaborative environment to modify your applications with AI assistance.
 
 # Building with AI
 
@@ -12,6 +12,14 @@ The editor includes an AI assistant with full context of your application code. 
 ## Images and Attachments
 
 You can attach images and files to your AI chat messages. Drag and drop or paste screenshots, mockups, or reference images directly into the chat. The AI uses these as context when building or modifying your app — useful for matching a specific design, reproducing a bug from a screenshot, or referencing documentation.
+
+## @ Mentions
+
+Type `@` in the chat to explicitly reference connectors, attachments, and workspace files in your message. This tells the AI exactly which resource or file you're talking about.
+
+## Queued Messages
+
+You can send follow-up messages while the AI is still working. Queued messages appear dimmed in the chat and are processed in order once the current task completes. You can cancel a queued message before it's picked up.
 
 ## Plan Mode
 
@@ -31,41 +39,9 @@ The panel includes three tabs:
 - **Code** — the generated source code for your application
 - **Log** — runtime logs from the application, useful for debugging errors or verifying behavior
 
-# Tools
+### Visual Selector
 
-The editor sidebar gives you access to specialized tools for inspecting and managing different parts of your app.
+The visual selection tool lets you click elements in the preview to reference them in your AI chat. Hold Cmd (Mac) or Ctrl (Windows/Linux) to select multiple elements — each appears as a dismissible badge in the chat input. This is useful for telling the AI "change this button" or "fix the layout of these two components."
 
-## Queries
+The preview's URL bar shows all available routes as an autocomplete dropdown, making it easy to navigate your app.
 
-The **Queries** panel shows every database query discovered in your application's codebase. Queries are organized by resource, and each entry includes the invocation key and the file location where it appears.
-
-You can edit a query string directly from this panel. Changes are saved back to your source code.
-
-The panel updates automatically whenever commits are pushed to the main branch, so it always reflects your current codebase.
-
-## Version Control & Deployment
-
-Major integrates with GitHub to version-control your applications. See [Source Control](/getting-started/core-concepts#source-control) for an overview of how repository hosting works.
-
-Deployments are triggered from the editor toolbar. Each deployment is tied to a specific Git commit, giving you a full audit trail of what shipped and when.
-
-### Version History
-You can view a complete history of your application's versions. Each version is linked to a commit, ensuring full traceability of changes.
-
-### One-Click Deploy
-Deploying to production is instant. Navigate to the version you want to ship and click **Deploy**. The new version becomes available to all users with access immediately.
-
-### Redeploying
-When you redeploy a previously deployed version, you can force a fresh build with the **Redeploy** button even if the version was cached. This rebuilds the app from scratch rather than reusing cached artifacts.
-
-### Public and Private Apps
-Deploy apps publicly (no authentication required) or privately (auth-gated). Public apps are accessible to anyone with the URL. Private apps require users to sign in and have the appropriate permissions.
-
-### Custom URL Slugs
-When deploying for the first time, you can choose a custom subdomain for your app (e.g., `my-app.apps.prod.major.build`). Existing apps can update their URL slug in application settings.
-
-## Environment Variables
-
-Define environment variables per application in the **Environment Variables** panel. These variables are automatically injected into the live preview, build pipeline, and deployments. When you update or delete an environment variable, the preview automatically reloads with the changes — no restart needed. System variables like `MAJOR_API_BASE_URL` cannot be overridden.
-
-After changing environment variables in a deployed app, click **Redeploy** to apply them to the live deployment.
