@@ -1,19 +1,19 @@
 ---
 title: "major resource"
-description: "Manage resource attachments from your terminal."
+description: "Manage connectors from your terminal."
 ---
 
 Use the `resource` group to manage the databases and APIs your app can access.
 
 <Tip>
-For more information on how resources work, see [Resources](/web/resources) in the web documentation.
+For more information on how connectors work, see [Connectors](/web/connectors) in the web documentation.
 </Tip>
 
 | Command | Purpose |
 | --- | --- |
-| `major resource create` | Create a new resource via the web UI. |
-| `major resource manage` | Attach or detach resources for the current app. |
-| `major resource env` | View and switch resource environments. |
+| `major resource create` | Create a new connector via the web UI. |
+| `major resource manage` | Attach or detach connectors for the current app. |
+| `major resource env` | View and switch environments. |
 
 ## `major resource create`
 
@@ -25,7 +25,7 @@ major resource create
 
 **What happens:**
 
-Opens the resource creation page in your browser.
+Opens the connector creation page in your browser.
 
 ## `major resource manage`
 
@@ -33,12 +33,12 @@ Opens the resource creation page in your browser.
 major resource manage
 ```
 
-**When to use:** changing which resources your app is connected to.
+**When to use:** changing which connectors your app is connected to.
 
 **What happens:**
 
-1. Fetches the current resources for your app.
-2. Lets you attach or detach resources using an interactive menu.
+1. Fetches the current connectors for your app.
+2. Lets you attach or detach connectors using an interactive menu.
 3. Updates your local configuration to match the new settings.
 
 ## `major resource env`
@@ -47,7 +47,7 @@ major resource manage
 major resource env
 ```
 
-**When to use:** switching between environments (e.g., development, staging, production) to change which resource instances your app connects to.
+**When to use:** switching between environments (e.g., development, staging, production) to change which connector instances your app connects to.
 
 **What happens:**
 
@@ -56,7 +56,7 @@ major resource env
 3. Updates both your local development environment and the Major web app to use the selected environment.
 
 <Note>
-Each environment can have different resources and configuration values. Switching environments affects where your application connects to—both locally and when running in dev mode on Major.
+Each environment can have different connectors and configuration values. Switching environments affects where your application connects to—both locally and when running in dev mode on Major.
 </Note>
 
 After switching environments, run `major app start` to apply the changes locally.

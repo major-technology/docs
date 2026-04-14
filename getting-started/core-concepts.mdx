@@ -1,22 +1,13 @@
 ---
 title: "Core Concepts"
-description: "Understand the building blocks of Major: Apps, Resources, and RBAC."
+description: "Understand the building blocks of Major: Apps, Connectors, and RBAC."
 ---
 
 Major is built around three core concepts that work together to help you build, deploy, and secure internal tools.
 
-## Apps
+# Apps
 
-An **App** is a self-contained project that you build and deploy through Major. Every app is backed by a GitHub repository, giving you full version control and the ability to use your own development tools.
-
-### Templates
-
-When creating an app, you choose from available templates:
-
-| Template | Description |
-| --- | --- |
-| **Vite** | React single-page application with fast builds |
-| **Next.js** | Full-stack framework with server components |
+An **App** is a self-contained project that you build and deploy through Major
 
 ### Lifecycle
 
@@ -24,13 +15,17 @@ Apps follow a simple lifecycle:
 
 1. **Create** — Scaffold from a template or clone an existing app
 2. **Develop** — Build locally with the CLI or in the web editor
-3. **Connect** — Attach resources (databases, APIs)
+3. **Connect** — Attach connectors (databases, APIs)
 4. **Deploy** — Ship to production with one command or click
 5. **Share** — Grant access to teammates via RBAC
 
-## Resources
+### Source Control
 
-**Resources** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
+Every app is backed by a Git repository. Major hosts repositories by default, but you can connect your own GitHub organization at any time. Either way, the code is yours — clone, branch, and manage it with any Git tooling.
+
+# Connectors
+
+**Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
 
 ### Architecture
 
@@ -56,7 +51,7 @@ flowchart TD
     style Resource fill:#fff,stroke:#333,stroke-width:2px
 ```
 
-- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual resources.
+- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
 - **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
 - **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
 
@@ -83,7 +78,7 @@ flowchart TD
   </Card>
 </CardGroup>
 
-### Using resources in code
+### Using connectors in code
 
 ```typescript
 import { myDatabaseClient } from './clients';
@@ -111,7 +106,7 @@ Major provides granular access control at both the organization and application 
 
 | Role | Permissions |
 | --- | --- |
-| **Member** | View apps and resources |
+| **Member** | View apps and connectors |
 | **Builder** | Create new apps |
 | **Admin** | Full control including user management |
 
@@ -140,8 +135,8 @@ Groups let you manage permissions for sets of users efficiently:
 
 ## How they work together
 
-1. **Admins** configure resources and grant permissions to users and groups
-2. **Builders** create applications and use resources to securely access company data
+1. **Admins** configure connectors and grant permissions to users and groups
+2. **Builders** create applications and use connectors to securely access company data
 3. **Users** get access to apps via RBAC and use them to get work done
 
 ## Next steps
