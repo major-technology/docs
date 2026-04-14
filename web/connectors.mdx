@@ -35,6 +35,17 @@ To configure:
 3. Enter the connection details for that environment
 4. Click **Save**
 
+### Shared Configuration
+
+For organizations with multiple environments, you can enable **shared configuration** on a resource. This uses a single configuration (from the default environment) across all environments instead of requiring per-environment setup.
+
+When enabled:
+- The default environment shows the shared configuration
+- Non-default environment tabs are locked with an explanatory tooltip
+- The query environment picker is disabled
+
+This is useful when the same connector instance should be accessed from all environments.
+
 ## API Tokens
 
 Programmatically access invocation data from your connectors and resources using API tokens. Create and manage tokens in the **API Tokens** settings page.

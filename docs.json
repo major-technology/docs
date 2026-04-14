@@ -102,7 +102,9 @@
             "pages": [
               "connectors/salesforce",
               "connectors/hubspot",
-              "connectors/outreach"
+              "connectors/outreach",
+              "connectors/gong",
+              "connectors/dynamics-365"
             ]
           },
           {

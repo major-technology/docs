@@ -19,7 +19,9 @@ Type `@` in the chat to explicitly reference connectors, attachments, and worksp
 
 ## Queued Messages
 
-You can send follow-up messages while the AI is still working. Queued messages appear dimmed in the chat and are processed in order once the current task completes. You can cancel a queued message before it's picked up.
+You can send follow-up messages while the AI is still working. Queued messages appear with a "Queued" label and a "Cancel" button. They are processed in order once the current task completes. You can cancel a queued message before it's picked up.
+
+When you send a new message while the AI is waiting for your approval or decision, the pending decision is automatically interrupted and the agent resumes immediately with your new message.
 
 ## Plan Mode
 
@@ -44,4 +46,8 @@ The panel includes three tabs:
 The visual selection tool lets you click elements in the preview to reference them in your AI chat. Hold Cmd (Mac) or Ctrl (Windows/Linux) to select multiple elements — each appears as a dismissible badge in the chat input. This is useful for telling the AI "change this button" or "fix the layout of these two components."
 
 The preview's URL bar shows all available routes as an autocomplete dropdown, making it easy to navigate your app.
+
+## TypeScript Intelligence
+
+The AI assistant has built-in TypeScript language server support, giving it precise code navigation across your codebase — go to definition, find references, and symbol lookup. This means the AI can understand your type relationships and imports accurately instead of relying on text search.
 
