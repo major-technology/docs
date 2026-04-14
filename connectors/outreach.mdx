@@ -1,26 +1,26 @@
 ---
-title: "HubSpot"
-description: "Interact with the HubSpot CRM API."
+title: "Outreach"
+description: "Manage prospects and sequences in Outreach.io."
 ---
 
-The `HubSpotResourceClient` is a specialized client for interacting with the HubSpot API, providing a convenient way to access CRM objects and other HubSpot features.
+The `OutreachResourceClient` provides access to the Outreach API, allowing you to manage prospects, sequences, and other sales engagement data.
 
 ## Usage
 
 ```typescript
-import { myHubSpotClient } from "./clients";
+import { myOutreachClient } from "./clients";
 
-const result = await myHubSpotClient.invoke(
+const result = await myOutreachClient.invoke(
   "GET",
-  "/crm/v3/objects/contacts",
-  "list-contacts",
+  "/api/v2/prospects",
+  "list-prospects",
   {
-    query: { limit: "10" },
+    query: { "page[size]": "25" },
   }
 );
 
 if (result.ok && result.result.body.kind === "json") {
-  console.log("Contacts:", result.result.body.value);
+  console.log("Prospects:", result.result.body.value);
 }
 ```
 
@@ -33,7 +33,7 @@ The `invoke` method accepts the following arguments:
 </ParamField>
 
 <ParamField path="path" type="string" required>
-  The HubSpot API path (e.g., `/crm/v3/objects/contacts`).
+  The Outreach API path (e.g., `/api/v2/prospects`).
 </ParamField>
 
 <ParamField path="invocationKey" type="string" required>
@@ -44,16 +44,10 @@ The `invoke` method accepts the following arguments:
   Optional configuration object.
   <Expandable title="properties">
     <ParamField path="query" type="Record<string, string | string[]>">
-      Query parameters.
+      Query parameters for filtering and pagination.
     </ParamField>
     <ParamField path="body" type="object">
-      The request body. Only JSON is supported.
-      <Expandable title="properties">
-        <ParamField path="type" type='"json"' required />
-        <ParamField path="value" type="unknown" required>
-          The JSON payload.
-        </ParamField>
-      </Expandable>
+      The request body for create/update operations.
     </ParamField>
     <ParamField path="timeoutMs" type="number">
       Timeout in milliseconds (default: 30000).
@@ -63,7 +57,7 @@ The `invoke` method accepts the following arguments:
 
 ## Outputs
 
-The output format is the same as the [Custom API](/resource-client/custom-api#outputs) client.
+The output format is the same as the [Custom API](/connectors/custom-api#outputs) client.
 
 <ResponseField name="kind" type='"api"'>
   Discriminator for the response type.

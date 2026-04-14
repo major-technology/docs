@@ -1,29 +1,27 @@
 ---
 title: "Connectors"
-description: "Connect and manage shared infrastructure."
+description: "Manage connectors from the web dashboard."
 ---
 
-Connectors allow you to securely connect your internal tools to your infrastructure (databases, APIs, etc.).
+The web dashboard lets you configure and manage connectors for your organization. For detailed documentation on each connector type, see the [Connectors](/connectors) section.
 
-## Organization-Level Connectors
+## Adding a connector
 
-You can define connectors at the organization level. Once configured, these connectors become available for use by **any application** in your organization.
-
-### Managing connectors
-1. Navigate to **Connectors**.
-2. Click **Add Connector** and select the type (Postgres, REST API, etc.).
-3. Configure the connection details and credentials.
+1. Navigate to **Organization Settings > Connectors**
+2. Click **Add Connector** and select the type
+3. Configure the connection details and credentials
 
 <Note>
 Resource credentials are encrypted and never exposed to the client-side application code.
 </Note>
 
-### Using Connectors
-In the App Editor, you can bind these pre-configured connectors to your application. The platform handles the secure connection and authentication automatically.
+## Using connectors in apps
+
+In the App Editor, you can bind pre-configured connectors to your application. The platform handles the secure connection and authentication automatically.
 
 The AI assistant will automatically generate and use resource clients when you ask it to interact with your connected connectors.
 
-## Per-Environment Configuration
+## Per-environment configuration
 
 When editing a connector, you can configure each environment independently. This lets you use different credentials or endpoints for staging and production.
 

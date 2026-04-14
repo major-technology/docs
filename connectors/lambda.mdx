@@ -1,0 +1,62 @@
+---
+title: "AWS Lambda"
+description: "Invoke AWS Lambda functions from your apps."
+---
+
+The `LambdaResourceClient` allows you to invoke AWS Lambda functions directly from your application code.
+
+## Usage
+
+```typescript
+import { myLambdaClient } from "./clients";
+
+const result = await myLambdaClient.invoke(
+  "Invoke",
+  {
+    FunctionName: "my-function",
+    Payload: JSON.stringify({ key: "value" }),
+  },
+  "call-lambda"
+);
+
+if (result.ok) {
+  console.log(result.result.data);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="command" type="string" required>
+  The Lambda command to execute. Typically `"Invoke"`.
+</ParamField>
+
+<ParamField path="params" type="Record<string, unknown>" required>
+  The parameters for the command, matching the AWS SDK input shape (e.g.,
+  `FunctionName`, `Payload`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="timeoutMs" type="number">
+  Optional timeout in milliseconds.
+</ParamField>
+
+## Outputs
+
+On success (`ok: true`), the `result` object contains:
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="command" type="string">
+  The command that was executed.
+</ResponseField>
+
+<ResponseField name="data" type="unknown">
+  The response payload from the Lambda function.
+</ResponseField>

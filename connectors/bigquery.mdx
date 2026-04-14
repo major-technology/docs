@@ -1,19 +1,19 @@
 ---
-title: "Postgres"
-description: "Execute SQL queries against your PostgreSQL database."
+title: "BigQuery"
+description: "Run SQL queries against Google BigQuery datasets."
 ---
 
-The `PostgresResourceClient` allows you to execute SQL queries against your PostgreSQL database connectors.
+The `BigQueryResourceClient` allows you to execute SQL queries against Google BigQuery datasets, explore schemas, and retrieve table metadata.
 
 ## Usage
 
 ```typescript
-import { myPostgresClient } from "./clients";
+import { myBigQueryClient } from "./clients";
 
-const result = await myPostgresClient.invoke(
-  "SELECT * FROM users WHERE id = $1",
-  [123],
-  "get-user"
+const result = await myBigQueryClient.invoke(
+  "SELECT * FROM `my_dataset.users` WHERE active = true LIMIT 100",
+  [],
+  "fetch-active-users"
 );
 
 if (result.ok) {
@@ -26,17 +26,15 @@ if (result.ok) {
 The `invoke` method accepts the following arguments:
 
 <ParamField path="sql" type="string" required>
-  The SQL query string to execute. Use `$1`, `$2`, etc., for parameterized
-  queries.
+  The SQL query string to execute.
 </ParamField>
 
 <ParamField path="params" type="(string | number | boolean | null)[]">
-  An array of values for the parameterized query.
+  An array of values for parameterized queries.
 </ParamField>
 
 <ParamField path="invocationKey" type="string" required>
-  A unique identifier for this operation, used for tracing and logging. Must
-  match `[a-zA-Z0-9][a-zA-Z0-9._:-]*`.
+  A unique identifier for this operation, used for tracing and logging.
 </ParamField>
 
 <ParamField path="timeoutMs" type="number">
@@ -56,5 +54,5 @@ On success (`ok: true`), the `result` object contains:
 </ResponseField>
 
 <ResponseField name="rowsAffected" type="number">
-  The number of rows affected by the query (e.g., for INSERT, UPDATE, DELETE).
+  The number of rows affected by the query.
 </ResponseField>

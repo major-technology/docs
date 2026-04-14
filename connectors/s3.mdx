@@ -5,6 +5,10 @@ description: "Manage files and buckets in S3-compatible storage."
 
 The `S3ResourceClient` allows you to perform operations on S3 buckets, such as listing objects, uploading files, and generating presigned URLs.
 
+<Tip>
+S3 connectors support [identity-based authentication](/connectors#identity-based-authentication) via Assume Role Identities for secure cross-account access.
+</Tip>
+
 ## Usage
 
 ```typescript
@@ -45,8 +49,8 @@ The `invoke` method accepts the following arguments:
 </ParamField>
 
 <ParamField path="params" type="Record<string, unknown>" required>
-  The parameters for the command, matching the AWS SDK input shape (e.g., `
-  {(Bucket, Key, Prefix)}`).
+  The parameters for the command, matching the AWS SDK input shape (e.g.,
+  `Bucket`, `Key`, `Prefix`).
 </ParamField>
 
 <ParamField path="invocationKey" type="string" required>

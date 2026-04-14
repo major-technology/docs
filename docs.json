@@ -70,21 +70,48 @@
         ]
       },
       {
-        "tab": "Resource Client",
+        "tab": "Connectors",
         "groups": [
           {
             "group": "Overview",
-            "pages": ["resource-client/index"]
+            "pages": ["connectors/index", "resource-client/index"]
           },
           {
-            "group": "Clients",
+            "group": "Databases",
             "pages": [
-              "resource-client/postgres",
-              "resource-client/dynamodb",
-              "resource-client/s3",
-              "resource-client/custom-api",
-              "resource-client/hubspot",
-              "resource-client/google-sheets"
+              "connectors/postgres",
+              "connectors/dynamodb",
+              "connectors/snowflake",
+              "connectors/mssql",
+              "connectors/bigquery",
+              "connectors/neo4j"
+            ]
+          },
+          {
+            "group": "Storage & Compute",
+            "pages": [
+              "connectors/s3",
+              "connectors/lambda"
+            ]
+          },
+          {
+            "group": "CRM & Sales",
+            "pages": [
+              "connectors/salesforce",
+              "connectors/hubspot",
+              "connectors/outreach"
+            ]
+          },
+          {
+            "group": "Productivity",
+            "pages": [
+              "connectors/google-sheets"
+            ]
+          },
+          {
+            "group": "Custom",
+            "pages": [
+              "connectors/custom-api"
             ]
           }
         ]
