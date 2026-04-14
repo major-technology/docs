@@ -15,10 +15,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "index",
-              "getting-started/core-concepts"
-            ]
+            "pages": ["index", "getting-started/core-concepts"]
           },
           {
             "group": "Quickstart",
@@ -34,36 +31,23 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "cli/overview",
-              "getting-started/quickstart-cli"
-            ]
+            "pages": ["cli/overview", "getting-started/quickstart-cli"]
           },
           {
             "group": "Workflows",
-            "pages": [
-              "workflows/app-lifecycle"
-            ]
+            "pages": ["workflows/app-lifecycle"]
           },
           {
             "group": "App Commands",
-            "pages": [
-              "cli/app",
-              "cli/resource"
-            ]
+            "pages": ["cli/app", "cli/resource"]
           },
           {
             "group": "Access & Orgs",
-            "pages": [
-              "cli/user",
-              "cli/org"
-            ]
+            "pages": ["cli/user", "cli/org"]
           },
           {
             "group": "Maintenance",
-            "pages": [
-              "cli/update"
-            ]
+            "pages": ["cli/update"]
           }
         ]
       },
@@ -72,9 +56,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "web/index"
-            ]
+            "pages": ["web/index"]
           },
           {
             "group": "Features",
@@ -82,7 +64,7 @@
               "web/editor",
               "web/environments",
               "web/permissions",
-              "web/resources"
+              "web/connectors"
             ]
           }
         ]
@@ -92,9 +74,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "resource-client/index"
-            ]
+            "pages": ["resource-client/index"]
           },
           {
             "group": "Clients",
@@ -144,21 +124,14 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   }
 }
