@@ -1,0 +1,83 @@
+---
+title: "GraphQL"
+description: "Execute GraphQL queries and mutations against a configured endpoint."
+---
+
+The `GraphQLResourceClient` allows you to execute GraphQL queries and mutations against your configured endpoint.
+
+## Usage
+
+```typescript
+import { myGraphQLClient } from "./clients";
+
+const result = await myGraphQLClient.invoke(
+  "POST",
+  "/graphql",
+  "fetch-users",
+  {
+    body: {
+      type: "json",
+      value: {
+        query: `query { users { id name email } }`,
+      },
+    },
+  }
+);
+
+if (result.ok && result.result.body.kind === "json") {
+  console.log("Users:", result.result.body.value);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="method" type="string" required>
+  The HTTP method to use. Typically `"POST"` for GraphQL.
+</ParamField>
+
+<ParamField path="path" type="string" required>
+  The GraphQL endpoint path (e.g., `/graphql`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="body" type="object">
+      The request body containing the GraphQL query/mutation and optional variables.
+      <Expandable title="properties">
+        <ParamField path="type" type='"json"' required />
+        <ParamField path="value" type="object" required>
+          An object with `query` (string) and optional `variables` (object).
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="headers" type="Record<string, string>">
+      Additional HTTP headers.
+    </ParamField>
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds (default: 30000).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+The output format is the same as the [Custom API](/connectors/custom-api#outputs) client.
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="status" type="number">
+  The HTTP status code.
+</ResponseField>
+
+<ResponseField name="body" type="ResponseBody">
+  The response body containing the GraphQL result.
+</ResponseField>

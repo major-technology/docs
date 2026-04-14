@@ -23,9 +23,9 @@ Apps follow a simple lifecycle:
 
 Every app is backed by a Git repository. Major hosts repositories by default, but you can connect your own GitHub organization at any time. Either way, the code is yours — clone, branch, and manage it with any Git tooling.
 
-### Managed Resources
+### Managed Connectors
 
-Need a database for your app? Major can provision and host one for you — no external setup required. Ask the AI assistant to provision a managed database and your app gets its own PostgreSQL instance, ready to use with the same generated clients as any other connector. Managed resources are tied to your app's lifecycle and can be configured per-environment.
+Need a database for your app? Major can provision and host one for you — no external setup required. Ask the AI assistant to provision a managed connector and your app gets its own PostgreSQL instance, ready to use with the same generated clients as any other connector. Managed connectors are tied to your app's lifecycle and can be configured per-environment.
 
 # Connectors
 
@@ -63,6 +63,10 @@ flowchart TD
 Credentials flow through the Major platform. Your app never sees connection strings or API keys.
 </Tip>
 
+### Resource context
+
+You can upload context files — database schemas, OpenAPI specs, API documentation, and more — to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat — click it to configure the resource inline without leaving the editor.
+
 <Card title="Browse all connectors" icon="server" href="/connectors">
   See setup guides and client documentation for all supported connectors.
 </Card>
@@ -91,7 +95,7 @@ Major provides granular access control at both the organization and application 
 
 | Role | Permissions |
 | --- | --- |
-| **User** | Use the resource in applications |
+| **Builder** | Invoke resources in development and production |
 | **Admin** | Configure and manage the resource |
 
 ### Groups

@@ -43,12 +43,6 @@ You can edit a query string directly from this panel. Changes are saved back to 
 
 The panel updates automatically whenever commits are pushed to the main branch, so it always reflects your current codebase.
 
-### DynamoDB Query Editing
-When editing DynamoDB queries, you can now modify both the query string and the parameter object as key-value pairs using Add/Remove buttons. The query preview displays the command method (e.g., `GetItem`) alongside parsed parameters. Values marked with `__expr` are dynamic code references and cannot be edited directly; you can test with static values instead.
-
-### Query Result Formatting
-DynamoDB query results are now formatted and displayed in a readable table instead of raw JSON, with proper formatting of attribute values (strings, numbers, booleans, sets, etc.) displayed in a structured view.
-
 ## Version Control & Deployment
 
 Major integrates with GitHub to version-control your applications. See [Source Control](/getting-started/core-concepts#source-control) for an overview of how repository hosting works.
@@ -60,3 +54,18 @@ You can view a complete history of your application's versions. Each version is 
 
 ### One-Click Deploy
 Deploying to production is instant. Navigate to the version you want to ship and click **Deploy**. The new version becomes available to all users with access immediately.
+
+### Redeploying
+When you redeploy a previously deployed version, you can force a fresh build with the **Redeploy** button even if the version was cached. This rebuilds the app from scratch rather than reusing cached artifacts.
+
+### Public and Private Apps
+Deploy apps publicly (no authentication required) or privately (auth-gated). Public apps are accessible to anyone with the URL. Private apps require users to sign in and have the appropriate permissions.
+
+### Custom URL Slugs
+When deploying for the first time, you can choose a custom subdomain for your app (e.g., `my-app.apps.prod.major.build`). Existing apps can update their URL slug in application settings.
+
+## Environment Variables
+
+Define environment variables per application in the **Environment Variables** panel. These variables are automatically injected into the live preview, build pipeline, and deployments. When you update or delete an environment variable, the preview automatically reloads with the changes — no restart needed. System variables like `MAJOR_API_BASE_URL` cannot be overridden.
+
+After changing environment variables in a deployed app, click **Redeploy** to apply them to the live deployment.

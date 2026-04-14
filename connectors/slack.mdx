@@ -1,0 +1,84 @@
+---
+title: "Slack"
+description: "Send messages and interact with the Slack Web API."
+---
+
+The `SlackResourceClient` allows you to connect to Slack workspaces and interact with the Slack Web API for messaging, channel operations, and more.
+
+## Usage
+
+```typescript
+import { mySlackClient } from "./clients";
+
+const result = await mySlackClient.invoke(
+  "POST",
+  "/api/chat.postMessage",
+  "send-notification",
+  {
+    body: {
+      type: "json",
+      value: {
+        channel: "C01234567",
+        text: "Hello from Major!",
+      },
+    },
+  }
+);
+
+if (result.ok && result.result.body.kind === "json") {
+  console.log("Message sent:", result.result.body.value);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="method" type="string" required>
+  The HTTP method to use: `"GET"` or `"POST"`.
+</ParamField>
+
+<ParamField path="path" type="string" required>
+  The Slack Web API path (e.g., `/api/chat.postMessage`, `/api/channels.list`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="query" type="Record<string, string | string[]>">
+      Query parameters.
+    </ParamField>
+    <ParamField path="body" type="object">
+      The request body.
+      <Expandable title="properties">
+        <ParamField path="type" type='"json"' required />
+        <ParamField path="value" type="unknown" required>
+          The JSON payload.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds (default: 30000).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+The output format is the same as the [Custom API](/connectors/custom-api#outputs) client.
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="status" type="number">
+  The HTTP status code.
+</ResponseField>
+
+<ResponseField name="body" type="ResponseBody">
+  The response body (typically JSON).
+</ResponseField>

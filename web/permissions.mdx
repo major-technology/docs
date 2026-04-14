@@ -1,17 +1,23 @@
 ---
-title: "Access Control"
-description: "Manage permissions for apps, groups, and your organization."
+title: "Permissions"
+description: "Manage who can access your apps and connectors."
 ---
 
-Major provides a robust Role-Based Access Control (RBAC) system to secure your internal tools.
+Major provides granular access control at both the organization and application level.
+
+## Organization Roles
+
+| Role | Permissions |
+| --- | --- |
+| **Member** | View apps and connectors |
+| **Builder** | Create new apps, use resources in development |
+| **Admin** | Full control including user and resource management |
 
 ## Application Permissions
 
-You can manage permissions on a per-application basis. The creator of an app automatically receives **Owner** permissions.
+Each app has its own permission levels:
 
-### Available Roles
-
-- **Owner**: Full control, including deleting the app and managing permissions.
+- **Admin**: Full control including sharing and deletion.
 - **Edit**: Can modify the app in the editor and create new versions.
 - **View**: Can run and use the deployed application.
 
@@ -20,14 +26,18 @@ You can share access to your application with specific:
 - **Individuals**: Invite users by email.
 - **Groups**: Grant access to entire teams at once.
 
+<Note>
+Deployed applications check the deployer's permissions when invoked. If you deploy an app without sufficient resource permissions, you'll be prompted to confirm the deployment.
+</Note>
+
 ## Resource Permissions
 
-You can manage permissions on a per-resource basis.
+Resource permissions control who can use connectors and at what level:
 
-### Available Roles
-
-- **Admin**: Configure and manage the resource settings.
-- **User**: Use the resource in applications.
+| Role | Permissions |
+| --- | --- |
+| **Admin** | Configure and manage the resource settings |
+| **Builder** | Invoke resources in development and production (coding sessions, local dev, MCP, and deployed apps) |
 
 ### Sharing Access
 You can share access to connectors with specific:
@@ -46,3 +56,5 @@ Every organization includes a special **All Users** group containing every membe
 - By default, this group is set to have **View** permissions on every new app, making internal tools open-by-default within the company.
 - You can modify this setting if you prefer a more restrictive default.
 
+### All Builders Group
+The **All Builders** managed group automatically syncs membership based on organization role — anyone with Builder role or higher is included.
