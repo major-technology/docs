@@ -24,6 +24,87 @@ if (result.ok && result.result.body.kind === "json") {
 }
 ```
 
+## Search API
+
+The HubSpot Search API allows you to query CRM objects with filtering, sorting, and pagination. Search has stricter rate limits than other API methods.
+
+### Rate Limits
+
+- **Search API**: 5 requests per second (much stricter than general API rate limit)
+- **General API**: 100 requests per 10 seconds
+
+### Basic search
+
+```typescript
+const result = await myHubSpotClient.invoke(
+  "POST",
+  "/crm/v3/objects/contacts/search",
+  "search-contacts",
+  {
+    body: {
+      type: "json",
+      value: {
+        filterGroups: [
+          {
+            filters: [
+              {
+                propertyName: "hs_lead_status",
+                operator: "EQ",
+                value: "MARKETINGSALESQUALIFIEDLEAD",
+              },
+            ],
+          },
+        ],
+        sorts: ["-hs_analytics_num_page_views"],
+        limit: 10,
+        after: 0,
+      },
+    },
+  }
+);
+```
+
+### Filter operators
+
+| Operator | Description | Example |
+| --- | --- | --- |
+| `EQ` | Equal | `{ propertyName: "status", operator: "EQ", value: "active" }` |
+| `NEQ` | Not equal | `{ propertyName: "status", operator: "NEQ", value: "inactive" }` |
+| `LT` | Less than | `{ propertyName: "amount", operator: "LT", value: "1000" }` |
+| `LTE` | Less than or equal | `{ propertyName: "amount", operator: "LTE", value: "1000" }` |
+| `GT` | Greater than | `{ propertyName: "amount", operator: "GT", value: "1000" }` |
+| `GTE` | Greater than or equal | `{ propertyName: "amount", operator: "GTE", value: "1000" }` |
+| `IN` | In list | `{ propertyName: "status", operator: "IN", values: ["active", "pending"] }` |
+| `NOT_IN` | Not in list | `{ propertyName: "status", operator: "NOT_IN", values: ["inactive"] }` |
+| `CONTAINS_TOKEN` | Contains (for text) | `{ propertyName: "name", operator: "CONTAINS_TOKEN", value: "John" }` |
+| `HAS_PROPERTY` | Has property | `{ propertyName: "custom_field", operator: "HAS_PROPERTY" }` |
+
+### Date formatting
+
+For date properties, use ISO 8601 format (`YYYY-MM-DD`) or Unix timestamps (milliseconds):
+
+```typescript
+{
+  propertyName: "createdate",
+  operator: "GTE",
+  value: "2024-01-01",
+}
+```
+
+### Pagination
+
+Use the `after` parameter for cursor-based pagination:
+
+```typescript
+{
+  filterGroups: [...],
+  limit: 100,
+  after: "MTAxNTExOTQ0NTIxNzA=", // cursor from previous response
+}
+```
+
+The response includes a `paginationCursor` field if more results are available.
+
 ## Inputs
 
 The `invoke` method accepts the following arguments:

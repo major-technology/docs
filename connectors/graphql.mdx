@@ -29,6 +29,31 @@ if (result.ok && result.result.body.kind === "json") {
 }
 ```
 
+## Per-Request Headers
+
+You can pass arbitrary HTTP headers on a per-request basis. Per-request headers override the resource's configured auth header if they use the same header name. This is useful for passing request IDs, tenant headers, or additional auth tokens:
+
+```typescript
+const result = await myGraphQLClient.invoke(
+  "POST",
+  "/graphql",
+  "fetch-users",
+  {
+    body: {
+      type: "json",
+      value: {
+        query: `query { users { id name email } }`,
+      },
+    },
+    headers: {
+      "X-Request-ID": "req-12345",
+      "X-Tenant-ID": "tenant-abc",
+      "Authorization": "Bearer custom-token",
+    },
+  }
+);
+```
+
 ## Inputs
 
 The `invoke` method accepts the following arguments:
@@ -58,7 +83,7 @@ The `invoke` method accepts the following arguments:
       </Expandable>
     </ParamField>
     <ParamField path="headers" type="Record<string, string>">
-      Additional HTTP headers.
+      Additional HTTP headers. These override the resource's configured auth header if the same header name is used.
     </ParamField>
     <ParamField path="timeoutMs" type="number">
       Timeout in milliseconds (default: 30000).

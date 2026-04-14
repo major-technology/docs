@@ -26,9 +26,7 @@
           },
           {
             "group": "Account",
-            "pages": [
-              "getting-started/billing"
-            ]
+            "pages": ["getting-started/billing"]
           }
         ]
       },
@@ -58,19 +56,21 @@
         ]
       },
       {
-        "tab": "Web Dashboard",
+        "tab": "Apps",
         "groups": [
           {
             "group": "Overview",
-            "pages": ["web/index"]
+            "pages": ["web/index", "web/editor", "web/deploying", "web/environments", "web/permissions"]
           },
           {
             "group": "Features",
             "pages": [
-              "web/editor",
-              "web/environments",
-              "web/permissions",
-              "web/connectors"
+              "web/queries",
+              "web/crons",
+              "web/managed-databases",
+              "web/webhooks",
+              "web/theming",
+              "web/env-vars"
             ]
           }
         ]
@@ -95,10 +95,7 @@
           },
           {
             "group": "Storage & Compute",
-            "pages": [
-              "connectors/s3",
-              "connectors/lambda"
-            ]
+            "pages": ["connectors/s3", "connectors/lambda"]
           },
           {
             "group": "CRM & Sales",
@@ -118,10 +115,7 @@
           },
           {
             "group": "Custom",
-            "pages": [
-              "connectors/custom-api",
-              "connectors/graphql"
-            ]
+            "pages": ["connectors/custom-api", "connectors/graphql"]
           }
         ]
       }

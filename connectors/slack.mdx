@@ -30,6 +30,14 @@ if (result.ok && result.result.body.kind === "json") {
 }
 ```
 
+## File Uploads
+
+The Slack connector supports file uploads via Slack's external upload API. The flow involves requesting an upload URL, uploading the file, and completing the upload.
+
+<Warning>
+File upload requires the `files:write` and `files:read` OAuth scopes. If your Slack connector was created before file upload support was added, you'll need to reauthorize it to get the new scopes.
+</Warning>
+
 ## Inputs
 
 The `invoke` method accepts the following arguments:

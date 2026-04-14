@@ -35,6 +35,22 @@ When you edit a resource, you can configure each environment independently:
 If an environment has no specific configuration, it falls back to the default environment's settings.
 </Tip>
 
+## Default Build Environment
+
+Organizations can designate a separate "default build environment" that the AI coder uses by default, distinct from the production environment. This is useful for testing and development workflows where you want the AI to work against staging data.
+
+### Setting a default build environment
+
+1. Go to **Settings > Environments**
+2. In the environment list, select the **Set as default build** option next to your chosen environment
+3. The environment will be marked with a "Default" badge
+
+The AI coder will use this environment for resource invocations and development contexts unless you explicitly switch environments in the editor.
+
+<Note>
+Production deployments always use the default (production) environment, regardless of the default build environment setting.
+</Note>
+
 ## Selecting environments in the web editor
 
 The web editor includes an environment selector in the **bottom right** of the screen. Click it to switch between available environments.
@@ -47,5 +63,3 @@ When you switch environments:
 <Note>
 Production deployments always use the default environment.
 </Note>
-
-

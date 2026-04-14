@@ -57,6 +57,10 @@ When editing a connector, you can configure each environment independently. This
   See how to create and manage environments for your organization.
 </Card>
 
+## Resource context
+
+You can upload context files — database schemas, OpenAPI specs, API documentation, and more — to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat — click it to configure the resource inline without leaving the editor.
+
 ## Identity-based authentication
 
 For S3 and DynamoDB resources, you can use Assume Role Identities instead of access keys. Create an identity in the web UI, review the generated trust policy for your IAM role, and select identity-based authentication when configuring your resource. This approach is more secure and avoids managing long-lived credentials.

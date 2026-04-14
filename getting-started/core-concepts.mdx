@@ -3,11 +3,11 @@ title: "Core Concepts"
 description: "Understand the building blocks of Major: Apps, Connectors, and RBAC."
 ---
 
-Major is built around three core concepts that work together to help you build, deploy, and secure internal tools.
+Major is built around several core concepts that work together to help you build, deploy, and secure internal tools.
 
 # Apps
 
-An **App** is a self-contained project that you build and deploy through Major
+An **App** is a self-contained project that you build and deploy through Major.
 
 ### Lifecycle
 
@@ -22,10 +22,6 @@ Apps follow a simple lifecycle:
 ### Source Control
 
 Every app is backed by a Git repository. Major hosts repositories by default, but you can connect your own GitHub organization at any time. Either way, the code is yours — clone, branch, and manage it with any Git tooling.
-
-### Managed Connectors
-
-Need a database for your app? Major can provision and host one for you — no external setup required. Ask the AI assistant to provision a managed connector and your app gets its own PostgreSQL instance, ready to use with the same generated clients as any other connector. Managed connectors are tied to your app's lifecycle and can be configured per-environment.
 
 # Connectors
 
@@ -62,10 +58,6 @@ flowchart TD
 <Tip>
 Credentials flow through the Major platform. Your app never sees connection strings or API keys.
 </Tip>
-
-### Resource context
-
-You can upload context files — database schemas, OpenAPI specs, API documentation, and more — to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat — click it to configure the resource inline without leaving the editor.
 
 <Card title="Browse all connectors" icon="server" href="/connectors">
   See setup guides and client documentation for all supported connectors.
@@ -105,6 +97,12 @@ Groups let you manage permissions for sets of users efficiently:
 - **Inheritance** — Group members inherit all permissions granted to the group
 - **Default permissions** — Configure groups to have automatic access to new apps
 - **All Users group** — Every organization member, useful for open-by-default apps
+
+## Memory
+
+Persistent memory stores organization-wide knowledge that your AI assistants and agents can access and update across sessions. Use memory to capture business context, resource quirks, and preferences without re-explaining them each time.
+
+Memory is organized into files that can be viewed, created, edited, and deleted — either through the Memory panel in the editor or through API endpoints. The system tracks which source (user, AI coder, or memory agent) made each change.
 
 ## How they work together
 

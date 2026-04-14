@@ -35,7 +35,30 @@ To configure:
 3. Enter the connection details for that environment
 4. Click **Save**
 
+## API Tokens
+
+Programmatically access invocation data from your connectors and resources using API tokens. Create and manage tokens in the **API Tokens** settings page.
+
+### Creating a token
+
+1. Go to **Settings** > **API Tokens**
+2. Click **Create Token**
+3. Give the token a name (for your reference)
+4. Copy the token immediately — you won't be able to see it again
+
+Tokens are prefixed with `MJR_` and scoped to your organization.
+
+### Using API tokens
+
+Include your token in the `Authorization` header with the `Bearer` scheme:
+
+```bash
+curl -H "Authorization: Bearer MJR_your_token_here" \
+  https://api.major.build/api/public/invocations
+```
+
+API tokens grant access to public API endpoints for reading invocation data. Admins can create and revoke tokens; organization members can view the tokens that exist.
+
 <Card title="Learn more about Environments" icon="layer-group" href="/web/environments">
   See how to create and manage environments for your organization.
 </Card>
-
