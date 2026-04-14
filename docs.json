@@ -23,6 +23,12 @@
               "getting-started/quickstart-cli",
               "getting-started/quickstart-web"
             ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "getting-started/billing"
+            ]
           }
         ]
       },
@@ -105,13 +111,16 @@
           {
             "group": "Productivity",
             "pages": [
-              "connectors/google-sheets"
+              "connectors/google-sheets",
+              "connectors/google-analytics",
+              "connectors/slack"
             ]
           },
           {
             "group": "Custom",
             "pages": [
-              "connectors/custom-api"
+              "connectors/custom-api",
+              "connectors/graphql"
             ]
           }
         ]

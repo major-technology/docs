@@ -1,0 +1,79 @@
+---
+title: "Google Analytics"
+description: "Access Google Analytics (GA4) reporting and account data."
+---
+
+The `GoogleAnalyticsResourceClient` provides access to Google Analytics 4 reporting, metadata exploration, and account management.
+
+## Usage
+
+```typescript
+import { myAnalyticsClient } from "./clients";
+
+const result = await myAnalyticsClient.invoke(
+  "POST",
+  "/v1beta/properties/123456:runReport",
+  "weekly-report",
+  {
+    body: {
+      type: "json",
+      value: {
+        dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
+        metrics: [{ name: "activeUsers" }],
+        dimensions: [{ name: "country" }],
+      },
+    },
+  }
+);
+
+if (result.ok && result.result.body.kind === "json") {
+  console.log("Report:", result.result.body.value);
+}
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="method" type="string" required>
+  The HTTP method to use: `"GET"` or `"POST"`.
+</ParamField>
+
+<ParamField path="path" type="string" required>
+  The Google Analytics API path (e.g., `/v1beta/properties/123456:runReport`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="query" type="Record<string, string | string[]>">
+      Query parameters.
+    </ParamField>
+    <ParamField path="body" type="object">
+      The request body for report queries.
+    </ParamField>
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds (default: 30000).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+The output format is the same as the [Custom API](/connectors/custom-api#outputs) client.
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="status" type="number">
+  The HTTP status code.
+</ResponseField>
+
+<ResponseField name="body" type="ResponseBody">
+  The response body (typically JSON).
+</ResponseField>
