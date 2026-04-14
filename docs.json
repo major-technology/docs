@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Major",
   "colors": {
-    "primary": "#2563EB",
-    "light": "#60A5FA",
-    "dark": "#1E3A8A"
+    "primary": "#02906f",
+    "light": "#3fa78d",
+    "dark": "#006551"
   },
   "favicon": "/favicon.ico",
   "navigation": {
