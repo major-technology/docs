@@ -3,7 +3,7 @@ title: "Billing & Plans"
 description: "Manage your organization's plan, credits, and billing."
 ---
 
-Major uses a credit-based billing system. Credits (denominated in USD) are consumed by AI coding sessions and app deployments.
+Major uses a credit-based billing system. Credits (denominated in USD) are consumed by AI coding sessions, AI proxy usage, and app deployments.
 
 ## Free Tier
 
@@ -35,6 +35,43 @@ Plans are billed monthly or annually.
 Annual plans include a **20% credit bonus** on top of the monthly balance. Unused credits roll over for 30 days on monthly plans and 365 days on annual plans.
 
 Team plans also enable **domain auto-enrollment** — new users who sign up with your organization's email domain are automatically added.
+
+## Wallet & Credits
+
+Your organization has a wallet that holds available credits. Credits are spent during:
+- **Coding Sessions** — AI-powered app building and modifications
+- **AI Proxy** — API requests through Major's managed LLM gateway
+- **App Compute** — running deployed applications
+
+### Overage Credits
+
+When your balance reaches zero, you can purchase additional credits (overage). Overage credits are applied to your wallet immediately.
+
+If your account has accrued debt from overage usage, purchasing new credits automatically forgives the negative balance and credits your wallet with the full purchase amount.
+
+### Auto-Refill
+
+Enable auto-refill in settings to automatically purchase credits when your balance drops below a threshold. Set your target balance and maximum monthly spending to stay within budget.
+
+### Credit Precision
+
+Credit amounts support up to 6 decimal places to accommodate sub-cent AI inference costs. Your wallet balance and transaction history reflect this precision.
+
+## Usage Dashboard
+
+View your monthly spending broken down by category:
+
+- **Coding Sessions** — AI coder agent usage
+- **AI Proxy** — LLM API calls through the managed proxy
+- **App Compute** — deployed application infrastructure
+
+Go to **Organization Settings > Usage** to see a daily breakdown with charts and summary cards. You can navigate between months to track spending trends.
+
+## AI Proxy Settings
+
+Enable the AI proxy feature for your organization in **Settings**. The AI proxy allows your apps to call Anthropic and OpenAI APIs through Major's managed gateway with automatic billing.
+
+You can set a monthly spending limit to control costs. Apps authenticate via JWT tokens, and usage is tracked automatically for billing.
 
 ## Managing Your Plan
 

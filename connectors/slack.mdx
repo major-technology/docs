@@ -30,6 +30,12 @@ if (result.ok && result.result.body.kind === "json") {
 }
 ```
 
+## Channel Access Verification
+
+Before performing any channel operations, the AI agent must verify that the bot has access to the target channel. The agent calls `slack_list_channels` first to confirm bot access.
+
+If the bot isn't in the channel, the agent will instruct you to invite **@Major Slack Integration** and re-verify access before proceeding with messages, file posts, or history reads.
+
 ## File Uploads
 
 The Slack connector supports file uploads via Slack's external upload API. The flow involves requesting an upload URL, uploading the file, and completing the upload.

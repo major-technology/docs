@@ -53,6 +53,8 @@ When editing a connector, you can configure each environment independently. This
 | default | prod.example.com | myapp_prod |
 | staging | staging.example.com | myapp_staging |
 
+You can also enable **shared configuration** for a resource, which uses a single configuration from the default environment across all environments instead of per-environment configs. When enabled, non-default environment tabs are locked with an explanatory tooltip.
+
 <Card title="Learn more about Environments" icon="layer-group" href="/web/environments">
   See how to create and manage environments for your organization.
 </Card>
@@ -116,7 +118,12 @@ For S3 and DynamoDB resources, you can use Assume Role Identities instead of acc
   <Card title="GraphQL" icon="code" href="/connectors/graphql">
     Query any GraphQL endpoint
   </Card>
+  <Card title="Gong" icon="phone" href="/connectors/gong">
+    Revenue intelligence data
+  </Card>
+  <Card title="Microsoft Dynamics 365" icon="cloud" href="/connectors/dynamics-365">
+    Dataverse CRM integration
+  </Card>
 </CardGroup>
 
 Don't see the connector you need? Click **Request it** in the Add Connector dialog to submit a request.
-
