@@ -19,4 +19,60 @@ After changing environment variables in a deployed app, click **Redeploy** to ap
 
 ## CLI
 
-You can also manage environment variables from the CLI. Environment names are case-insensitive, so `--env staging` and `--env Staging` resolve to the same environment. See the [CLI Resource docs](/cli/resource) for details.
+Environment names are case-insensitive, so `--env staging` and `--env Staging` resolve to the same environment.
+
+### API Endpoints
+
+You can manage environment variables programmatically via HTTP. All endpoints require authentication with a valid CLI token.
+
+#### List environment variables
+
+```bash
+GET /cli/application/:applicationId/env-variables
+```
+
+Returns all environment variables for an application with their per-environment values.
+
+**Response:**
+```json
+{
+  "variables": [
+    {
+      "key": "DATABASE_URL",
+      "values": {
+        "development": "postgres://...",
+        "staging": "postgres://...",
+        "production": "postgres://..."
+      }
+    }
+  ]
+}
+```
+
+#### Set an environment variable
+
+```bash
+POST /cli/application/:applicationId/env-variables/set
+```
+
+Sets a single environment variable for a single environment.
+
+**Request body:**
+```json
+{
+  "key": "DATABASE_URL",
+  "environment": "staging",
+  "value": "postgres://..."
+}
+```
+
+#### Delete an environment variable
+
+```bash
+DELETE /cli/application/:applicationId/env-variables/by-key/:key
+```
+
+Deletes an environment variable. To delete for a specific environment only, include `environment` as a query parameter. Omit it to delete the variable across all environments.
+
+**Query parameters:**
+- `environment` (optional) – delete only from this environment; if omitted, deletes from all environments

@@ -29,6 +29,20 @@ When a user visits a private app while logged out, Major redirects them to sign 
 
 When deploying for the first time, you can choose a custom subdomain for your app (e.g., `my-app.apps.prod.major.build`). Existing apps can update their URL slug in application settings.
 
+## Custom Domains
+
+Organizations can register a custom domain and map multiple applications to different subdomains under it.
+
+### Organization Domains
+
+Register a custom domain at the organization level (e.g., `coolapp.com`). Once registered, all applications in your organization can use subdomains under this domain.
+
+### Application Subdomains
+
+Each application can be assigned a subdomain that maps to the organization's custom domain. For example, if your organization domain is `coolapp.com`, you can assign the subdomain `app1` to make your application accessible at `app1.coolapp.com`.
+
+Multiple applications can run under the same organization domain with different subdomains, enabling you to manage multiple apps under a single branded domain.
+
 ## Per-User OAuth in Deployed Apps
 
 If your app uses resources configured for **per-user** authentication, Major automatically enforces an OAuth gate. When a user accesses the app without a connected OAuth account, they're redirected to the `/connect` page to authorize access.
