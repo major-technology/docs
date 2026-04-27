@@ -15,7 +15,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["index", "getting-started/core-concepts"]
+            "pages": ["index", "getting-started/core-concepts", "getting-started/auth"]
           },
           {
             "group": "Quickstart",
