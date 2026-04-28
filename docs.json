@@ -60,7 +60,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["web/index", "web/editor", "web/deploying", "web/environments", "web/permissions"]
+            "pages": ["web/index", "web/editor", "web/deploying", "web/environments", "web/permissions", "web/authn"]
           },
           {
             "group": "Features",
