@@ -71,6 +71,7 @@
               "web/webhooks",
               "web/theming",
               "web/env-vars",
+              "web/domains",
               "web/ai-proxy",
               "web/errors",
               "web/integrations"

@@ -1,0 +1,101 @@
+---
+title: "Domains"
+description: "Connect your application to a branded domain name."
+---
+
+When you publish an app on Major, it always gets an internet-accessible URL. By default that's a `usemajor.dev` subdomain, but you can also serve apps from your own branded domain — for example, `dashboard.acme.com` instead of `acme-dashboard.usemajor.dev`.
+
+Custom domains are configured in two steps:
+
+1. An **organization admin** verifies a domain you own (e.g. `acme.com`) by adding two DNS records.
+2. Any **builder** can then pick a subdomain (e.g. `dashboard.acme.com`) when publishing an app on the verified domain.
+
+Custom domains are currently **free of charge**.
+
+## Set up an organization domain
+
+Adding a domain is a one-time, organization-level action that any admin can perform from **Settings > Domains**.
+
+1. Go to **Settings > Domains** and click **Add Domain**.
+2. Enter the root domain you own (e.g. `acme.com`).
+3. Major shows you two CNAME records to add at your DNS provider:
+
+| Record | Type | Target |
+| --- | --- | --- |
+| `*.acme.com` | CNAME | `cname.major.build` |
+| `_acme-challenge.acme.com` | CNAME | `_acme-challenge.acme.major.build` |
+
+4. Add both records in your DNS provider's dashboard.
+5. Major automatically polls DNS, validates ownership, and issues an SSL certificate.
+
+<Note>
+The wildcard CNAME (`*.acme.com`) is what makes the rest of the flow zero-touch. Once it's in place, every new subdomain you assign to an app routes to Major's infrastructure without any further DNS changes.
+</Note>
+
+### Verification status
+
+After you add a domain, it progresses through these states on the Domains page:
+
+- **Pending DNS** — Major is waiting to see your CNAME records resolve.
+- **DNS verified** — Records found; certificate provisioning has started.
+- **Provisioning certificate** — Major is requesting an SSL certificate from Let's Encrypt.
+- **Active** — The domain is live and ready to be assigned to apps.
+- **Certificate failed** — Issuance failed, usually because the `_acme-challenge` CNAME is missing or misconfigured.
+
+DNS propagation can take a few minutes, and certificate issuance typically completes within ten. Major keeps polling for up to 48 hours, so it's safe to add the DNS records later — the domain just stays in **Pending DNS** until they appear.
+
+Note: If DNS verification has not succeeded in 48 hours, you can make another verification attempt by clicking **Retry DNS verification**.
+
+<Tip>
+SSL certificates are issued by Let's Encrypt using a DNS-01 challenge against the `_acme-challenge` CNAME. Renewals happen automatically before expiry — you never need to touch the records again.
+</Tip>
+
+## Assign a domain to an app
+
+Once an organization domain is **Active**, any builder with edit access on an app can pick a subdomain on it:
+
+1. Open the app in the editor and click **Publish**.
+2. In the URL picker, choose the verified organization domain.
+3. Enter the subdomain you want (e.g. `dashboard` for `dashboard.acme.com`).
+4. Click **Publish**.
+
+You can assign a custom domain on the very first deploy of an app — there's no need to publish to a `usemajor.dev` URL first. The subdomain is reserved as soon as you confirm it; routing goes live as soon as the deployment completes.
+
+You can also assign a custom subdomain to an already-deployed app — it becomes the app's primary URL immediately.
+
+### Multiple subdomains per app
+
+A single app can be served from multiple subdomains at once (for example, both `dashboard.acme.com` and `app.acme.com`). Add additional subdomains from the app's URL settings.
+
+## Authentication on custom domains
+
+Custom domains work for both **public** and **private** apps.
+
+- **Public apps** load directly with no sign-in.
+- **Private apps** still require an authenticated Major session. We perform a one-time auth handshake the first time a user visits a custom domain:
+  1. The user is redirected to `app.major.build` to confirm they're signed in and have permission to view the app.
+  2. They're redirected back to your custom domain with a short-lived session cookie scoped to it.
+  3. Subsequent visits skip the redirect — the cookie is valid for 7 days.
+
+Permissions are re-checked on every request, so removing a user's access takes effect immediately even if their cookie hasn't expired.
+
+## Limits
+
+| Resource | Limit |
+| --- | --- |
+| Organization domains | 10 per organization |
+| Subdomains | 20 per application |
+
+## Removing a domain
+
+- **Removing a subdomain from an app** — Open the app's URL settings and remove the entry. The last URL on an app cannot be removed; if a custom domain is the only URL, you must add another (a `usemajor.dev` slug or a different subdomain) before removing it.
+- **Removing an organization domain** — Go to **Settings > Domains** and delete the domain. You must first remove every app subdomain that uses it.
+
+## Not supported
+
+A few configurations are intentionally not available today:
+
+- **Apex domains.** You can use `dashboard.acme.com` but not `acme.com` itself as an app URL.
+- **Multi-level subdomains.** `api.acme.com` works; `api.v2.acme.com` does not — the wildcard certificate covers exactly one level.
+- **Bring-your-own certificates.** All certificates are issued by Major via Let's Encrypt.
+- **Frontend-only (Vite) apps.** Custom domains are available for full-stack (Next.js) apps only.
