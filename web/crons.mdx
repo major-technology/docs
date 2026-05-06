@@ -20,6 +20,16 @@ The Crons panel in the editor shows all defined jobs with their schedules and ex
 - **Delete jobs** — remove cron jobs from your app
 - **View versions** — see cron definitions from different app versions and deploy specific versions
 
+## Home Page View
+
+Your application cards on the home page display a "scheduled jobs" indicator when you have deployed cron jobs. The indicator shows:
+
+- A calendar icon
+- The count of scheduled jobs
+- The names and detailed schedules of each job (e.g., "Daily at 9:03 AM", "Weekly on Monday at 2:15 PM", "Monthly on the 15th at 10:45 AM")
+
+Click the indicator to jump directly to your app's cron management tab. Use the "Filter Scheduled Jobs" button to display only applications that have scheduled jobs.
+
 ## Execution
 
 When a cron executes, Major sends an HTTP POST request to the specified URL with an `x-major-cron-jwt` header containing a signed token. Use this to verify the request came from Major.

@@ -9,6 +9,15 @@ The Major Editor provides a collaborative environment to modify your application
 
 The editor includes an AI assistant with full context of your application code. You describe what you want to build or change in the chat panel, and the AI reads your codebase, asks clarifying questions if anything is ambiguous, and works through the implementation with you.
 
+## Session State
+
+Your coding session has a state that indicates whether the AI agent is ready to work. The frontend observes this state to determine AI readiness:
+
+- **READY** — The AI agent has finished startup and is actively running. You can send messages and the AI will respond.
+- **CLOSED** — The session has ended. The AI is no longer available for this session.
+
+When you open the editor, the session starts and the AI agent initializes. Once initialization completes, the session transitions to READY and the agent stands by to process your requests.
+
 ## Images and Attachments
 
 You can attach images and files to your AI chat messages. Drag and drop or paste screenshots, mockups, or reference images directly into the chat. Supported file types include:
@@ -24,7 +33,7 @@ The AI uses these attachments as context when building or modifying your app —
 
 ## @ Mentions
 
-Type `@` in the chat to explicitly reference connectors, attachments, and workspace files in your message. This tells the AI exactly which resource or file you're talking about.
+Type `@` in the chat to see a popover of available connectors, attachments, and workspace files. Click an item to reference it in your message, or type to filter the list. This tells the AI exactly which resource or file you're talking about.
 
 ## Tool Cards
 
@@ -90,4 +99,3 @@ The AI assistant has built-in TypeScript language server support, giving it prec
 The AI assistant can query production logs from your deployed applications. Ask the AI to investigate runtime errors, search specific log patterns, or examine application behavior in production. The AI searches logs collected from your app's container stdout and stderr, filtered by organization and app ID.
 
 Use this to debug issues in deployed apps without leaving the editor. The AI can correlate log messages with your code to identify root causes and suggest fixes.
-
