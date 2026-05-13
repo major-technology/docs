@@ -4,3 +4,43 @@ description: "Build, configure, and deploy your internal tools."
 ---
 
 The Major web dashboard is where you build, configure, and ship your internal tools. Use the AI-powered [editor](/web/editor) to develop your app, [deploy](/web/deploying) to production, configure [environments](/web/environments) for staging and production, and manage [permissions](/web/permissions) to control who can access what.
+
+## Home Page
+
+The home page displays all your apps as cards. Each card shows the app name, status, and any deployed [scheduled jobs](/web/crons). Apps with scheduled cron jobs display a calendar icon indicator with the count and names of active crons in human-readable schedule format, including specific times (e.g., "Daily at 9:03 AM", "Weekly on Monday at 2:30 PM"). Click the indicator to jump directly to the app's cron management tab.
+
+Use the "Filter Scheduled Jobs" button to view only apps with deployed cron jobs.
+
+### Pinning Apps
+
+Pin your most-used apps to keep them at the top of the app grid. Hover over an app card to reveal the pin icon, then click it to pin or unpin the app. Pinned apps appear in a dedicated "Pinned" section above all other apps. Your pins persist across "My Apps" and "All Apps" tabs, and across search results, so your most important apps are always easy to find.
+
+Pins are scoped to your user and organization.
+
+## API
+
+### Get Pinned Applications
+
+Retrieve the list of apps you've pinned in your current organization.
+
+```bash
+GET /applications/pins
+```
+
+Returns an array of pinned app IDs in the order you've pinned them.
+
+### Pin an Application
+
+Pin an app to your dashboard.
+
+```bash
+PUT /applications/:id/pin
+```
+
+### Unpin an Application
+
+Unpin an app from your dashboard.
+
+```bash
+DELETE /applications/:id/pin
+```

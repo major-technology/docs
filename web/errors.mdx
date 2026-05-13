@@ -3,7 +3,7 @@ title: "Errors"
 description: "Monitor and debug runtime errors from your deployed apps."
 ---
 
-The **Errors** panel displays runtime errors from your deployed applications. Use it to identify issues in production, understand error patterns, and resolve problems quickly.
+The **Errors** panel displays runtime errors from your deployed applications. Errors from deployed and previewed apps appear as real-time notifications in the chat panel, so you catch issues as they occur and fix them immediately.
 
 ## Error Details
 
@@ -20,16 +20,24 @@ Errors are automatically collected from your app's container runtime and organiz
 
 Errors from your application are automatically collected and aggregated — no additional configuration needed. Major captures runtime errors from your app code and surfaces them in the Errors panel.
 
-## Ask AI to Fix
+## Real-time Error Notifications
 
-Click the **Ask AI to fix** button on any error to send the full error details to the AI chat in the editor. The AI uses the message, stack trace, and context to:
+When an error occurs in your deployed or previewed app, it appears as a notification in the chat panel. Error cards in the chat show the error message, stack trace, and environment context, with two action buttons:
 
-- Identify the root cause
-- Suggest code changes to resolve the issue
-- Walk you through the fix step-by-step
+- **Fix with AI** — sends the error directly to the AI assistant, which analyzes the full error details and proposes code changes to resolve the issue
+- **Ignore** — marks the error as ignored and hides it from the errors panel
 
-This shortcut skips copying and pasting error details manually — the AI has everything it needs to start debugging immediately.
+This lets you see errors as they happen and request fixes without leaving the chat.
+
+## Ignoring Errors
+
+When you click **Ignore** on an error card in the chat, the error is marked as ignored and hidden from the errors panel. You can toggle between active and ignored errors using the Active/Ignored filter in the errors panel to review previously ignored errors if needed.
 
 ## Filtering and Search
+
+The errors panel includes filters to help you focus on the errors that matter:
+
+- **Environment** — filter by coding-session (live preview), deployment (production), or local-dev errors
+- **Active/Ignored** — toggle between active errors and errors you've marked as ignored
 
 The panel updates automatically as new errors occur in your deployed app. You can review error history to spot patterns and address systemic issues before they affect more users.

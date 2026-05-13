@@ -24,7 +24,18 @@ The AI uses these attachments as context when building or modifying your app —
 
 ## @ Mentions
 
-Type `@` in the chat to explicitly reference connectors, attachments, and workspace files in your message. This tells the AI exactly which resource or file you're talking about.
+Type `@` in the chat to explicitly reference connectors, attachments, and workspace files in your message. This tells the AI exactly which resource or file you're talking about. Workspace files appear immediately in the mention popover when you start a new session, so you can reference them right away without waiting for the AI to make initial changes.
+
+## Session State and Readiness
+
+The editor tracks the session state to show you whether the AI agent is ready and actively running. When you start a new chat session, the AI agent initializes and marks the session as READY once it's fully operational and has loaded your application context.
+
+The session state helps you understand:
+
+- Whether the AI is ready to accept your next request
+- When the agent has completed its startup sequence and loaded your codebase
+
+You'll see visual indicators in the chat interface showing when the agent is initializing versus ready to respond.
 
 ## Tool Cards
 
@@ -34,6 +45,15 @@ When the AI executes resource operations in the chat, tool cards display the ope
 - **Tool description**: A brief description of the tool appears below the tool name for clarity.
 - **Arguments with descriptions**: Input parameters are labeled with human-readable descriptions and resolved resource names where applicable.
 - **Formatted output**: Results are displayed with proper JSON formatting for clarity.
+
+## Error Notifications
+
+When your deployed or previewed app encounters a runtime error, an error card appears in the chat panel with the error message, stack trace, and context. Error cards include two action buttons:
+
+- **Fix with AI** — sends the error details to the AI assistant, which analyzes the issue and proposes code changes
+- **Ignore** — marks the error as ignored and hides it from the errors panel
+
+This gives you real-time visibility into app errors without switching to the Errors panel, and lets you request AI fixes directly from the error notification.
 
 ## Approvals & User Input
 
@@ -90,4 +110,3 @@ The AI assistant has built-in TypeScript language server support, giving it prec
 The AI assistant can query production logs from your deployed applications. Ask the AI to investigate runtime errors, search specific log patterns, or examine application behavior in production. The AI searches logs collected from your app's container stdout and stderr, filtered by organization and app ID.
 
 Use this to debug issues in deployed apps without leaving the editor. The AI can correlate log messages with your code to identify root causes and suggest fixes.
-

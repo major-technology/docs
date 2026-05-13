@@ -3,7 +3,17 @@ title: "Salesforce"
 description: "Query and manage Salesforce CRM data with SOQL."
 ---
 
-The `SalesforceResourceClient` provides access to Salesforce CRM data, allowing you to run SOQL queries and perform CRUD operations on sObjects.
+The `SalesforceResourceClient` provides access to Salesforce CRM data, allowing you to run SOQL queries and perform CRUD operations on sObjects. It uses OAuth for authentication, so you authorize once and Major handles token management.
+
+## Setup
+
+1. Go to **Organization Settings > Connectors**
+2. Click **Add Connector** and select **Salesforce**
+3. Click **Connect to Salesforce** to authorize access to your Salesforce account
+4. You'll be redirected back to the connectors page with the resource details sheet already open
+5. Finish configuring the resource and click **Save**
+
+Attach the resource to your app via `major resource manage` (CLI) or the web editor. Major generates a client in `src/clients/`.
 
 ## Usage
 

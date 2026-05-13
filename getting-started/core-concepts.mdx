@@ -104,6 +104,10 @@ Persistent memory stores organization-wide knowledge that your AI assistants and
 
 Memory is organized into files that can be viewed, created, edited, and deleted — either through the Memory panel in the editor or through API endpoints. The system tracks which source (user, AI coder, or memory agent) made each change.
 
+### Memory Agent Resilience
+
+The memory agent retries transient failures (network timeouts, HTTP 408, 429, 502, 503, 504) with exponential backoff and enforces a 15-second timeout per request. This improves reliability during temporary service disruptions.
+
 ## How they work together
 
 1. **Admins** configure connectors and grant permissions to users and groups

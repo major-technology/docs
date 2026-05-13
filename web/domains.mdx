@@ -3,33 +3,35 @@ title: "Domains"
 description: "Connect your application to a branded domain name."
 ---
 
-When you publish an app on Major, it always gets an internet-accessible URL. By default that's a `usemajor.dev` subdomain, but you can also serve apps from your own branded domain — for example, `dashboard.acme.com` instead of `acme-dashboard.usemajor.dev`.
+When you publish an app on Major, it always gets an internet-accessible URL. By default that's a `usemajor.dev` subdomain, but you can also serve apps from your own branded domain — for example, `app1.coolapp.com` instead of `app1.usemajor.dev`.
 
-Custom domains are configured in two steps:
+Major uses a two-level domain structure:
 
-1. An **organization admin** verifies a domain you own (e.g. `acme.com`) by adding two DNS records.
-2. Any **builder** can then pick a subdomain (e.g. `dashboard.acme.com`) when publishing an app on the verified domain.
+1. **Organization domains** — A root domain (e.g., `coolapp.com`) registered and verified once at the organization level by an admin.
+2. **Application subdomains** — Each app claims a subdomain (e.g., `app1`) under the organization domain, resulting in `app1.coolapp.com`.
+
+This lets you register a single domain for your organization and map multiple apps to different subdomains under it.
 
 Custom domains are currently **free of charge**.
 
 ## Set up an organization domain
 
-Adding a domain is a one-time, organization-level action that any admin can perform from **Settings > Domains**.
+Adding a domain is a one-time, organization-level action that any admin can perform from **Settings > Domains**. Once verified, all builders in your organization can assign subdomains of this domain to their apps.
 
 1. Go to **Settings > Domains** and click **Add Domain**.
-2. Enter the root domain you own (e.g. `acme.com`).
+2. Enter the root domain you own (e.g., `coolapp.com`).
 3. Major shows you two CNAME records to add at your DNS provider:
 
 | Record | Type | Target |
 | --- | --- | --- |
-| `*.acme.com` | CNAME | `cname.major.build` |
-| `_acme-challenge.acme.com` | CNAME | `_acme-challenge.acme.major.build` |
+| `*.coolapp.com` | CNAME | `cname.major.build` |
+| `_acme-challenge.coolapp.com` | CNAME | `_acme-challenge.acme.major.build` |
 
 4. Add both records in your DNS provider's dashboard.
 5. Major automatically polls DNS, validates ownership, and issues an SSL certificate.
 
 <Note>
-The wildcard CNAME (`*.acme.com`) is what makes the rest of the flow zero-touch. Once it's in place, every new subdomain you assign to an app routes to Major's infrastructure without any further DNS changes.
+The wildcard CNAME (`*.coolapp.com`) is what makes the rest of the flow zero-touch. Once it's in place, every new subdomain you assign to an app routes to Major's infrastructure without any further DNS changes.
 </Note>
 
 ### Verification status
@@ -50,13 +52,13 @@ Note: If DNS verification has not succeeded in 48 hours, you can make another ve
 SSL certificates are issued by Let's Encrypt using a DNS-01 challenge against the `_acme-challenge` CNAME. Renewals happen automatically before expiry — you never need to touch the records again.
 </Tip>
 
-## Assign a domain to an app
+## Assign an application subdomain
 
-Once an organization domain is **Active**, any builder with edit access on an app can pick a subdomain on it:
+Once an organization domain is **Active**, any builder with edit access on an app can claim a subdomain under it:
 
 1. Open the app in the editor and click **Publish**.
 2. In the URL picker, choose the verified organization domain.
-3. Enter the subdomain you want (e.g. `dashboard` for `dashboard.acme.com`).
+3. Enter the subdomain you want (e.g., `app1` for `app1.coolapp.com`).
 4. Click **Publish**.
 
 You can assign a custom domain on the very first deploy of an app — there's no need to publish to a `usemajor.dev` URL first. The subdomain is reserved as soon as you confirm it; routing goes live as soon as the deployment completes.
@@ -65,7 +67,7 @@ You can also assign a custom subdomain to an already-deployed app — it becomes
 
 ### Multiple subdomains per app
 
-A single app can be served from multiple subdomains at once (for example, both `dashboard.acme.com` and `app.acme.com`). Add additional subdomains from the app's URL settings.
+A single app can be served from multiple subdomains at once (for example, both `app1.coolapp.com` and `dashboard.coolapp.com`). Add additional subdomains from the app's URL settings.
 
 ## Authentication on custom domains
 
@@ -84,7 +86,7 @@ Permissions are re-checked on every request, so removing a user's access takes e
 | Resource | Limit |
 | --- | --- |
 | Organization domains | 10 per organization |
-| Subdomains | 20 per application |
+| Application subdomains | 20 per application |
 
 ## Removing a domain
 
@@ -95,7 +97,7 @@ Permissions are re-checked on every request, so removing a user's access takes e
 
 A few configurations are intentionally not available today:
 
-- **Apex domains.** You can use `dashboard.acme.com` but not `acme.com` itself as an app URL.
-- **Multi-level subdomains.** `api.acme.com` works; `api.v2.acme.com` does not — the wildcard certificate covers exactly one level.
+- **Apex domains.** You can use `app1.coolapp.com` but not `coolapp.com` itself as an app URL.
+- **Multi-level subdomains.** `api.coolapp.com` works; `api.v2.coolapp.com` does not — the wildcard certificate covers exactly one level.
 - **Bring-your-own certificates.** All certificates are issued by Major via Let's Encrypt.
 - **Frontend-only (Vite) apps.** Custom domains are available for full-stack (Next.js) apps only.
