@@ -3,7 +3,17 @@ title: "HubSpot"
 description: "Interact with the HubSpot CRM API."
 ---
 
-The `HubSpotResourceClient` is a specialized client for interacting with the HubSpot API, providing a convenient way to access CRM objects and other HubSpot features.
+The `HubSpotResourceClient` is a specialized client for interacting with the HubSpot API, providing a convenient way to access CRM objects and other HubSpot features. It uses OAuth for authentication, so you authorize once and Major handles token management.
+
+## Setup
+
+1. Go to **Organization Settings > Connectors**
+2. Click **Add Connector** and select **HubSpot**
+3. Click **Connect to HubSpot** to authorize access to your HubSpot account
+4. You'll be redirected back to the connectors page with the resource details sheet already open
+5. Finish configuring the resource and click **Save**
+
+Attach the resource to your app via `major resource manage` (CLI) or the web editor. Major generates a client in `src/clients/`.
 
 ## Usage
 

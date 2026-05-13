@@ -9,8 +9,12 @@ The web dashboard lets you configure and manage connectors for your organization
 
 1. Click **Add Connector** in the Connectors page
 2. Select the connector type from the list
-3. Complete the configuration and authentication (some connectors use OAuth)
-4. Click **Save**
+3. Complete the configuration and authentication
+   - For OAuth-based connectors (Google Sheets, HubSpot, Salesforce, etc.), click **Connect** to authorize access
+   - You'll be redirected to the provider's authorization screen
+   - After authorizing, you're automatically redirected back to the connectors page with the resource details sheet already open
+4. Finish configuring the resource on the default environment tab
+5. Click **Save**
 
 If you don't see the connector you need, click **Request it** to submit a feature request.
 
@@ -34,6 +38,8 @@ To configure:
 2. Select the desired environment
 3. Enter the connection details for that environment
 4. Click **Save**
+
+Environment lists are sorted by creation date (oldest first), ensuring the default Production environment always appears first.
 
 ### Shared Configuration
 

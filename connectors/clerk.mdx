@@ -1,0 +1,165 @@
+---
+title: "Clerk"
+description: "Manage users, organizations, and authentication data via the Clerk Backend API."
+---
+
+The `ClerkResourceClient` allows you to query and modify user and organization data in your Clerk account using the Clerk Backend API.
+
+## Setup
+
+To set up a Clerk connector, you need your Clerk Secret Key. Find it in your Clerk Dashboard under **API Keys**.
+
+## Usage
+
+```typescript
+import { myClerkClient } from "./clients";
+
+// List all users
+const users = await myClerkClient.invoke(
+  "GET",
+  "/users",
+  "list-users",
+  {}
+);
+
+if (users.ok && users.result.body.kind === "json") {
+  console.log("Users:", users.result.body.value);
+}
+```
+
+## Available Operations
+
+The Clerk connector exposes the following operations via the Backend API:
+
+### List Users
+
+Retrieve a paginated list of users in your Clerk instance.
+
+```typescript
+const result = await myClerkClient.invoke(
+  "GET",
+  "/users",
+  "list-users",
+  {
+    query: {
+      limit: "10",
+      offset: "0",
+    },
+  }
+);
+```
+
+### Get User
+
+Retrieve a specific user by ID.
+
+```typescript
+const result = await myClerkClient.invoke(
+  "GET",
+  "/users/{user_id}",
+  "get-user",
+  {}
+);
+```
+
+### List Organizations
+
+Retrieve a paginated list of organizations.
+
+```typescript
+const result = await myClerkClient.invoke(
+  "GET",
+  "/organizations",
+  "list-organizations",
+  {
+    query: {
+      limit: "10",
+      offset: "0",
+    },
+  }
+);
+```
+
+### Get Organization
+
+Retrieve a specific organization by ID.
+
+```typescript
+const result = await myClerkClient.invoke(
+  "GET",
+  "/organizations/{organization_id}",
+  "get-organization",
+  {}
+);
+```
+
+### Custom API Requests
+
+Make arbitrary requests to any Clerk Backend API endpoint not explicitly listed above.
+
+```typescript
+const result = await myClerkClient.invoke(
+  "POST",
+  "/users/{user_id}/ban",
+  "ban-user",
+  {
+    body: {
+      type: "json",
+      value: {},
+    },
+  }
+);
+```
+
+## Inputs
+
+The `invoke` method accepts the following arguments:
+
+<ParamField path="method" type="string" required>
+  The HTTP method to use: `"GET"`, `"POST"`, `"PUT"`, `"PATCH"`, or `"DELETE"`.
+</ParamField>
+
+<ParamField path="path" type="string" required>
+  The Clerk Backend API path (e.g., `/users`, `/organizations/{organization_id}`).
+</ParamField>
+
+<ParamField path="invocationKey" type="string" required>
+  A unique identifier for this operation.
+</ParamField>
+
+<ParamField path="options" type="object">
+  Optional configuration object.
+  <Expandable title="properties">
+    <ParamField path="query" type="Record<string, string | string[]>">
+      Query parameters.
+    </ParamField>
+    <ParamField path="body" type="object">
+      The request body.
+      <Expandable title="properties">
+        <ParamField path="type" type='"json"' required />
+        <ParamField path="value" type="unknown" required>
+          The JSON payload.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="timeoutMs" type="number">
+      Timeout in milliseconds (default: 30000).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Outputs
+
+The output format is the same as the [Custom API](/connectors/custom-api#outputs) client.
+
+<ResponseField name="kind" type='"api"'>
+  Discriminator for the response type.
+</ResponseField>
+
+<ResponseField name="status" type="number">
+  The HTTP status code.
+</ResponseField>
+
+<ResponseField name="body" type="ResponseBody">
+  The response body (typically JSON).
+</ResponseField>

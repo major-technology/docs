@@ -105,4 +105,6 @@ AI assistants in app-coder sessions use the `deploy_app` MCP tool to deploy your
 - Enforces permission checks for deployment access.
 - Supports optional URL slug overrides to customize your app's deployment URL.
 
+The orchestrator MCP requires a valid message context (with `message_id`) to resolve the acting user. Message context is retained for 1 hour.
+
 To use this tool in an AI-coder session, the AI assistant will call `deploy_app` with your application context. Deployments respect your organization's RBAC settings.

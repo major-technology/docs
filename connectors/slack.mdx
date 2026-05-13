@@ -34,6 +34,10 @@ if (result.ok && result.result.body.kind === "json") {
 
 The Slack integration accepts direct messages from users in addition to app mentions and threaded replies. Top-level DMs start new conversations, and threaded DM replies continue existing ones. This expands how users can interact with your bot via Slack—they can message it directly without mentioning it in a channel.
 
+## Slack Orchestrator Threads
+
+When a Slack orchestrator thread is created, the user who initiated the thread is automatically granted Admin role on the associated application. This allows users to manage the app without requiring pre-existing access or manual permission assignment.
+
 ## Channel Access Verification
 
 Before performing any channel operations, the AI agent must verify that the bot has access to the target channel. The agent calls `slack_list_channels` first to confirm bot access.
