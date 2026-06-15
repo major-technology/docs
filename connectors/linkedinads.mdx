@@ -1,0 +1,25 @@
+---
+title: "LinkedIn Marketing"
+description: "Access LinkedIn Ads data including campaigns, creatives, and analytics."
+---
+
+Connect to the LinkedIn Marketing API to query ad accounts, campaigns, creatives, and analytics.
+
+## Setup
+
+Connect via LinkedIn OAuth when creating the connector. Major requests the scopes needed to access your LinkedIn Ads account.
+
+## MCP Tools
+
+The connector exposes tools for working with LinkedIn's advertising platform:
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__linkedinads_list_accounts` | List ad accounts. |
+| `mcp__resources__linkedinads_list_campaigns` | List campaigns for an account. |
+| `mcp__resources__linkedinads_get_analytics` | Fetch campaign analytics and performance data. |
+| `mcp__resources__linkedinads_invoke` | Call any LinkedIn Marketing API endpoint. |
+
+## TypeScript Client
+
+Major generates a typed client in your app's `src/clients/` directory.

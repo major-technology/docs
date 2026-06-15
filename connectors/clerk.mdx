@@ -1,0 +1,28 @@
+---
+title: "Clerk"
+description: "Query users and organizations in your Clerk account."
+---
+
+Connect to the Clerk Backend API to manage users, organizations, sessions, and invitations.
+
+## Setup
+
+When creating the connector, enter your Clerk **Secret Key** (starts with `sk_`). Major stores it encrypted and injects it as a Bearer token on all API calls.
+
+## MCP Tools
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__clerk_get` | Fetch a single resource by path (user, org, session). |
+| `mcp__resources__clerk_list_users` | List users with optional filters. |
+| `mcp__resources__clerk_get_user` | Fetch a single user by ID. |
+| `mcp__resources__clerk_list_organizations` | List organizations in your Clerk instance. |
+| `mcp__resources__clerk_invoke` | Call any Clerk Backend API endpoint. |
+
+## TypeScript Client
+
+Major generates a typed `ClerkResourceClient` in your app's `src/clients/` directory.
+
+<Note>
+The Clerk Backend API is server-side only. Never expose your Clerk Secret Key in client-side code.
+</Note>

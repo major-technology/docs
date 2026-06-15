@@ -1,0 +1,26 @@
+---
+title: "Meta Marketing"
+description: "Manage Facebook and Instagram Ads through the Meta Marketing API."
+---
+
+Connect to the Meta Marketing API to query and manage Facebook Ads, Instagram Ads, campaigns, ad sets, and analytics.
+
+## Setup
+
+Connect via Meta OAuth when creating the connector. Grant the required ads management permissions during the OAuth flow.
+
+## MCP Tools
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__metamarketing_list_ad_accounts` | List ad accounts. |
+| `mcp__resources__metamarketing_list_campaigns` | List campaigns for an account. |
+| `mcp__resources__metamarketing_list_ad_sets` | List ad sets within a campaign. |
+| `mcp__resources__metamarketing_list_ads` | List individual ads. |
+| `mcp__resources__metamarketing_get_insights` | Fetch performance insights and analytics. |
+| `mcp__resources__metamarketing_list_lead_forms` | List lead generation forms. |
+| `mcp__resources__metamarketing_invoke` | Call any Meta Marketing API endpoint. |
+
+## TypeScript Client
+
+Major generates a typed client in your app's `src/clients/` directory.

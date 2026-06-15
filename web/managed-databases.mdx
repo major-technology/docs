@@ -17,6 +17,16 @@ Click **Browse tables and data** to explore your database:
 - Click rows to see full details
 - View table schema — columns, primary keys, foreign keys, and indexes
 
+## Migrations
+
+Run database migrations through the AI assistant. Ask the AI to apply a schema change — it writes the migration SQL, shows it to you with syntax highlighting for review, and applies it atomically across all environments once you approve.
+
+Migrations are recorded in an audit log so you can track what changed and when. The AI uses the `postgresql_run_migration` tool, which validates SQL before execution and requires admin permission. Only managed (not external) databases support this flow.
+
+## Multi-environment schemas
+
+When you create a new environment, Major automatically provisions a matching PostgreSQL schema for it, cloned from the default environment's structure. Deleting an environment drops its schema.
+
 ## Access Control
 
 App collaborators (admins and editors) automatically get database access synced from your resource permissions. Managed databases are scoped to your app and can be configured per-environment.

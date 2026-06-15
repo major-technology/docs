@@ -1,0 +1,26 @@
+---
+title: "MySQL"
+description: "Connect to MySQL databases and run queries."
+---
+
+Connect to a MySQL database and run SQL queries through Major's connector system.
+
+## Setup
+
+When creating the connector, provide your MySQL connection details:
+
+- **Host** and **Port**
+- **Database name**
+- **Username** and **Password**
+- Optional: **SSH tunnel** settings and **TLS** configuration for secure connections
+
+## MCP Tools
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__mysql_query` | Execute a read-only SELECT query. Returns rows as JSON. |
+| `mcp__resources__mysql_invoke` | Execute a write operation (INSERT, UPDATE, DELETE, or DDL). |
+
+## TypeScript Client
+
+Major generates a typed client in your app's `src/clients/` directory. Use it for type-safe database access without managing connection state directly.

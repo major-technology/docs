@@ -85,9 +85,17 @@ The preview's URL bar shows all available routes as an autocomplete dropdown, ma
 
 The AI assistant has built-in TypeScript language server support, giving it precise code navigation across your codebase — go to definition, find references, and symbol lookup. This means the AI can understand your type relationships and imports accurately instead of relying on text search.
 
-## Debugging with Production Logs
+## Session Persistence
 
-The AI assistant can query production logs from your deployed applications. Ask the AI to investigate runtime errors, search specific log patterns, or examine application behavior in production. The AI searches logs collected from your app's container stdout and stderr, filtered by organization and app ID.
+Sessions persist across reconnections. When you resume a session on the same app, your conversation history and workspace state are automatically restored, so you pick up right where you left off without re-cloning or reinstalling dependencies.
 
-Use this to debug issues in deployed apps without leaving the editor. The AI can correlate log messages with your code to identify root causes and suggest fixes.
+To start the agent fresh on an unrelated task, say "clear context" in chat. The agent will reset its context window while keeping the code changes already in your repository intact.
 
+## Debugging Logs
+
+The AI assistant can query logs from both your live preview and your deployed application.
+
+- **Preview logs** — logs from the local dev server running in your current session. Use these to debug build errors, hot-reload issues, or runtime problems during development.
+- **Production logs** — logs collected from your deployed app's container stdout/stderr. Use these to investigate issues in production.
+
+Ask the AI to investigate an error and it will search the appropriate log source automatically, correlate messages with your code, and suggest fixes.

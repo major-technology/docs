@@ -1,0 +1,26 @@
+---
+title: "Notion"
+description: "Read and write Notion pages, databases, and workspaces."
+---
+
+Connect to Notion to read and write pages, query databases, and access workspace content through Major's connector system.
+
+## Setup
+
+Connect via Notion OAuth when creating the connector. You can also use a Notion Internal Integration Token (API key) if you prefer.
+
+## MCP Tools
+
+The connector exposes tools for common Notion operations:
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__notion_list_databases` | List databases in your workspace. |
+| `mcp__resources__notion_query_database` | Query a database with filters and sorts. |
+| `mcp__resources__notion_get_page` | Fetch a page's content and properties. |
+| `mcp__resources__notion_create_page` | Create a new page or database entry. |
+| `mcp__resources__notion_invoke` | Call any Notion API endpoint. |
+
+## TypeScript Client
+
+Major generates a typed client in your app's `src/clients/` directory.
