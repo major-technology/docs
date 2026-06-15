@@ -100,11 +100,12 @@ Logs are collected from your app's container stdout and stderr. Output is human-
 
 | Flag | Description |
 | --- | --- |
-| `--since` | Start of the time window (ISO date or relative, e.g. `2h`). |
-| `--until` | End of the time window. |
-| `--search` | Filter to lines matching this substring. |
-| `--next-token` | Pagination token returned by a previous call. |
-| `--json` | Output as newline-delimited JSON. |
+| `--since` | Show logs since a duration (e.g. `30m`, `1h`) or RFC3339 timestamp. |
+| `--until` | Show logs up until an RFC3339 timestamp. |
+| `--search` | Filter to lines matching this substring (case-sensitive). |
+| `--limit` | Maximum number of log lines to return (1–5000, default 500). |
+| `--next-token` | Pagination cursor returned by a previous call. |
+| `--json` | Output in JSON format. |
 
 ## `major app editor`
 
