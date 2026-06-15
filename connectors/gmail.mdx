@@ -1,0 +1,219 @@
+---
+title: "Gmail"
+description: "Read, search, and send emails."
+---
+
+The Gmail connector lets you interact with Gmail. It uses OAuth for authentication, so you connect your Google account once and Major handles token management.
+
+For full API details, see the [Gmail API documentation](https://developers.google.com/gmail/api/guides).
+
+## Setup
+
+1. Go to **Organization Settings > Connectors**
+2. Click **Add Connector** and select **Gmail**
+3. Choose the access scope:
+   - **Read only** — Can list and read emails
+   - **Read and write** — Can list, read, and send emails
+4. Choose the authentication mode:
+   - **Shared** — Use a single shared account (the person configuring the resource provides credentials)
+   - **Per-user** — Each app user connects their own account
+5. Click **Connect to Google** to authorize access
+
+Attach the resource to your app via `major resource manage` (CLI) or the web editor. Major generates a client in `src/clients/`.
+
+## Per-User Authentication
+
+When you configure a Gmail resource for **per-user** authentication, end-users authenticate with their own Google accounts instead of using shared credentials.
+
+### User Flow
+
+1. User accesses a deployed app that uses a per-user Gmail resource
+2. If they haven't connected their account, Major redirects them to the `/connect` page
+3. User clicks **Connect Gmail** and authorizes access to their own email
+4. User is returned to the app and can now use Gmail features
+
+### Managing Connections
+
+Users can view and manage their connected OAuth accounts by clicking their profile photo in the bottom left and selecting **Connected Accounts**. From there, they can disconnect individual OAuth credentials or reconnect if access expires.
+
+Once disconnected, users must re-authorize via the `/connect` page if they want to use apps that require that connection.
+
+## Usage
+
+Import the generated client and use the helper methods:
+
+```typescript
+import { gmailClient } from './clients';
+```
+
+### Listing messages
+
+```typescript
+const result = await gmailClient.gmail_list_messages(
+  'list-messages',
+  {
+    q: 'is:unread',
+    maxResults: 10
+  }
+);
+
+if (result.ok) {
+  const messages = result.result.messages;
+  messages.forEach(msg => {
+    console.log(msg.id, msg.snippet);
+  });
+}
+```
+
+**Parameters:**
+- `operationName` — A name for logging and debugging
+- `options` — Query options:
+  - `q` — Search query (e.g., `is:unread`, `from:alice@example.com`, `subject:important`)
+  - `maxResults` — Maximum messages to return (1–500)
+  - `pageToken` — Token for pagination
+
+**Returns:**
+- `messages` — Array of message objects with `id`, `threadId`, and `snippet`
+- `nextPageToken` — Token to fetch the next page of results
+
+### Getting message details
+
+```typescript
+const result = await gmailClient.gmail_get_message(
+  'get-message',
+  {
+    id: 'message-id-here',
+    format: 'full'
+  }
+);
+
+if (result.ok) {
+  const message = result.result;
+  console.log(message.payload.headers);
+  console.log(message.snippet);
+}
+```
+
+**Parameters:**
+- `operationName` — A name for logging and debugging
+- `options` — Query options:
+  - `id` — Message ID (required)
+  - `format` — Response format: `minimal`, `full`, or `raw`
+
+**Returns:**
+- `id` — Message ID
+- `threadId` — Thread ID
+- `payload` — Message payload with headers and body
+- `snippet` — Preview of message content
+
+### Sending messages
+
+```typescript
+const result = await gmailClient.gmail_send_message(
+  'send-message',
+  {
+    to: 'recipient@example.com',
+    subject: 'Hello',
+    body: 'This is the email body'
+  }
+);
+
+if (result.ok) {
+  console.log('Email sent:', result.result.id);
+}
+```
+
+**Parameters:**
+- `operationName` — A name for logging and debugging
+- `messageBody` — Message object with:
+  - `to` — Recipient email address (required)
+  - `subject` — Email subject (required)
+  - `body` — Email body (required)
+  - `cc` — CC recipient(s)
+  - `bcc` — BCC recipient(s)
+
+**Returns:**
+- `id` — The sent message's ID
+- `threadId` — Thread ID
+- Full message object with all details
+
+## Low-level API
+
+For operations not covered by helper methods, use `invoke()` directly:
+
+```typescript
+const result = await gmailClient.gmail_invoke(
+  'GET',
+  '/users/me/messages',
+  'list-messages',
+  {
+    query: { q: 'is:unread', maxResults: 10 }
+  }
+);
+```
+
+### Supported API paths
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/users/me/messages` | List messages |
+| GET | `/users/me/messages/{id}` | Get message details |
+| POST | `/users/me/messages/send` | Send message |
+| POST | `/users/me/messages/{id}/modify` | Modify message |
+| DELETE | `/users/me/messages/{id}` | Delete message |
+| GET | `/users/me/threads` | List threads |
+| GET | `/users/me/threads/{id}` | Get thread details |
+
+<Note>
+User ID is typically `me` to reference the authenticated user's mailbox.
+</Note>
+
+## Error handling
+
+```typescript
+import { ResourceInvokeError } from '@major-tech/resource-client';
+
+try {
+  const result = await gmailClient.gmail_list_messages(
+    'list-messages',
+    { q: 'is:unread' }
+  );
+
+  if (!result.ok) {
+    // Resource returned an error (e.g., invalid query)
+    console.error('Gmail error:', result.error.message);
+    return;
+  }
+
+  // Success
+  console.log(result.result.messages);
+
+} catch (e) {
+  if (e instanceof ResourceInvokeError) {
+    // Client-level error (e.g., OAuth not completed)
+    console.error('Invocation error:', e.message);
+  }
+}
+```
+
+### Common errors
+
+| Error | Cause |
+| --- | --- |
+| 401 Unauthorized | OAuth not completed—reconnect the resource |
+| 403 Forbidden | Write operation on a read-only resource |
+| 400 Bad Request | Invalid query or message data |
+| 404 Not Found | Message or thread not found |
+
+## Scope and permissions
+
+When creating the resource, you choose between:
+
+- **Read only** — `GET` requests only
+- **Read and write** — Full read/write access including sending messages
+
+The scope is enforced at the API level. If you try to send an email with a read-only resource, you'll get a 403 error.
+
+<Tip>
+Major uses the most restrictive Google OAuth scope, which only grants access to the user's mailbox—not additional Google services.
+</Tip>
