@@ -1,0 +1,38 @@
+---
+title: "Pipedream Instance"
+description: "Connect your own Pipedream account to reach thousands of apps."
+---
+
+A **Pipedream Instance** connector links your own [Pipedream](https://pipedream.com) account to Major. Once connected, your app can reach every app in [Pipedream's catalog](https://pipedream.com/apps) — thousands of integrations — using the accounts you've connected in your own Pipedream workspace.
+
+Use this when you need an app that isn't one of Major's built-in [connectors](/connectors), or when you want to manage the third-party connections yourself in Pipedream.
+
+## Setup
+
+1. In your [Pipedream project settings](https://pipedream.com/docs/rest-api/auth), create an OAuth client and copy its **Client ID** and **Client Secret**.
+2. In Major, go to **Organization Settings > Connectors**, click **Add Connector**, and choose **Pipedream Instance**.
+3. Paste the **Client ID** and **Client Secret**. The secret is encrypted at rest; the Client ID is stored as non-secret metadata.
+4. Connect the apps you want from inside your Pipedream account.
+
+Major proxies authenticated requests to `api.pipedream.com` on your behalf — your third-party credentials never touch your app code. You manage which accounts are connected, and revoke them, from Pipedream directly.
+
+## Usage
+
+Pipedream Instance connectors are reached through Major's generic HTTP proxy rather than a per-vendor client. Use `createProxyFetch` from `@major-tech/resource-client/next`, which returns a `fetch`-compatible function with auth injected automatically.
+
+```typescript
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const pipedreamFetch = createProxyFetch({
+  baseUrl: process.env.MAJOR_API_BASE_URL!,
+  resourceId: process.env.PIPEDREAM_RESOURCE_ID!,
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+});
+
+const res = await pipedreamFetch("https://api.pipedream.com/v1/users/me");
+const me = await res.json();
+```
+
+<Note>
+In the web editor, the Major AI assistant wires up `createProxyFetch` and the resource ID for you as you build. The same proxy is exposed to the AI assistant as the `http_proxy_get` and `http_proxy_invoke` tools.
+</Note>

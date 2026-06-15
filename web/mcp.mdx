@@ -1,0 +1,38 @@
+---
+title: "MCP"
+description: "Expose your apps as MCP tools to AI clients like Claude, Cursor, and Codex."
+---
+
+Any deployed Major app can expose its API as [Model Context Protocol](https://modelcontextprotocol.io) (MCP) tools, so AI clients like Claude, Cursor, and Codex can call your app's endpoints directly. All opted-in apps in your organization are reachable through a single per-org **gateway** endpoint.
+
+## Enabling MCP for an app
+
+1. Open a **deployed** app in the editor and go to the **Settings** tab.
+2. In the **App MCP** section, choose the API route to serve MCP from (for example, `/api/mcp`).
+3. Save. The app's tools are now reachable through the org gateway.
+
+To stop exposing an app, set its App MCP section back to **Disabled**.
+
+## The organization gateway
+
+Every organization has one gateway endpoint that aggregates all opted-in apps:
+
+```
+https://mcp.major.build/<org-slug>
+```
+
+Find this URL, and the list of apps currently exposing MCP, under **Settings > MCP**.
+
+### Connecting a client
+
+Point any MCP-capable client at the gateway URL. Major handles authentication over OAuth — the first time a client connects, you're redirected to a Major sign-in tab to grant access, after which the connector lights up and your apps' tools become available.
+
+The steps differ slightly per client (Claude Desktop, Claude Code, Codex, Cursor); the **Settings > MCP** page shows the exact instructions for each. For example, in Claude Desktop you add the gateway URL under **Settings > Connectors > Add custom connector**.
+
+<Tip>
+Pick a connector name distinct from your apps' names — clients show the connector name when listing tools, so a distinct name keeps things readable.
+</Tip>
+
+## Access
+
+Connecting to the gateway uses your own Major identity. Tools are scoped to the apps you can access in the organization, and every call is authenticated — the same permissions that govern the app in Major apply through MCP.

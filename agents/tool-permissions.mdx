@@ -1,0 +1,34 @@
+---
+title: "Tool Permissions"
+description: "Control which connector tools and app endpoints an agent can use."
+---
+
+Tool permissions give you fine-grained control over what an agent is allowed to do. Every connector tool and every endpoint of an attached app can be set to one of three decisions:
+
+| Decision | Behavior |
+| --- | --- |
+| **Always allow** | The agent uses the tool immediately, no prompt. |
+| **Ask** | The agent must request approval before each use — interactively in chat, or routed to an [approval channel](/agents/schedules#approvals) for unattended runs. |
+| **Always deny** | The tool is blocked and hidden from the agent. |
+
+## Smart defaults
+
+When you add a connector or app to an agent, Major applies safe defaults automatically so you don't have to configure every tool by hand:
+
+- **Read-only operations** → **Always allow**. Reads are determined by the connector's read-only flag or, for app endpoints, by safe HTTP methods (`GET`, `HEAD`, `OPTIONS`).
+- **Write or delete operations** → **Ask**, so changes to your data are surfaced before they happen.
+
+You only need to change a default when you want tighter or looser control than the default provides.
+
+## What you can scope
+
+- **Connector tools** — each tool a connector exposes (for example, `slack_post_message` or `gmail_search_threads`).
+- **App endpoints** — each route of a deployed app's API, identified by method and path (for example, `POST /api/invoices`).
+
+## Enforcement
+
+Permissions are resolved at the start of each agent run and enforced on every tool call. Denied connector tools are removed from what the agent can call, and denied app endpoints are filtered out of the API documentation the agent sees — so the agent never even attempts them. A summary of its restrictions is included in the agent's instructions so it understands its own boundaries.
+
+<Note>
+Permission changes take effect on the agent's next run. A run that's already in progress keeps the permissions it started with.
+</Note>

@@ -1,0 +1,39 @@
+---
+title: "Schedules"
+description: "Run an agent automatically on a recurring schedule."
+---
+
+Schedules run an agent on a recurring cron schedule with a fixed prompt — no person needs to start the run. Use them for recurring work like a daily standup summary, a weekly report, or an hourly data check.
+
+A schedule attaches to an existing agent and is made up of these fields:
+
+| Field | Description |
+| --- | --- |
+| **Name** | A display label for the schedule. |
+| **Agent** | The agent that runs when the schedule fires. |
+| **Prompt** | The instruction sent to the agent on each run. |
+| **Schedule** | A standard 5-field cron expression (e.g. `0 9 * * 1` = every Monday at 9 AM). |
+| **Timezone** | An IANA timezone (e.g. `America/New_York`) the cron is evaluated against. |
+| **Approval channel** | Optional, Slack-only — where the run's [approval requests](#approvals) go. |
+| **Shared template** | Optional — lets others reuse this schedule as a starting point. See [Templates](#templates). |
+
+## Building a schedule
+
+Like agents and skills, schedules are [built conversationally](/agents#building-with-chat) — tell Major which agent to run and how often. It translates your cadence into a cron expression and timezone (e.g. "every weekday at 9am ET" → `0 9 * * 1-5` in `America/New_York`), asking for your timezone if it isn't clear. The schedule goes **live immediately** and starts firing on the next matching time. Refine it the same way later ("change it to 8am", "only on Mondays"), or [disable](#managing-schedules) it while you make changes.
+
+## Templates
+
+Mark a schedule as a **shared template** to let other people in your organization reuse it. A shared template is visible org-wide and others can copy it as the starting point for their own schedule — the copy runs as them, with their own prompt and credentials, so a template never points runs or approvals at someone else's account.
+
+## Managing schedules
+
+- **Enable / disable** — pause a schedule without deleting it, and resume it later.
+- **Run now** — trigger a run immediately, outside the schedule, to test it.
+- **View runs** — see the history of past runs and open any of them.
+- **Share** — grant other users edit access to a schedule (unless its agent uses per-user connectors — see below).
+
+Scheduled runs execute as the user who created the schedule, so the agent uses that person's credentials for any connectors that require them. For this reason, a schedule whose agent uses [per-user connectors](/web/permissions#per-user-oauth) can't be shared, and only its creator can run it. See [Access & Permissions](/agents/permissions#schedules) for the full rules.
+
+## Approvals
+
+If an agent has tools set to **Ask** (see [Tool Permissions](/agents/tool-permissions)), an unattended scheduled run has no one to prompt. You can configure a schedule to route those approval requests to a **Slack channel**, where a person can approve or deny the action. Connect Slack and select the channel when configuring the schedule.

@@ -1,0 +1,37 @@
+---
+title: "Audit Log"
+description: "Monitor resource invocations across your organization."
+---
+
+The **Audit Log** records every connector invocation across your organization — each time an app, agent, or chat calls a connector tool. Use it to see who accessed what, from where, and whether it succeeded.
+
+Open it from **Audit Log** in the dashboard. You'll see a paginated table of invocations, newest first, that you can filter and expand.
+
+## What's recorded
+
+Each entry captures:
+
+| Field | Description |
+| --- | --- |
+| **Time** | When the invocation happened. |
+| **Resource** | The connector that was called, and its type. |
+| **Actor** | What made the call — an agent, an application, or general chat. |
+| **Environment** | Where the call originated (see below). |
+| **User** | The user the call ran as. |
+| **Status** | Whether it succeeded or returned an error. |
+
+Click any row to expand the full invocation details, including the request payload and any error message.
+
+## Filters
+
+Narrow the log by:
+
+- **Time window** — defaults to the past week.
+- **Resource** — a specific connector.
+- **Application** — a specific app.
+- **Environment** — **Deployed**, **Coding Session**, **Chat**, **Local**, or **Manual**.
+- **Status** — **Success** or **Error**.
+
+<Note>
+The audit log covers connector invocations org-wide. For activity on a specific agent skill — published versions, attach/detach, runtime loads — see the skill's own [activity log](/agents/skills#activity).
+</Note>
