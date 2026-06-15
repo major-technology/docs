@@ -1,0 +1,24 @@
+---
+title: "Connected Accounts"
+description: "Manage the third-party accounts you've authorized with Major."
+---
+
+Some connectors use [per-user OAuth](/web/permissions#per-user-oauth) — instead of a shared account, each person authorizes their own (for example, your own Google Calendar). The accounts you've authorized are managed from the **Connected Accounts** settings page.
+
+## Managing your accounts
+
+From **Connected Accounts** you can:
+
+- **View** every third-party service you've connected.
+- **Disconnect** an individual account.
+- **Re-authenticate** an account whose credentials have expired.
+
+When you disconnect an account, you lose access to any app or agent feature that relies on that connection until you reconnect it.
+
+## Connecting an account
+
+You usually don't visit this page to connect — apps prompt you when needed. If you open an app that uses a per-user connector and haven't authorized your account, Major redirects you to a `/connect` page to complete OAuth, then returns you to the app. Trying to invoke the connector before connecting returns an error asking you to finish authorizing.
+
+<Card title="Per-user OAuth" icon="key" href="/web/permissions#per-user-oauth">
+  How shared vs. per-user authentication modes work for connectors.
+</Card>

@@ -1,0 +1,48 @@
+---
+title: "App Triggers"
+description: "Let your deployed apps start and manage agent runs."
+---
+
+Your deployed Major apps can trigger agents at runtime and interact with their runs. A common pattern is a dashboard that, on load, kicks off several agents — summarize my inbox, prep my calendar, review open PRs — and renders their results as they come in.
+
+## Attaching an agent to an app
+
+An app can only trigger agents that have been explicitly attached to it. Attaching requires edit access to both the app and the agent — it's a deliberate action, not inferred from your code. Once attached, the app can start and manage runs of that agent.
+
+## Triggering from code
+
+Use the `@major-tech/agents-client/next` package. The client reads your app's Major credentials from the environment, so there's nothing to wire up manually.
+
+```typescript
+import { createAgentsClient } from "@major-tech/agents-client/next";
+
+const agents = createAgentsClient();
+
+// Start a run — returns immediately with a run handle
+const { chatThreadId } = await agents.run({
+  agentId: process.env.SUMMARY_AGENT_ID!,
+  prompt: "Summarize today's unread email.",
+  name: "inbox-summary",
+});
+
+// Poll for progress — the last N messages of the run
+const messages = await agents.getAgentContent(chatThreadId, 10);
+```
+
+Runs are asynchronous: `run()` returns right away and you poll `getAgentContent` for progress. Other methods let you manage a run in flight:
+
+| Method | Description |
+| --- | --- |
+| `run({ agentId, prompt, name? })` | Start a run; returns a `chatThreadId` handle. |
+| `sendMessage(chatThreadId, message)` | Send a follow-up message to a live run. |
+| `stopAgent(chatThreadId)` | Stop a run (no-op if it already finished). |
+| `getRunningInstancesOfAgent(agentId?)` | List currently live runs. |
+| `getAgentContent(chatThreadId, n?)` | Read the last `n` messages of a run. |
+
+## Limits
+
+To prevent runaway costs, an app may have a limited number of live agent runs at once; further `run()` calls are rejected until some finish. An app can only manage the runs it started. Manual and scheduled runs aren't subject to this per-app cap.
+
+<Note>
+`sendMessage` to a finished run throws `AgentRunNotActiveError` — start a fresh run instead. Calls also fail if the agent isn't attached to the app or the caller lacks access.
+</Note>

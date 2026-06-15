@@ -1,0 +1,61 @@
+---
+title: "Access & Permissions"
+description: "Role-based access control for agents, skills, and schedules."
+---
+
+Agents, skills, and schedules each have their own role-based access control (RBAC), layered on top of your [organization roles and groups](/web/permissions). Access is granted per object — you can share a single agent or skill with specific people or groups without giving them access to everything.
+
+Don't confuse this with [tool permissions](/agents/tool-permissions): RBAC controls **who can use and edit** an agent, skill, or schedule; tool permissions control **what an agent itself is allowed to do** once it runs.
+
+## Agents
+
+| Role | Can do |
+| --- | --- |
+| **User** | Run the agent and start chats with it. |
+| **Editor** | Everything a User can, plus edit the definition (prompt, model, connectors, apps, skills, env vars, tool permissions) and publish. |
+| **Admin** | Everything an Editor can, plus share the agent with others. |
+
+Creating a new agent requires the organization-level **app-creation** permission (Builder role or higher), the same permission used to create apps.
+
+### Sharing
+
+The agent's owner or an Admin can grant access to:
+
+- **Individuals** — invite users by email.
+- **Groups** — grant access to an entire team at once (see [Groups](/web/permissions#groups)).
+
+## Skills
+
+[Skills](/agents/skills) use the same three roles, so authorship can be separated from use:
+
+| Role | Can do |
+| --- | --- |
+| **User** | Read a skill and attach it to agents they can edit. |
+| **Editor** | Everything a User can, plus modify the skill's content and publish new versions. |
+| **Admin** | Everything an Editor can, plus share the skill and delete it. |
+
+Deleting a skill is blocked while it's still attached to any agent — detach it everywhere first.
+
+## Schedules
+
+[Schedules](/agents/schedules) inherit access from their agent: if you can use the agent, you can see and use its schedules. Beyond that:
+
+- The schedule's **creator** can share it with other users and groups, granting **edit** access — collaborators can view and edit it in the Build-with-Major editor, but can't re-share it.
+- Every run — scheduled or "run now" — executes as the **creator**, using their credentials.
+
+<Warning>
+**A schedule can't be shared if its agent uses [per-user connectors](/web/permissions#per-user-oauth).** Because the schedule always runs as the creator's identity, sharing it would let a collaborator trigger runs as the creator (and per-user credentials wouldn't be the collaborator's). Sharing is blocked outright in this case, only the creator can run it, and a shared schedule can't be repointed onto a per-user agent to get around it.
+</Warning>
+
+## Shared agents and identity
+
+When an agent is shared and someone other than its author runs it, Major distinguishes two identities:
+
+- The **author/deployer** — the subject of RBAC checks and the source of shared credentials.
+- The **runner** — the person who started the run, used for any [per-user OAuth](/web/permissions#per-user-oauth) connectors.
+
+This means a shared agent uses shared connectors via the author's credentials, but per-user connectors act as whoever is running it — so each person only ever touches data they're entitled to.
+
+## App triggers
+
+For an app to [trigger an agent](/agents/app-triggers), the agent must be explicitly attached to that app. Attaching requires **edit** access to both the app and the agent — it's a deliberate grant, never inferred from your code.

@@ -1,0 +1,31 @@
+---
+title: "Skills"
+description: "Reusable instruction bundles that extend what your agents can do."
+---
+
+Skills are reusable bundles of instructions, reference material, and scripts that you attach to agents. Instead of duplicating the same guidance across every agent's system prompt, you author a skill once and attach it wherever it's needed. Skills follow Anthropic's [Agent Skills](https://www.anthropic.com/news/skills) convention.
+
+## What's in a skill
+
+A skill is a `SKILL.md` file with YAML frontmatter (a name and description), plus optional:
+
+- **Reference docs** — additional context the agent reads on demand.
+- **Scripts** — files in a `scripts/` directory the agent can execute.
+
+When an agent with an attached skill runs, the skill's `SKILL.md` is loaded into the agent's context automatically. The agent reads the reference docs or runs the scripts only when it needs them, so attaching a skill doesn't bloat every prompt.
+
+## Attaching skills to an agent
+
+In the agent builder, attach or detach skills from your agent. Major suggests skills and the connectors they recommend based on what your agent does. A single skill can be attached to many agents, and updating the skill updates the behavior everywhere it's used.
+
+## Versioning
+
+Skills are versioned. Each time you publish changes, Major snapshots a new version, so agents always load a stable, published version rather than work-in-progress edits. Edits you make while building are kept in a separate working area until you publish them.
+
+## Access
+
+Skills use three roles (**User**, **Editor**, **Admin**) so authoring can be separated from use, and deletion is blocked while a skill is still attached to an agent. See [Access & Permissions](/agents/permissions#skills) for the full breakdown.
+
+## Activity
+
+Skill usage is logged: when a version is published, when a skill is attached or detached from an agent, and when an agent loads a skill or runs one of its scripts at runtime. This gives you an audit trail of how each skill is being used.

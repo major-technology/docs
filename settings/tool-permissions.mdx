@@ -1,0 +1,28 @@
+---
+title: "Tool Permissions"
+description: "Set how your own chats treat each connector and app tool."
+---
+
+Tool Permissions let you choose how your own [Build-with-Major chats](/agents#building-with-chat) handle each connector tool and app endpoint — **always allow**, **ask**, or **always deny**. Your choices are remembered across sessions, so you don't get re-prompted for the same tool every time.
+
+Open the page from **Account > Tool Permissions**. It lists every connector and app you have access to; click one to set decisions for its individual tools.
+
+| Decision | Behavior in your chats |
+| --- | --- |
+| **Always allow** | The tool runs without prompting you. |
+| **Ask** | You're prompted to approve each use. |
+| **Always deny** | The tool is blocked. |
+
+These preferences are **additive**: only the tools you explicitly configure are affected, and everything else keeps its current default behavior.
+
+## How this differs from agent permissions
+
+This page controls **your own chats** — the orchestrator / Build-with-Major sessions you start. It does not affect [agents](/agents):
+
+| | Tool Permissions (this page) | [Agent tool permissions](/agents/tool-permissions) |
+| --- | --- | --- |
+| **Scope** | Your personal chats | A specific agent, for everyone who runs it |
+| **Who sets it** | You, for yourself | Whoever edits the agent |
+| **Stored against** | Your user | The agent |
+
+When you run an agent, its configured permissions apply — not your personal ones.

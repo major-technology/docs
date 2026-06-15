@@ -23,10 +23,6 @@
               "getting-started/quickstart-cli",
               "getting-started/quickstart-web"
             ]
-          },
-          {
-            "group": "Account",
-            "pages": ["getting-started/billing"]
           }
         ]
       },
@@ -60,7 +56,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["web/index", "web/editor", "web/deploying", "web/environments", "web/permissions", "web/authn"]
+            "pages": ["web/index", "web/editor", "web/deploying", "web/environments", "web/authn"]
           },
           {
             "group": "Features",
@@ -69,12 +65,31 @@
               "web/crons",
               "web/managed-databases",
               "web/webhooks",
+              "web/mcp",
               "web/theming",
               "web/env-vars",
               "web/domains",
               "web/ai-proxy",
-              "web/errors",
-              "web/integrations"
+              "web/errors"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Agents",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["agents/index"]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "agents/skills",
+              "agents/tool-permissions",
+              "agents/schedules",
+              "agents/app-triggers",
+              "agents/permissions"
             ]
           }
         ]
@@ -117,6 +132,7 @@
             "pages": [
               "connectors/google-sheets",
               "connectors/google-calendar",
+              "connectors/gmail",
               "connectors/google-analytics",
               "connectors/slack"
             ]
@@ -124,6 +140,30 @@
           {
             "group": "Custom",
             "pages": ["connectors/custom-api", "connectors/graphql"]
+          },
+          {
+            "group": "Pipedream Instance",
+            "pages": ["connectors/pipedream"]
+          }
+        ]
+      },
+      {
+        "tab": "Settings",
+        "groups": [
+          {
+            "group": "Your Account",
+            "pages": [
+              "settings/connected-accounts",
+              "settings/tool-permissions"
+            ]
+          },
+          {
+            "group": "Organization",
+            "pages": [
+              "web/permissions",
+              "settings/audit-log",
+              "getting-started/billing"
+            ]
           }
         ]
       }

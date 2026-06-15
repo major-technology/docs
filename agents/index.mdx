@@ -1,0 +1,54 @@
+---
+title: "Agents"
+description: "Build reusable AI agents that act on your data and apps."
+---
+
+Agents are reusable AI configurations you build once and run on demand. An agent pairs a system prompt with the connectors, apps, skills, and permissions it's allowed to use — so it can autonomously query your data, call your APIs, and take action within boundaries you define.
+
+## What makes up an agent
+
+| Field | Description |
+| --- | --- |
+| **System prompt** | The instructions that define the agent's behavior and goals. |
+| **Model** | The Claude model the agent runs on. Defaults to Claude Opus; you can switch to Sonnet or Haiku. |
+| **Connectors** | The [resources](/connectors) the agent may query (Postgres, Slack, Salesforce, …). |
+| **Applications** | Deployed Major apps the agent may invoke. |
+| **Skills** | Reusable instruction bundles that extend the agent's abilities. See [Skills](/agents/skills). |
+| **Tool permissions** | Per-tool allow/ask/deny rules for connectors and app endpoints. See [Tool Permissions](/agents/tool-permissions). |
+| **Environment variables** | Key/value pairs made available to the agent at runtime, encrypted at rest. |
+
+## Building with chat
+
+Everything in the agents platform is built the same way: you describe what you want in chat and Major configures it for you. This applies to agents, their [skills](/agents/skills), and their [schedules](/agents/schedules) — there are no forms to fill out. Major drafts the configuration, wires up the right connectors and permissions, and you refine it by just asking ("use the production database", "only run on weekdays"). The same conversation can research your connectors and apps to write a better system prompt.
+
+For an agent specifically:
+
+1. Create a new agent — it starts as a private **draft**.
+2. Describe its purpose; Major drafts the system prompt and attaches connectors, apps, and skills as needed.
+3. Review the auto-applied [tool permissions](/agents/tool-permissions) and adjust if needed.
+4. **Publish** the agent to make it available to run.
+
+<Note>
+Drafts stay private to you until you publish. Published agents can be [shared](#sharing-and-access) with others in your organization.
+</Note>
+
+## Running an agent
+
+Start a new chat and pick your agent, and it runs with the prompt, connectors, skills, and permissions you configured. Agents can also run without a person in the loop:
+
+<CardGroup cols={2}>
+  <Card title="Schedules" icon="clock" href="/agents/schedules">
+    Run an agent automatically on a cron schedule.
+  </Card>
+  <Card title="App triggers" icon="bolt" href="/agents/app-triggers">
+    Let your deployed apps start and manage agent runs.
+  </Card>
+</CardGroup>
+
+## Sharing and access
+
+Agent access is role-based — **User** (run), **Editor** (edit and publish), and **Admin** (share) — and an agent can be shared with individuals or groups. When an agent is shared and run by someone other than its author, Major uses per-user credentials where a connector requires them, so each runner acts as themselves.
+
+<Card title="Access & Permissions" icon="lock" href="/agents/permissions">
+  Full RBAC details for agents, skills, and schedules.
+</Card>

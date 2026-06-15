@@ -71,19 +71,7 @@ When configuring a resource, you choose between two modes:
 
 ### Connected Accounts
 
-Users can view and manage their authorized OAuth accounts via the **Connected Accounts** settings page. From there, they can:
-
-- View all connected services
-- Disconnect individual OAuth credentials
-- Re-authenticate if credentials expire
-
-When a user disconnects an account, they lose access to any app features that require that connection.
-
-### OAuth Gate in Deployed Apps
-
-If you deploy an app configured for per-user OAuth and a user hasn't connected their account, Major redirects them to the `/connect` page. After they authorize access, they're returned to the app.
-
-If users try to invoke a resource before connecting their account, they'll receive an error prompting them to complete OAuth.
+Users manage the per-user accounts they've authorized from the [Connected Accounts](/settings/connected-accounts) settings page — viewing connected services, disconnecting them, and re-authenticating when credentials expire.
 
 ## Groups
 
