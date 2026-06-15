@@ -65,7 +65,15 @@ You can upload context files — database schemas, OpenAPI specs, API documentat
 
 ## Identity-based authentication
 
-For S3 and DynamoDB resources, you can use Assume Role Identities instead of access keys. Create an identity in the web UI, review the generated trust policy for your IAM role, and select identity-based authentication when configuring your resource. This approach is more secure and avoids managing long-lived credentials.
+For AWS services (S3 and DynamoDB), you can use IAM Assume Role Identities instead of access keys. Create an identity in **Settings > Identities**, review the generated trust policy for your IAM role, and select identity-based authentication when configuring the resource.
+
+For GCP services (BigQuery), you can authenticate via a service account JSON key in addition to OAuth. Create a GCP identity in **Settings > Identities** to manage service accounts across resources.
+
+Identity-based authentication is more secure and avoids storing long-lived credentials.
+
+## Rate limiting
+
+Set hourly and daily invocation limits on any connector to protect downstream services from runaway usage. When a limit is reached, requests return `429 Too Many Requests` until the window resets. Configure limits when creating or editing a connector.
 
 ## Available connectors
 
@@ -88,6 +96,9 @@ For S3 and DynamoDB resources, you can use Assume Role Identities instead of acc
   <Card title="Microsoft SQL Server" icon="database" href="/connectors/mssql">
     SQL Server queries
   </Card>
+  <Card title="MySQL" icon="database" href="/connectors/mysql">
+    MySQL database queries
+  </Card>
   <Card title="BigQuery" icon="database" href="/connectors/bigquery">
     Google BigQuery datasets
   </Card>
@@ -100,14 +111,26 @@ For S3 and DynamoDB resources, you can use Assume Role Identities instead of acc
   <Card title="Custom API" icon="globe" href="/connectors/custom-api">
     Any REST API
   </Card>
+  <Card title="GraphQL" icon="code" href="/connectors/graphql">
+    Query any GraphQL endpoint
+  </Card>
   <Card title="Salesforce" icon="cloud" href="/connectors/salesforce">
     CRM data and SOQL
   </Card>
   <Card title="HubSpot" icon="hubspot" href="/connectors/hubspot">
     CRM integration
   </Card>
+  <Card title="Attio" icon="address-book" href="/connectors/attio">
+    CRM records and objects
+  </Card>
   <Card title="Outreach" icon="bullhorn" href="/connectors/outreach">
     Sales engagement
+  </Card>
+  <Card title="Stripe" icon="credit-card" href="/connectors/stripe">
+    Payments and subscriptions
+  </Card>
+  <Card title="Clerk" icon="key" href="/connectors/clerk">
+    User and org management
   </Card>
   <Card title="Google Sheets" icon="table-cells" href="/connectors/google-sheets">
     Spreadsheet access
@@ -115,23 +138,44 @@ For S3 and DynamoDB resources, you can use Assume Role Identities instead of acc
   <Card title="Google Calendar" icon="calendar" href="/connectors/google-calendar">
     Calendar events and scheduling
   </Card>
-  <Card title="Gmail" icon="envelope" href="/connectors/gmail">
-    Read, search, and send email
-  </Card>
   <Card title="Google Analytics" icon="chart-line" href="/connectors/google-analytics">
     GA4 reporting
+  </Card>
+  <Card title="Google Search Console" icon="search" href="/connectors/googlesearchconsole">
+    Search analytics and sitemaps
+  </Card>
+  <Card title="Gmail" icon="envelope" href="/connectors/gmail">
+    Read, search, and send email
   </Card>
   <Card title="Slack" icon="hashtag" href="/connectors/slack">
     Workspace messaging
   </Card>
-  <Card title="GraphQL" icon="code" href="/connectors/graphql">
-    Query any GraphQL endpoint
+  <Card title="RingCentral" icon="phone" href="/connectors/ringcentral">
+    Communications data and APIs
+  </Card>
+  <Card title="Notion" icon="file-text" href="/connectors/notion">
+    Workspaces, pages, and databases
+  </Card>
+  <Card title="SharePoint" icon="folder" href="/connectors/sharepoint">
+    Microsoft SharePoint and OneDrive
+  </Card>
+  <Card title="Fireflies" icon="microphone" href="/connectors/fireflies">
+    Meeting transcription and summaries
+  </Card>
+  <Card title="Zendesk" icon="life-ring" href="/connectors/zendesk">
+    Customer support tickets and data
+  </Card>
+  <Card title="LinkedIn Marketing" icon="linkedin" href="/connectors/linkedinads">
+    LinkedIn Ads and campaign analytics
+  </Card>
+  <Card title="Meta Marketing" icon="facebook" href="/connectors/metamarketing">
+    Facebook and Instagram Ads
+  </Card>
+  <Card title="TikTok Ads" icon="video" href="/connectors/tiktokads">
+    TikTok advertising campaigns
   </Card>
   <Card title="Gong" icon="phone" href="/connectors/gong">
     Revenue intelligence data
-  </Card>
-  <Card title="RingCentral" icon="phone" href="/connectors/ringcentral">
-    Communications data and APIs
   </Card>
   <Card title="Microsoft Dynamics 365" icon="cloud" href="/connectors/dynamics-365">
     Dataverse CRM integration

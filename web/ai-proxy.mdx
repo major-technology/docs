@@ -1,9 +1,19 @@
 ---
 title: "AI Proxy"
-description: "Call Anthropic and OpenAI APIs through Major's managed gateway."
+description: "Call Anthropic, OpenAI, and Gemini APIs through Major's managed gateway."
 ---
 
-The AI proxy lets your apps call Anthropic and OpenAI APIs through Major's managed gateway. Instead of managing API keys and billing for each provider separately, your apps authenticate via JWT tokens and usage is tracked automatically.
+The AI proxy lets your apps call Anthropic, OpenAI, and Gemini APIs through Major's managed gateway. Instead of managing API keys and billing for each provider separately, your apps authenticate via JWT tokens and usage is tracked automatically.
+
+## Supported providers
+
+| Provider | Endpoint prefix |
+| --- | --- |
+| Anthropic | `/anthropic/` |
+| OpenAI | `/openai/` |
+| Gemini | `/genai/` |
+
+Gemini supports text generation, streaming, token counting, and image generation. Use the `/genai/v1beta/models/{model}:generateContent` and `:streamGenerateContent` endpoints the same way you would call the Gemini API directly.
 
 ## Setup
 

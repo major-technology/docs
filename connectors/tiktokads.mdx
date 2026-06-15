@@ -1,0 +1,24 @@
+---
+title: "TikTok Ads"
+description: "Access TikTok Ads accounts, campaigns, and performance reports."
+---
+
+Connect to the TikTok Marketing API to query ad accounts, campaigns, and run reports.
+
+## Setup
+
+Connect via TikTok OAuth when creating the connector.
+
+## MCP Tools
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__tiktokads_list_advertisers` | List ad accounts accessible to your credentials. |
+| `mcp__resources__tiktokads_list_campaigns` | List campaigns for an advertiser. |
+| `mcp__resources__tiktokads_get_campaign` | Fetch a single campaign by ID. |
+| `mcp__resources__tiktokads_run_report` | Run a performance report for an advertiser. |
+| `mcp__resources__tiktokads_invoke` | Call any TikTok Marketing API endpoint. |
+
+## TypeScript Client
+
+Major generates a typed client in your app's `src/clients/` directory.

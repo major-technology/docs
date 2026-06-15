@@ -12,6 +12,7 @@ description: "Create, run, and deploy applications with the Major CLI."
 | `major app start` | Start the development server. |
 | `major app deploy` | Deploy changes to production. |
 | `major app info` | Show the current application's metadata. |
+| `major app logs` | Query logs from a deployed app. |
 | `major app editor` | Open the App Editor in your browser. |
 
 <Callout icon="circle-info">
@@ -86,6 +87,25 @@ major app info
 ```
 
 Displays metadata for the current application, including its name, deployment status, and live URL.
+
+## `major app logs`
+
+```bash
+major app logs [options]
+```
+
+**When to use:** viewing or searching production logs from a deployed app.
+
+Logs are collected from your app's container stdout and stderr. Output is human-readable by default.
+
+| Flag | Description |
+| --- | --- |
+| `--since` | Show logs since a duration (e.g. `30m`, `1h`) or RFC3339 timestamp. |
+| `--until` | Show logs up until an RFC3339 timestamp. |
+| `--search` | Filter to lines matching this substring (case-sensitive). |
+| `--limit` | Maximum number of log lines to return (1–5000, default 500). |
+| `--next-token` | Pagination cursor returned by a previous call. |
+| `--json` | Output in JSON format. |
 
 ## `major app editor`
 

@@ -1,0 +1,29 @@
+---
+title: "Stripe"
+description: "Connect to Stripe to query and manage payments, subscriptions, and customers."
+---
+
+Connect your Stripe account to query customers, payments, subscriptions, and invoices through Major's connector system.
+
+## Setup
+
+When creating the connector, enter your Stripe **Secret Key**. Major stores it encrypted and injects it automatically into all API calls.
+
+## MCP Tools
+
+| Tool | Description |
+| --- | --- |
+| `mcp__resources__stripe_list_customers` | List customers with optional filters. |
+| `mcp__resources__stripe_get_customer` | Fetch a single customer by ID. |
+| `mcp__resources__stripe_invoke` | Call any Stripe REST endpoint (GET or write). |
+
+Additional tools cover payments, subscriptions, invoices, and balance queries. The AI assistant loads the full tool list from the connector when your app uses Stripe.
+
+## TypeScript Client
+
+Major generates a typed `StripeResourceClient` in your app's `src/clients/` directory.
+
+## Notes
+
+- Stripe requires form-encoded request bodies for write operations — the generated client handles this automatically.
+- Specify an `api-version` header when calling version-sensitive endpoints.
