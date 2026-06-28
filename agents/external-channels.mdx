@@ -3,22 +3,4 @@ title: "External Channels"
 description: "Deploy an agent as its own Slack bot to receive and reply in channels and DMs."
 ---
 
-External channels connect an agent to Slack under its own bot identity — distinct from the shared Major Slack integration. Users @mention the bot or DM it directly, and the agent responds as itself (for example, "Office Jester") rather than as the generic Major bot. Replies in the Slack thread continue the same Major session, so context carries forward across the conversation.
-
-## What external channels support
-
-| Capability | Description |
-| --- | --- |
-| **Own bot identity** | The agent posts as its own provisioned Slack app, not the shared Major integration. |
-| **Bidirectional files** | Users can send images and files to the agent; the agent can post images back. This includes Slack Connect channels where members are from an external workspace. |
-| **Session continuity** | Thread replies route back to the active Major session. Every agent post includes a "View this run in Major" footer link. |
-
-## Posting messages
-
-When an external-channel agent calls the `slack_post_message` MCP tool, the message posts through the agent's own Slack installation automatically — no extra configuration at call time.
-
-<!-- DOCS-BOT: please review — setup steps for provisioning an agent as a Slack external channel aren't fully available in sources; please fill in the configuration flow (UI steps, any prerequisites) -->
-
-## Limits
-
-The bot's Slack description is capped at **139 characters**.
+External channels connect an agent to Slack under its own bot identity — distinct from the shared Major Slack integration. Users @mention the bot or DM it directly, and the agent responds as itself (for example, "Data Analyst") rather than as the generic Major bot. Replies in the Slack thread continue the same Major session, so context carries forward across the conversation.

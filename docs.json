@@ -89,6 +89,7 @@
               "agents/tool-permissions",
               "agents/schedules",
               "agents/app-triggers",
+              "agents/external-channels",
               "agents/permissions"
             ]
           }
