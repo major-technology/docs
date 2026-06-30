@@ -1,0 +1,53 @@
+---
+title: "Linear"
+description: "Access Linear issue tracking and project management tools."
+---
+
+The Linear connector gives your app access to Linear's issue-tracking and project tools. It exposes Linear in two ways: as MCP tools usable directly by the AI assistant, and via an HTTP proxy for GraphQL API calls in your own code.
+
+## Authentication
+
+When creating a Linear connector, choose a connection mode:
+
+- **Shared** — one org-wide OAuth connection for all sessions
+- **Per-user** — each user authenticates with their own Linear account
+
+Then select a scope preset:
+
+- **Read-only** — read issues, projects, teams, and users
+- **Read-write** — create and update issues and projects in addition to reading
+- **Admin** — full access including settings and webhooks
+
+The OAuth flow redirects to Linear for authentication. Major stores and refreshes the token automatically.
+
+## Usage
+
+### MCP tools
+
+In AI chat sessions, Linear tools are mounted automatically as `mcp__linear__*`. The AI assistant can list issues, create issues, update status, and more without any additional configuration.
+
+### HTTP proxy (GraphQL)
+
+For app code, use `createProxyFetch` to call Linear's GraphQL API:
+
+```typescript
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const linearFetch = createProxyFetch({
+  baseUrl: process.env.MAJOR_API_BASE_URL!,
+  resourceId: process.env.LINEAR_RESOURCE_ID!,
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+});
+
+const res = await linearFetch("https://api.linear.app/graphql", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    query: `{
+      viewer { id name }
+      issues(first: 10) { nodes { id title state { name } } }
+    }`,
+  }),
+});
+const { data } = await res.json();
+```

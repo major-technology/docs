@@ -1,0 +1,33 @@
+---
+title: "Plaid"
+description: "Connect bank accounts and access financial data via Plaid."
+---
+
+The Plaid connector lets users link their bank accounts through Plaid Link and gives your app access to account balances and transaction history. Major manages the access token; your app never handles bank credentials directly.
+
+## Authentication
+
+Plaid uses the Plaid Link hosted widget for authentication. When a user adds a Plaid connector, they complete the Plaid Link flow to select their financial institution and grant access. Major stores the resulting access token securely.
+
+## Usage
+
+### MCP tools
+
+The following MCP tools are available in AI chat sessions:
+
+- `plaid_get_transactions` — retrieve transaction history for linked accounts
+- `plaid_get_accounts` — list linked accounts with current balances
+
+### TypeScript client
+
+The generated Plaid client exposes typed methods you can call directly in your app:
+
+```typescript
+import { myPlaidClient } from "./clients";
+
+// Fetch recent transactions
+const transactions = await myPlaidClient.getTransactions();
+
+// Fetch account balances
+const accounts = await myPlaidClient.getAccounts();
+```
