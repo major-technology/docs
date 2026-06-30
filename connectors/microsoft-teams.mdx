@@ -1,0 +1,40 @@
+---
+title: "Microsoft Teams"
+description: "Read Teams, channels, messages, and chats via the Microsoft Graph API."
+---
+
+The Microsoft Teams connector lets you access Teams data — including teams, channels, messages, and chats — through the Microsoft Graph API. Major manages OAuth tokens so your app code never handles credentials directly.
+
+## Authentication
+
+When creating a Microsoft Teams connector, choose a connection mode:
+
+- **Shared** — one org-wide OAuth connection used by all sessions
+- **Per-user** — each user authenticates with their own Microsoft account
+
+Then select an OAuth scope preset:
+
+- **Read-only** — read teams, channels, messages, and chats
+- **Read-write** — read and write to Teams resources
+
+The OAuth flow redirects to Microsoft for authentication. Major stores and refreshes the token automatically.
+
+## Usage
+
+Microsoft Teams connectors are accessed through Major's generic HTTP proxy. Use `createProxyFetch` from `@major-tech/resource-client/next` to get a `fetch`-compatible function with authentication injected automatically.
+
+```typescript
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const teamsFetch = createProxyFetch({
+  baseUrl: process.env.MAJOR_API_BASE_URL!,
+  resourceId: process.env.TEAMS_RESOURCE_ID!,
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+});
+
+// List teams the authenticated user is a member of
+const res = await teamsFetch("https://graph.microsoft.com/v1.0/me/joinedTeams");
+const { value: teams } = await res.json();
+```
+
+The AI assistant can also call `http_proxy_get` and `http_proxy_invoke` directly in chat to query your Teams data.
