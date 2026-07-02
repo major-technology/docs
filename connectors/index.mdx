@@ -5,37 +5,13 @@ description: "Connect your apps to databases, APIs, and storage services."
 
 Connectors are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
 
-## How connectors work
-
-```mermaid
-flowchart TD
-    subgraph YourApp ["Your App"]
-        App["Application Code"]
-        Client["@major-tech/resource-client"]
-    end
-
-    Gateway["Major API Gateway"]
-    Resource[("Your Resource")]
-
-    App -- "Uses" --> Client
-    Client -- "Authenticated Request<br/>(MAJOR_JWT_TOKEN)" --> Gateway
-    Gateway -- "Proxy" --> Resource
-
-    click Client "https://www.npmjs.com/package/@major-tech/resource-client"
-
-    style YourApp fill:transparent,stroke:#999,stroke-dasharray: 5 5
-    style Client fill:#fff,stroke:#333,stroke-width:2px
-    style Gateway fill:#fff,stroke:#333,stroke-width:2px
-    style Resource fill:#fff,stroke:#333,stroke-width:2px
-```
-
 - **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
 - **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
 - **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
 
 ## Setting up a connector
 
-1. Navigate to **Organization Settings > Connectors**
+1. Navigate to **Connectors**
 2. Click **Add Connector** and select the type
 3. Configure the connection details and credentials
 4. Attach the connector to your app via the web editor or `major resource manage`
@@ -43,6 +19,19 @@ flowchart TD
 <Note>
 Resource credentials are encrypted and never exposed to the client-side application code.
 </Note>
+
+## Shared vs. per-user connections
+
+When you configure a connector, you choose how it authenticates:
+
+- **Shared** — one set of credentials for everyone. The person setting up the connector provides them, and every app user and agent run uses that same account. Best for system-owned resources like a production database.
+- **Per-user** — each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors — typically OAuth services — support this.
+
+With a per-user connector, Major gates on the user's own authorization: anyone who opens an app or runs an agent without a connected account is redirected to a `/connect` page to complete OAuth, then returned where they were. Because the connector acts as whoever is using it, each person only touches data they're entitled to. Users manage the accounts they've authorized from [Connected Accounts](/settings/connected-accounts).
+
+<Card title="Per-user OAuth" icon="key" href="/web/permissions#per-user-oauth">
+  Full details on shared vs. per-user authentication modes.
+</Card>
 
 ## Per-environment configuration
 
@@ -53,7 +42,7 @@ When editing a connector, you can configure each environment independently. This
 | default | prod.example.com | myapp_prod |
 | staging | staging.example.com | myapp_staging |
 
-You can also enable **shared configuration** for a resource, which uses a single configuration from the default environment across all environments instead of per-environment configs. When enabled, non-default environment tabs are locked with an explanatory tooltip.
+You can also enable **global configuration** for a resource, which uses a single configuration from the default environment across all environments instead of per-environment configs. When enabled, non-default environment tabs are locked with an explanatory tooltip.
 
 <Card title="Learn more about Environments" icon="layer-group" href="/web/environments">
   See how to create and manage environments for your organization.

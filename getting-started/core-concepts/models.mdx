@@ -25,13 +25,13 @@ By default, each tier resolves to the Claude model in that slot — Opus 4.8 (Sm
 
 ## Model matrix
 
-Each provider fills the same three tiers. The number next to each model is its **relative cost** — a multiple of the Anthropic model in that tier (`1×`), blended across input and output tokens (assuming a ~3:1 input-to-output mix). Figures are public list prices as of July 2026; actual billing is usage-based through the [AI proxy](/web/ai-proxy).
+Each provider fills the same three tiers. The number next to each model is its **relative cost** — a multiple of Claude Opus 4.8 (`1×`), blended across input and output tokens (assuming a ~3:1 input-to-output mix), so every model sits on one scale. Figures are public list prices as of July 2026; actual billing is usage-based.
 
 | Tier | Anthropic | OpenAI | Google | Kimi |
 | --- | --- | --- | --- | --- |
-| **Smartest** | Claude Opus 4.8 · `1×` | GPT-5.5 · `1.1×` | Gemini 3.5 Flash · `0.34×` | Kimi K2.7 Code · `0.17×` |
-| **Balanced** | Claude Sonnet 5 · `1×` | GPT-5.4 · `0.94×` | Gemini 2.5 Flash · `0.14×` | Kimi K2.6 · `0.29×` |
-| **Fastest** | Claude Haiku 4.5 · `1×` | GPT-5.4 mini · `0.84×` | Gemini 3.1 Flash-Lite · `0.28×` | — |
+| **Smartest** | Claude Opus 4.8 · `1×` | GPT-5.5 · `1.1×` | Gemini 3.5 Flash · `0.34×` | — |
+| **Balanced** | Claude Sonnet 5 · `0.6×` | GPT-5.4 · `0.56×` | Gemini 2.5 Flash · `0.09×` | Kimi K2.7 Code · `0.17×` |
+| **Fastest** | Claude Haiku 4.5 · `0.2×` | GPT-5.4 mini · `0.17×` | Gemini 3.1 Flash-Lite · `0.06×` | Kimi K2.6 · `0.17×` |
 
 <Card title="Using models with agents" icon="robot" href="/agents/models">
   How a configured agent locks its chats to a single model.
