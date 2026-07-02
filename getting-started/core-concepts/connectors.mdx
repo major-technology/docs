@@ -1,0 +1,29 @@
+---
+title: "Connectors"
+description: "Databases, APIs, and storage your apps and agents connect to securely."
+---
+
+**Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code — requests are proxied through the Major platform, which attaches authentication and forwards them to the underlying resource.
+
+<Tip>
+Credentials flow through the Major platform. Your app never sees connection strings or API keys.
+</Tip>
+
+## Generated clients
+
+When you attach a connector, Major generates a client for it — one per resource, available at `src/clients/`. You don't wire up HTTP requests, authentication, or connection setup yourself; you import the client and call its `invoke` method.
+
+Because the clients are generated from your attached resources, they're worth leaning on:
+
+- **Type-safe** — full TypeScript support, so inputs and outputs are checked as you write against each resource.
+- **Tailored per resource** — each connector type gets a client with an `invoke` signature specific to it, so a Postgres query and a Slack message each use the shape that fits.
+- **No secrets in code** — authentication is handled by the platform, not your application.
+
+<CardGroup cols={2}>
+  <Card title="Resource Client" icon="box" href="/resource-client">
+    Client generation, per-connector usage, and error handling.
+  </Card>
+  <Card title="Browse all connectors" icon="server" href="/connectors">
+    Setup guides and client docs for every supported connector.
+  </Card>
+</CardGroup>

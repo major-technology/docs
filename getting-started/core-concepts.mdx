@@ -1,114 +1,36 @@
 ---
 title: "Core Concepts"
-description: "Understand the building blocks of Major: Apps, Connectors, and RBAC."
+description: "Understand the building blocks of Major: Apps, Agents, Connectors, and RBAC."
 ---
 
-Major is built around several core concepts that work together to help you build, deploy, and secure internal tools.
+Major is built around a handful of core concepts that work together to help you build, deploy, and secure internal tools.
 
-# Apps
-
-An **App** is a self-contained project that you build and deploy through Major.
-
-### Lifecycle
-
-Apps follow a simple lifecycle:
-
-1. **Create** — Scaffold from a template or clone an existing app
-2. **Develop** — Build locally with the CLI or in the web editor
-3. **Connect** — Attach connectors (databases, APIs)
-4. **Deploy** — Ship to production with one command or click
-5. **Share** — Grant access to teammates via RBAC
-
-### Source Control
-
-Every app is backed by a Git repository. Major hosts repositories by default, but you can connect your own GitHub organization at any time. Either way, the code is yours — clone, branch, and manage it with any Git tooling.
-
-# Connectors
-
-**Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
-
-### Architecture
-
-```mermaid
-flowchart TD
-    subgraph YourApp ["Your App"]
-        App["Application Code"]
-        Client["@major-tech/resource-client"]
-    end
-
-    Gateway["Major API Gateway"]
-    Resource[("Your Resource")]
-
-    App -- "Uses" --> Client
-    Client -- "Authenticated Request<br/>(MAJOR_JWT_TOKEN)" --> Gateway
-    Gateway -- "Proxy" --> Resource
-
-    click Client "https://www.npmjs.com/package/@major-tech/resource-client"
-
-    style YourApp fill:transparent,stroke:#999,stroke-dasharray: 5 5
-    style Client fill:#fff,stroke:#333,stroke-width:2px
-    style Gateway fill:#fff,stroke:#333,stroke-width:2px
-    style Resource fill:#fff,stroke:#333,stroke-width:2px
-```
-
-- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
-- **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
-- **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
-
-<Tip>
-Credentials flow through the Major platform. Your app never sees connection strings or API keys.
-</Tip>
-
-<Card title="Browse all connectors" icon="server" href="/connectors">
-  See setup guides and client documentation for all supported connectors.
-</Card>
-
-## RBAC (Role-Based Access Control)
-
-Major provides granular access control at both the organization and application level.
-
-### Organization roles
-
-| Role | Permissions |
-| --- | --- |
-| **Member** | View apps and connectors |
-| **Builder** | Create new apps |
-| **Admin** | Full control including user management |
-
-### Application roles
-
-| Role | Permissions |
-| --- | --- |
-| **User** | View and run the deployed app |
-| **Editor** | Modify code and create versions |
-| **Admin** | Full control including sharing and deletion |
-
-### Resource roles
-
-| Role | Permissions |
-| --- | --- |
-| **Builder** | Invoke resources in development and production |
-| **Admin** | Configure and manage the resource |
-
-### Groups
-
-Groups let you manage permissions for sets of users efficiently:
-
-- **Inheritance** — Group members inherit all permissions granted to the group
-- **Default permissions** — Configure groups to have automatic access to new apps
-- **All Users group** — Every organization member, useful for open-by-default apps
-
-## Memory
-
-Persistent memory stores organization-wide knowledge that your AI assistants and agents can access and update across sessions. Use memory to capture business context, resource quirks, and preferences without re-explaining them each time.
-
-Memory is organized into files that can be viewed, created, edited, and deleted — either through the Memory panel in the editor or through API endpoints. The system tracks which source (user, AI coder, or memory agent) made each change.
+<CardGroup cols={2}>
+  <Card title="Apps" icon="window" href="/getting-started/core-concepts/apps">
+    Self-contained projects you build, deploy, and share.
+  </Card>
+  <Card title="Agents" icon="robot" href="/getting-started/core-concepts/agents">
+    Reusable AI configurations that act on your data and apps.
+  </Card>
+  <Card title="Models" icon="sparkles" href="/getting-started/core-concepts/models">
+    The AI models agents run on, by capability tier and cost.
+  </Card>
+  <Card title="Connectors" icon="server" href="/getting-started/core-concepts/connectors">
+    Databases, APIs, and storage your apps and agents use securely.
+  </Card>
+  <Card title="RBAC" icon="lock" href="/getting-started/core-concepts/rbac">
+    Role-based access control across orgs, apps, and resources.
+  </Card>
+  <Card title="Memory" icon="brain" href="/getting-started/core-concepts/memory">
+    Persistent, organization-wide knowledge for your AI.
+  </Card>
+</CardGroup>
 
 ## How they work together
 
 1. **Admins** configure connectors and grant permissions to users and groups
-2. **Builders** create applications and use connectors to securely access company data
-3. **Users** get access to apps via RBAC and use them to get work done
+2. **Builders** create apps and agents that use connectors to securely access company data
+3. **Users** get access via RBAC and use them to get work done
 
 ## Next steps
 

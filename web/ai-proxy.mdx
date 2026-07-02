@@ -15,6 +15,10 @@ The AI proxy lets your apps call Anthropic, OpenAI, and Gemini APIs through Majo
 
 Gemini supports text generation, streaming, token counting, and image generation. Use the `/genai/v1beta/models/{model}:generateContent` and `:streamGenerateContent` endpoints the same way you would call the Gemini API directly.
 
+<Note>
+To run agent coding sessions on non-Anthropic models, see [Models](/agents/models). Those sessions route through this proxy for billing.
+</Note>
+
 ## Setup
 
 Enable the AI proxy for your organization in **Organization Settings**. Once enabled, your apps can make LLM API calls through the proxy.
