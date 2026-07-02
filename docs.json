@@ -23,6 +23,7 @@
                   "getting-started/core-concepts",
                   "getting-started/core-concepts/apps",
                   "getting-started/core-concepts/agents",
+                  "getting-started/core-concepts/models",
                   "getting-started/core-concepts/connectors",
                   "getting-started/core-concepts/rbac",
                   "getting-started/core-concepts/memory"
@@ -115,50 +116,6 @@
           {
             "group": "Overview",
             "pages": ["connectors/index", "resource-client/index"]
-          },
-          {
-            "group": "Databases",
-            "pages": [
-              "connectors/postgres",
-              "connectors/dynamodb",
-              "connectors/snowflake",
-              "connectors/mssql",
-              "connectors/bigquery",
-              "connectors/neo4j"
-            ]
-          },
-          {
-            "group": "Storage & Compute",
-            "pages": ["connectors/s3", "connectors/lambda", "connectors/sqs"]
-          },
-          {
-            "group": "CRM & Sales",
-            "pages": [
-              "connectors/salesforce",
-              "connectors/hubspot",
-              "connectors/outreach",
-              "connectors/gong",
-              "connectors/dynamics-365",
-              "connectors/ringcentral"
-            ]
-          },
-          {
-            "group": "Productivity",
-            "pages": [
-              "connectors/google-sheets",
-              "connectors/google-calendar",
-              "connectors/gmail",
-              "connectors/google-analytics",
-              "connectors/slack"
-            ]
-          },
-          {
-            "group": "Custom",
-            "pages": ["connectors/custom-api", "connectors/graphql"]
-          },
-          {
-            "group": "Pipedream Instance",
-            "pages": ["connectors/pipedream"]
           }
         ]
       },

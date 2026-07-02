@@ -1,45 +1,10 @@
 ---
 title: "Models"
-description: "Run agent coding sessions on Anthropic, OpenAI, Gemini, and Fireworks models."
+description: "Run agent coding sessions on Anthropic, OpenAI, Gemini, and Kimi models."
 ---
 
-Agent coding sessions can run on multiple AI providers — Anthropic, OpenAI, Google Gemini, and Fireworks (Kimi). Non-Anthropic models route through the [AI proxy](/web/ai-proxy); Anthropic models connect to the Anthropic API directly without proxy routing. Multi-model is available to all organizations with no special enrollment required.
-
-## Supported providers
-
-| Provider | Models | Routing |
-| --- | --- | --- |
-| Anthropic | Claude | Direct to Anthropic API |
-| OpenAI | GPT | Through the AI proxy |
-| Google | Gemini | Through the AI proxy |
-| Fireworks | Kimi | Through the AI proxy |
-
-## Model tiers
-
-The model picker in agent chats uses three abstract tiers instead of specific model names. This keeps prompts and agent configs portable — switching a tier's underlying model, or switching providers entirely, doesn't require touching anything that references a model.
-
-| Tier | Relative capability |
-| --- | --- |
-| Smartest | Highest-capability |
-| Balanced | General-purpose |
-| Fastest | Lowest-latency |
-
-Your organization can pin each tier to a specific model using the `POST /organization/model-tiers` API endpoint.
-
-## Choosing a model
-
-Pick a model from the picker in any agent chat. The selection applies to that session. If the agent has a model configured, the picker is locked — see below.
+Agent coding sessions can run on multiple AI providers — Anthropic, OpenAI, Google Gemini, and Kimi. Multi-model is available to all organizations with no special enrollment required. For the full list of models by capability tier and relative cost, see [Models](/getting-started/core-concepts/models).
 
 ## Agent model locking
 
 When an agent has a model configured, all chats bound to that agent lock to that model — users cannot change it from the picker. This keeps every run of a published agent on the same model.
-
-Subagents spawned within a session use model aliases (`opus`, `sonnet`, `haiku`, `fable`) that resolve to the tier-equivalent model for the configured provider. So a subagent that requests `sonnet` on an OpenAI-backed session gets that provider's Balanced-tier model, not a Claude model.
-
-## Billing
-
-Non-Anthropic agent sessions bill through the AI proxy and require a proxy wallet. Anthropic sessions record usage directly without proxy routing. All multi-model agent usage appears in the [Usage Dashboard](/getting-started/billing#usage-dashboard) under the "AI Proxy" category.
-
-<Note>
-Non-Anthropic sessions won't run without a funded proxy wallet. See [AI Proxy](/web/ai-proxy) for wallet setup and spending limits.
-</Note>

@@ -3,40 +3,27 @@ title: "Connectors"
 description: "Databases, APIs, and storage your apps and agents connect to securely."
 ---
 
-**Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
-
-## Architecture
-
-```mermaid
-flowchart TD
-    subgraph YourApp ["Your App"]
-        App["Application Code"]
-        Client["@major-tech/resource-client"]
-    end
-
-    Gateway["Major API Gateway"]
-    Resource[("Your Resource")]
-
-    App -- "Uses" --> Client
-    Client -- "Authenticated Request<br/>(MAJOR_JWT_TOKEN)" --> Gateway
-    Gateway -- "Proxy" --> Resource
-
-    click Client "https://www.npmjs.com/package/@major-tech/resource-client"
-
-    style YourApp fill:transparent,stroke:#999,stroke-dasharray: 5 5
-    style Client fill:#fff,stroke:#333,stroke-width:2px
-    style Gateway fill:#fff,stroke:#333,stroke-width:2px
-    style Resource fill:#fff,stroke:#333,stroke-width:2px
-```
-
-- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
-- **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
-- **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
+**Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code — requests are proxied through the Major platform, which attaches authentication and forwards them to the underlying resource.
 
 <Tip>
 Credentials flow through the Major platform. Your app never sees connection strings or API keys.
 </Tip>
 
-<Card title="Browse all connectors" icon="server" href="/connectors">
-  See setup guides and client documentation for all supported connectors.
-</Card>
+## Generated clients
+
+When you attach a connector, Major generates a client for it — one per resource, available at `src/clients/`. You don't wire up HTTP requests, authentication, or connection setup yourself; you import the client and call its `invoke` method.
+
+Because the clients are generated from your attached resources, they're worth leaning on:
+
+- **Type-safe** — full TypeScript support, so inputs and outputs are checked as you write against each resource.
+- **Tailored per resource** — each connector type gets a client with an `invoke` signature specific to it, so a Postgres query and a Slack message each use the shape that fits.
+- **No secrets in code** — authentication is handled by the platform, not your application.
+
+<CardGroup cols={2}>
+  <Card title="Resource Client" icon="box" href="/resource-client">
+    Client generation, per-connector usage, and error handling.
+  </Card>
+  <Card title="Browse all connectors" icon="server" href="/connectors">
+    Setup guides and client docs for every supported connector.
+  </Card>
+</CardGroup>

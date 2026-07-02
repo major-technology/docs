@@ -1,0 +1,38 @@
+---
+title: "Models"
+description: "The AI models available, grouped by capability tier and relative cost."
+---
+
+Agents and coding sessions can run on models from four providers — **Anthropic**, **OpenAI**, **Google**, and **Kimi**. Multi-model is available to all organizations with no special enrollment.
+
+## Capability tiers
+
+End users pick a *tier*, not a specific model — so prompts and agent configs stay portable when the model behind a tier changes.
+
+<CardGroup cols={3}>
+  <Card title="Smartest" icon="star">
+    Deepest reasoning for complex, multi-step work.
+  </Card>
+  <Card title="Balanced" icon="bolt">
+    The best everyday default — strong quality at moderate cost.
+  </Card>
+  <Card title="Fastest" icon="gauge">
+    Quick and cheap for simple, high-volume tasks.
+  </Card>
+</CardGroup>
+
+By default, each tier resolves to the Claude model in that slot — Opus 4.8 (Smartest), Sonnet 5 (Balanced), Haiku 4.5 (Fastest). Organizations can customize the different tiers of models for their end users.
+
+## Model matrix
+
+Each provider fills the same three tiers. The number next to each model is its **relative cost** — a multiple of the Anthropic model in that tier (`1×`), blended across input and output tokens (assuming a ~3:1 input-to-output mix). Figures are public list prices as of July 2026; actual billing is usage-based through the [AI proxy](/web/ai-proxy).
+
+| Tier | Anthropic | OpenAI | Google | Kimi |
+| --- | --- | --- | --- | --- |
+| **Smartest** | Claude Opus 4.8 · `1×` | GPT-5.5 · `1.1×` | Gemini 3.5 Flash · `0.34×` | Kimi K2.7 Code · `0.17×` |
+| **Balanced** | Claude Sonnet 5 · `1×` | GPT-5.4 · `0.94×` | Gemini 2.5 Flash · `0.14×` | Kimi K2.6 · `0.29×` |
+| **Fastest** | Claude Haiku 4.5 · `1×` | GPT-5.4 mini · `0.84×` | Gemini 3.1 Flash-Lite · `0.28×` | — |
+
+<Card title="Using models with agents" icon="robot" href="/agents/models">
+  How a configured agent locks its chats to a single model.
+</Card>
