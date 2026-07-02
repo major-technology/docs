@@ -15,29 +15,9 @@ The AI proxy lets your apps call Anthropic, OpenAI, and Gemini APIs through Majo
 
 Gemini supports text generation, streaming, token counting, and image generation. Use the `/genai/v1beta/models/{model}:generateContent` and `:streamGenerateContent` endpoints the same way you would call the Gemini API directly.
 
-## Multi-model agents
-
-Agent coding sessions can run on multiple AI providers — Anthropic, OpenAI, Google Gemini, and Fireworks (Kimi). Non-Anthropic models route through the AI proxy; Anthropic models connect to the Anthropic API directly without proxy routing. Multi-model is available to all organizations with no special enrollment required.
-
-### Model tiers
-
-The model picker in agent chats uses three abstract tiers instead of specific model names:
-
-| Tier | Relative capability |
-| --- | --- |
-| Smartest | Highest-capability |
-| Balanced | General-purpose |
-| Fastest | Lowest-latency |
-
-Your organization can pin each tier to a specific model using the `POST /organization/model-tiers` API endpoint.
-
-### Agent model locking
-
-When an agent has a model configured, all chats bound to that agent lock to that model — users cannot change it from the picker. Subagents spawned within a session use model aliases (`opus`, `sonnet`, `haiku`, `fable`) that resolve to the tier-equivalent model for the configured provider.
-
-### Billing
-
-Non-Anthropic agent sessions bill through the AI proxy and require a proxy wallet. Anthropic sessions record usage directly without proxy routing. All multi-model agent usage appears in the [Usage Dashboard](/getting-started/billing#usage-dashboard) under the "AI Proxy" category.
+<Note>
+To run agent coding sessions on non-Anthropic models, see [Models](/agents/models). Those sessions route through this proxy for billing.
+</Note>
 
 ## Setup
 

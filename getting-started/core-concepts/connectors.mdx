@@ -1,0 +1,42 @@
+---
+title: "Connectors"
+description: "Databases, APIs, and storage your apps and agents connect to securely."
+---
+
+**Connectors** are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    subgraph YourApp ["Your App"]
+        App["Application Code"]
+        Client["@major-tech/resource-client"]
+    end
+
+    Gateway["Major API Gateway"]
+    Resource[("Your Resource")]
+
+    App -- "Uses" --> Client
+    Client -- "Authenticated Request<br/>(MAJOR_JWT_TOKEN)" --> Gateway
+    Gateway -- "Proxy" --> Resource
+
+    click Client "https://www.npmjs.com/package/@major-tech/resource-client"
+
+    style YourApp fill:transparent,stroke:#999,stroke-dasharray: 5 5
+    style Client fill:#fff,stroke:#333,stroke-width:2px
+    style Gateway fill:#fff,stroke:#333,stroke-width:2px
+    style Resource fill:#fff,stroke:#333,stroke-width:2px
+```
+
+- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
+- **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
+- **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
+
+<Tip>
+Credentials flow through the Major platform. Your app never sees connection strings or API keys.
+</Tip>
+
+<Card title="Browse all connectors" icon="server" href="/connectors">
+  See setup guides and client documentation for all supported connectors.
+</Card>

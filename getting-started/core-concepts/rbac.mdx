@@ -1,0 +1,37 @@
+---
+title: "RBAC"
+description: "Role-based access control across your organization, apps, and resources."
+---
+
+Major provides granular access control at both the organization and application level.
+
+## Organization roles
+
+| Role | Permissions |
+| --- | --- |
+| **Member** | View apps and connectors |
+| **Builder** | Create new apps |
+| **Admin** | Full control including user management |
+
+## Application roles
+
+| Role | Permissions |
+| --- | --- |
+| **User** | View and run the deployed app |
+| **Editor** | Modify code and create versions |
+| **Admin** | Full control including sharing and deletion |
+
+## Resource roles
+
+| Role | Permissions |
+| --- | --- |
+| **Builder** | Invoke resources in development and production |
+| **Admin** | Configure and manage the resource |
+
+## Groups
+
+Groups let you manage permissions for sets of users efficiently:
+
+- **Inheritance** — Group members inherit all permissions granted to the group
+- **Default permissions** — Configure groups to have automatic access to new apps
+- **All Users group** — Every organization member, useful for open-by-default apps

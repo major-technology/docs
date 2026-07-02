@@ -15,7 +15,20 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["index", "getting-started/core-concepts"]
+            "pages": [
+              "index",
+              {
+                "group": "Core Concepts",
+                "pages": [
+                  "getting-started/core-concepts",
+                  "getting-started/core-concepts/apps",
+                  "getting-started/core-concepts/agents",
+                  "getting-started/core-concepts/connectors",
+                  "getting-started/core-concepts/rbac",
+                  "getting-started/core-concepts/memory"
+                ]
+              }
+            ]
           },
           {
             "group": "Quickstart",
@@ -85,6 +98,7 @@
           {
             "group": "Features",
             "pages": [
+              "agents/models",
               "agents/skills",
               "agents/tool-permissions",
               "agents/schedules",
