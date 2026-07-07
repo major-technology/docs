@@ -39,6 +39,14 @@ Runs are asynchronous: `run()` returns right away and you poll `getAgentContent`
 | `getRunningInstancesOfAgent(agentId?)` | List currently live runs. |
 | `getAgentContent(chatThreadId, n?)` | Read the last `n` messages of a run. |
 
+## Approving permission requests
+
+An agent an app started can reach a tool set to **Ask** (see [Tool Permissions](/agents/tool-permissions)) — for example a write or delete operation. On an app-triggered run there's no person in chat to approve it, so the run pauses with a pending permission request instead of prompting.
+
+The app that started the run can read those pending requests and approve or deny them, keeping an unattended run moving. As with other run management, an app can only respond to permission requests from runs it started.
+
+<!-- DOCS-BOT: please review — the exact agents-client method names for listing and responding to permission requests aren't confirmed in the source. Add them to the methods table above (alongside `stopAgent`) once known. -->
+
 ## Limits
 
 To prevent runaway costs, an app may have a limited number of live agent runs at once; further `run()` calls are rejected until some finish. An app can only manage the runs it started. Manual and scheduled runs aren't subject to this per-app cap.
