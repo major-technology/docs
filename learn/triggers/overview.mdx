@@ -1,0 +1,69 @@
+---
+title: "Overview"
+description: "Every way work starts in Major: Run now, schedules, connector events, webhooks, and app triggers."
+---
+
+A trigger is what starts a run. Most triggers start a [workflow](/learn/workflows/overview): you add them to the workflow's definition, and they fire on their own once the workflow is published. Apps can also start [agent](/learn/agents/overview) runs directly from their code.
+
+## Example requests
+
+- "Run the weekly-report workflow every Monday at 8am Eastern."
+- "Start the triage workflow whenever someone posts a top-level message in #support."
+- "Kick off the onboarding workflow when a Stripe checkout session completes."
+- "Give our backend a URL it can call to start the refund review workflow."
+- "When the dashboard loads, have the inbox agent summarize today's unread email."
+
+## Ways to start a run
+
+| Trigger | Starts | Fires when | Input | Set up in |
+| --- | --- | --- | --- | --- |
+| **Run now** | Workflow | You click **Run now**, or ask the Platform Agent or an MCP client to run it | Values you enter | The workflow page, chat, or [MCP](/build/mcp) |
+| [Schedule](/learn/triggers/schedules) | Workflow | A cron expression matches, in a timezone | Literal values on the trigger | `cron` trigger in the definition |
+| [Connector event](/learn/triggers/connector-events) | Workflow | A connected service reports an event, such as a Slack message or a Stripe payment | The event payload, optionally filtered and reshaped | `connector-event` trigger in the definition |
+| [Webhook](/learn/triggers/webhooks) | Workflow | Something calls the trigger's URL with its bearer token | The JSON request body, optionally reshaped | `webhook` trigger in the definition |
+| [App trigger](/learn/triggers/app-triggers) | Agent | Your deployed app calls the agents client | The prompt your code sends | Your app's code |
+
+A workflow can have any number of triggers, of any mix of types. Each trigger has an `id`, a `type`, and an optional `label`:
+
+```jsonc
+"triggers": [
+  {
+    "id": "weekday_morning",
+    "type": "cron",
+    "label": "Weekdays at 9am",
+    "config": { "cron": "0 9 * * 1-5", "timezone": "America/New_York" }
+  },
+  { "id": "backend_call", "type": "webhook", "label": "Called from our backend" }
+]
+```
+
+## Triggers only fire when published
+
+Saving a workflow never turns its triggers on. **Publish** is what makes them live: schedules start firing, connector event subscriptions are set up, and webhook URLs start accepting calls. A trigger in a saved but unpublished version is inert.
+
+This also means you can add a trigger and keep testing with **Run now**, which runs the latest saved version, before anything fires on its own.
+
+<Note>
+To pause a live workflow, remove its trigger (or comment it out in the JSONC), save, and publish.
+</Note>
+
+## What a triggered run uses
+
+Triggered runs always run the **published** version and always call deployed apps. They run as the person who last published the workflow, so agents and app calls use that person's access. Each run appears in the workflow's run history, labeled with the trigger that started it.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Schedules" icon="clock" href="/learn/triggers/schedules">
+    Run a workflow on a cron schedule.
+  </Card>
+  <Card title="Connector events" icon="plug" href="/learn/triggers/connector-events">
+    Start a workflow from Slack, Stripe, GitHub, and more.
+  </Card>
+  <Card title="Webhooks" icon="globe" href="/learn/triggers/webhooks">
+    Start a workflow with an authenticated HTTP call.
+  </Card>
+  <Card title="App triggers" icon="bolt" href="/learn/triggers/app-triggers">
+    Start agent runs from your deployed apps.
+  </Card>
+</CardGroup>

@@ -1,9 +1,13 @@
 ---
-title: "Webhooks"
-description: "Receive HTTP callbacks from external services."
+title: "Webhook routes"
+description: "Receive raw, unauthenticated HTTP callbacks from external services in your app."
 ---
 
-Receive HTTP callbacks from external services (Stripe, GitHub, Twilio, etc.) by creating routes matching `/api/webhook/*` and turning on **Webhook Access** in your app's settings. When enabled, only `/api/webhook/*` routes are publicly accessible — all other routes remain protected.
+Receive HTTP callbacks from external services (Stripe, GitHub, Twilio, etc.) by creating routes matching `/api/webhook/*` and turning on **Webhook Access** in your app's settings. When enabled, only `/api/webhook/*` routes are publicly accessible - all other routes remain protected.
+
+<Tip>
+If you want an external event to start work in Major, use a [webhook trigger](/learn/triggers/webhooks) instead. Webhook triggers start a workflow and every call is authenticated with a credential, so they are the more secure and preferred option. Use webhook routes only when a service must post raw payloads to your app and can't send a credential.
+</Tip>
 
 ## Setup
 

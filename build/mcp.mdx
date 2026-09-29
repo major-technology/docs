@@ -1,0 +1,136 @@
+---
+title: "MCP"
+description: "Build on Major from Claude Code, Codex, ChatGPT, Claude Desktop, Cursor, or any MCP client."
+---
+
+The Major MCP server exposes Major itself as [Model Context Protocol](https://modelcontextprotocol.io) tools. Connect an MCP client and your AI assistant can list and create apps, agents, skills, and workflows, start sandboxes and edit their files, query your connectors, run agents and workflows, and deploy - from the client you already use.
+
+It gives your client the same capabilities as the [Platform Agent](/build/platform-agent) in the web app.
+
+## Example requests
+
+- "List the apps I can edit in Major."
+- "Create an app that shows open support tickets from our Postgres database, then deploy it."
+- "Add a status filter to the dashboard in my `ops-dashboard` app."
+- "Build an agent that summarizes yesterday's Slack messages in #sales."
+- "Run the `weekly-report` workflow with the input `{ \"region\": \"EMEA\" }`."
+- "How many customers signed up last week?"
+
+## Connect
+
+<Tip>
+The recommended way to connect is the **Major plugin**. It configures the MCP server and installs the Major skills in one step. See the [Quickstart](/get-started/quickstart) for install steps for each client.
+</Tip>
+
+To configure the server by hand, use:
+
+| | |
+| --- | --- |
+| **Endpoint** | `https://mcp.major.build/mcp` |
+| **Transport** | Streamable HTTP |
+| **Authentication** | OAuth |
+
+The first time your client connects, a browser tab opens to Major. Sign in and click **Allow** to grant the client access to your organization. The client then stores the token and connects without prompting again.
+
+<Note>
+The access token is tied to one organization. To work in a different organization, reconnect the server and approve access for that organization.
+</Note>
+
+### Skills in the plugin
+
+The plugin also installs skills that teach your assistant how to build on Major. The assistant loads them on demand:
+
+| Skill | Use it for |
+| --- | --- |
+| `new-project` | Planning a brand new app: connector setup and the data layer |
+| `app-builder` | Creating and editing apps in an app sandbox |
+| `agent-builder` | Creating and configuring agents (`agent.jsonc` and `prompt.md`) |
+| `skill-builder` | Creating and managing agent skills |
+| `workflow-builder` | Creating and managing workflows, their nodes, and triggers |
+| `using-connectors` | Querying connectors and Major platform resources, with per-connector references |
+| `using-apps` | Calling the API of a deployed app |
+| `using-authn` | Adding sign-in and identity to an app |
+| `using-webhooks` | Receiving webhooks in a deployed app |
+| `using-frontend-data-table` | Building table views in an app's frontend |
+| `debug-issue` | Investigating errors, failed calls, and broken behavior |
+
+The Platform Agent uses the same skills, so your client and the web app build things the same way.
+
+## What it can do
+
+| Group | Tools | What they do |
+| --- | --- | --- |
+| **Discovery** | `list`, `list_sandboxes` | List the apps, agents, skills, or workflows you can edit (or view, with `include_read_only`). List your running sandboxes. |
+| **Create** | `create` | Create an app, agent, skill, or workflow and start its sandbox. |
+| **Sandboxes** | `start_sandbox`, `stop_sandbox` | Start the sandbox for an existing app, agent, skill, or workflow, or release it. |
+| **Sandbox editing** | `sandbox_read_file`, `sandbox_write_file`, `sandbox_edit_file`, `sandbox_glob`, `sandbox_grep`, `sandbox_bash`, `sandbox_bash_output`, `sandbox_bash_stop`, `sandbox_workspace_status`, `sandbox_restart_preview` | Read, write, and search files, and run shell commands in a sandbox. `sandbox_restart_preview` restarts an app's preview server. |
+| **App wiring** | `sandbox_add-resource-client`, `sandbox_remove-resource-client`, `sandbox_add-agent-client`, `sandbox_remove-agent-client` | Add or remove a connector or an agent client in an app. |
+| **Connectors** | `search_resource_tool_catalog`, `execute_resource_tool` | Find a connector tool by describing what you need, then run it against one of your connectors. |
+| **Connector setup** | `search_connector_types`, `request_resource_setup` | Find connector types and get a prefilled link to set up a new connector. |
+| **Deployed apps** | `get_app_skill`, `do_get_request`, `do_requests` | Read a deployed app's API guide and call its endpoints. |
+| **Running** | `run_agent`, `run_workflow` | Start a run of an agent's published version, or run the latest saved draft of a workflow. |
+| **Data and config** | `setup_managed_database`, `run_migration`, `set_app_env_variables` | Create an app's [managed database](/learn/apps/managed-databases), run SQL migrations on it, and get a link to set an app's [environment variables](/learn/apps/environment-variables). |
+
+Tools that need secrets or credentials, such as `request_resource_setup` and `set_app_env_variables`, never take them from your assistant. They return a link that you open in Major to enter the values yourself.
+
+## How it works
+
+### Sandboxes
+
+Apps, agents, skills, and workflows are all edited on a remote sandbox. Your assistant finds what to edit with `list`, starts its sandbox with `start_sandbox` (or `create` for something new), and then edits through the `sandbox_*` tools. Every sandbox call names its target: an app's slug, or an agent, skill, or workflow id. Several sandboxes can run at once.
+
+You can watch every sandbox your client starts at [app.major.build/sandboxes](https://app.major.build/sandboxes), with one tab per sandbox, including an app's live preview.
+
+A sandbox is held by one person at a time. If someone else is editing the same item, `start_sandbox` reports that it is locked.
+
+### Saving, publishing, and deploying
+
+Inside a sandbox, `sandbox_bash` runs the Major CLI in the workspace root:
+
+| Command | Agent, skill, or workflow | App |
+| --- | --- | --- |
+| `major pull` | Pull the saved bundle | `git pull` |
+| `major push` | Save a new version | `git push` |
+| `major validate` | Validate the bundle | Run lint |
+| `major publish` | Publish the latest saved version | Deploy the pushed commit |
+
+An app's first deploy needs `major publish --slug <slug>` to choose its URL. See the [CLI](/build/cli) for the full command set.
+
+### Connectors
+
+Your assistant does not load a separate tool for every connector. It describes what it needs to `search_resource_tool_catalog` (for example, "read-only SQL against Postgres"), gets back matching tools with their input schemas, and runs one with `execute_resource_tool`. See [Connectors](/learn/connectors/overview).
+
+## Permissions
+
+The MCP server acts as you:
+
+- **Scoped to your organization.** Every call runs in the organization you approved when you connected.
+- **Scoped to your roles.** `list` returns only what you can access, and each tool checks your access to the item it touches. Creating things, starting sandboxes, running agents and workflows, and connector setup require permission to build in the organization. Members without it see only the connector, deployed-app, and listing tools. See [Members & roles](/settings/members-and-roles).
+- **Approvals happen in your client.** Your personal [tool permissions](/settings/tool-permissions) apply to Platform Agent chats in the web app, not to MCP clients. Use your client's own tool approval settings to control what runs without asking.
+
+## MCP server vs. app MCP
+
+Major has two kinds of MCP endpoints:
+
+| | Major MCP server (this page) | [App MCP](/learn/apps/mcp) |
+| --- | --- | --- |
+| **Endpoint** | `https://mcp.major.build/mcp` | `https://mcp.major.build/<org-slug>` |
+| **Exposes** | Major itself: building, editing, running, and deploying | Your deployed apps' own endpoints, as tools |
+| **Use it to** | Build on Major from your AI client | Let AI clients use the apps you built |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/get-started/quickstart">
+    Install the Major plugin in your client.
+  </Card>
+  <Card title="Platform Agent" icon="sparkles" href="/build/platform-agent">
+    The same capabilities, built into the web app.
+  </Card>
+  <Card title="CLI" icon="terminal" href="/build/cli">
+    Build on Major from your own terminal.
+  </Card>
+  <Card title="App MCP" icon="plug" href="/learn/apps/mcp">
+    Expose your deployed apps as MCP tools.
+  </Card>
+</CardGroup>

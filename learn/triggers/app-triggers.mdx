@@ -1,48 +1,100 @@
 ---
-title: "App Triggers"
+title: "App triggers"
 description: "Let your deployed apps start and manage agent runs."
 ---
 
-Your deployed Major apps can trigger agents at runtime and interact with their runs. A common pattern is a dashboard that, on load, kicks off several agents — summarize my inbox, prep my calendar, review open PRs — and renders their results as they come in.
+Your Major [apps](/learn/apps/overview) can start [agent](/learn/agents/overview) runs from their server code and interact with those runs: read their messages, send follow-ups, stop them, and answer their tool approvals. A common pattern is a dashboard that, on load, starts a few agents (summarize my inbox, prep my calendar, review open PRs) and shows their results as they come in.
 
-## Attaching an agent to an app
+App triggers start agents, not workflows. To start a [workflow](/learn/workflows/overview) from your own code, call its [webhook](/learn/triggers/webhooks).
 
-An app can only trigger agents that have been explicitly attached to it. Attaching requires edit access to both the app and the agent — it's a deliberate action, not inferred from your code. Once attached, the app can start and manage runs of that agent.
+## Example requests
+
+- "When the dashboard loads, have the inbox agent summarize today's unread email and show the result."
+- "Add a Research button to each account row that starts the account-research agent on that company."
+- "Show the agent's pending approvals in the app so users can approve them without leaving the page."
+
+## Adding an agent to an app
+
+Ask the [Platform Agent](/build/platform-agent) to use an agent from your app, or add it while you build the app. Major generates a typed client for that agent in the app's `clients/` folder, already bound to the agent's id:
+
+```typescript
+import { supportBotClient } from "./clients";
+```
+
+Use the generated client rather than writing your own. When you deploy, Major reads the app's code to find which agents it triggers and allows only those. To stop triggering an agent, delete the code that uses it and remove its client.
+
+Triggering an agent doesn't let the agent call the app back. If the agent should write results to the app or call its endpoints, add the app to the agent's applications and publish the agent. See [Agents](/learn/agents/overview#what-makes-up-an-agent).
 
 ## Triggering from code
 
-Use the `@major-tech/agents-client/next` package. The client reads your app's Major credentials from the environment, so there's nothing to wire up manually.
+The generated client works in server code only (Server Components, Server Actions, and Route Handlers), because it sends the app's credentials. It reads them from the environment, so there's nothing to configure, and the same credentials are available while you build, so you can test the whole loop before deploying.
 
 ```typescript
-import { createAgentsClient } from "@major-tech/agents-client/next";
+import { supportBotClient } from "./clients";
 
-const agents = createAgentsClient();
-
-// Start a run — returns immediately with a run handle
-const { chatThreadId } = await agents.run({
-  agentId: process.env.SUMMARY_AGENT_ID!,
-  prompt: "Summarize today's unread email.",
-  name: "inbox-summary",
+// Start a run. Returns as soon as the run is accepted; the agent runs in the background.
+const { runId } = await supportBotClient.run({
+  prompt: "Summarize today's unread email and flag what needs a reply.",
+  name: "Daily email summary",
 });
 
-// Poll for progress — the last N messages of the run
-const messages = await agents.getAgentContent(chatThreadId, 10);
+// Read the newest messages, oldest first within the page.
+const page = await supportBotClient.getAgentContent(runId, { limit: 20 });
 ```
 
-Runs are asynchronous: `run()` returns right away and you poll `getAgentContent` for progress. Other methods let you manage a run in flight:
+Runs are asynchronous: `run()` returns right away, and you poll `getAgentContent` for progress. The other methods manage a run in flight:
 
 | Method | Description |
 | --- | --- |
-| `run({ agentId, prompt, name? })` | Start a run; returns a `chatThreadId` handle. |
-| `sendMessage(chatThreadId, message)` | Send a follow-up message to a live run. |
-| `stopAgent(chatThreadId)` | Stop a run (no-op if it already finished). |
-| `getRunningInstancesOfAgent(agentId?)` | List currently live runs. |
-| `getAgentContent(chatThreadId, n?)` | Read the last `n` messages of a run. |
+| `run({ prompt, name? })` | Start a run. Returns `{ runId, status: "started" }`. `name` is shown in the Major UI. |
+| `getAgentContent(runId, { limit?, nextToken? })` | Read a page of the run's messages (up to 100). Pass `nextToken` back to read older messages. |
+| `sendMessage(runId, message)` | Send a follow-up message. If the run has finished, this resumes it on the same run. |
+| `stopAgent(runId)` | Stop a run. Stopping a finished run still succeeds. |
+| `getRunningInstancesOfAgent()` | List this app's runs of the agent that are still executing. |
+| `listPendingApprovals(runId)` | List the tool calls the run is paused on, waiting for approval. |
+| `respondToApproval(runId, approvalId, { approved, feedback?, remember? })` | Approve or deny a paused tool call. `remember: true` saves the decision for future runs. |
 
-## Limits
+An app can only manage runs it started. Each run costs credits and starts a real agent session, so start only the runs a page needs and never in a render loop.
 
-To prevent runaway costs, an app may have a limited number of live agent runs at once; further `run()` calls are rejected until some finish. An app can only manage the runs it started. Manual and scheduled runs aren't subject to this per-app cap.
+## Who the run acts as
 
-<Note>
-`sendMessage` to a finished run throws `AgentRunNotActiveError` — start a fresh run instead. Calls also fail if the agent isn't attached to the app or the caller lacks access.
-</Note>
+When a signed-in user triggers the run through your app, the run is attributed to that user, and agents with per-user connectors act with that user's credentials. A call made outside a user's request runs as the person who deployed the app. A call made for an anonymous visitor, such as on a public page, is rejected because there's no user to attribute the run to. In every case, the deployer must have access to use the agent.
+
+## Approvals
+
+If the agent has tools set to **Ask** (see [Tool permissions](/learn/agents/tool-permissions)), the run pauses when it wants to use one. Call `listPendingApprovals` to show the pending call, including `toolName` and `toolArgs`, and `respondToApproval` to approve or deny it. An approval left unanswered is denied automatically at its `expiresAt` time, and the run continues.
+
+## Errors
+
+The client throws typed errors you can branch on:
+
+| Error | When |
+| --- | --- |
+| `AgentRunNotStartedError` | The run couldn't start or accept the message, for example when the organization is out of credits or a safety rule rejected the message. |
+| `AgentNotFoundError` | Unknown run or agent, a run this app didn't start, or an approval that's no longer pending. |
+| `AgentsAuthError` | The deployer can't use the agent, or the generated client is missing or out of date. |
+| `AgentsValidationError` | Invalid input, such as a missing prompt. |
+
+```typescript
+import { AgentRunNotStartedError } from "@major-tech/agents-client";
+
+try {
+  await supportBotClient.sendMessage(runId, text);
+} catch (err) {
+  if (err instanceof AgentRunNotStartedError) {
+    return { error: err.message };
+  }
+  throw err;
+}
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Webhooks" icon="globe" href="/learn/triggers/webhooks">
+    Start a workflow from your app or backend.
+  </Card>
+  <Card title="Tool permissions" icon="shield" href="/learn/agents/tool-permissions">
+    Decide which tools need approval.
+  </Card>
+</CardGroup>

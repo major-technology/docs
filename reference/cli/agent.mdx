@@ -1,0 +1,171 @@
+---
+title: "major agent"
+description: "Create, clone, run, and manage file-based agents from the CLI."
+---
+
+`major agent` manages [agents](/learn/agents/overview) as local folders. An agent folder holds two files, `agent.jsonc` and `prompt.md`, plus a `.major/config.json` that links the folder to the agent. Once you have a folder, edit the files and use [`major validate`, `major push`, and `major publish`](/reference/cli/sync) to save and release changes.
+
+Every `major agent` subcommand accepts `--json` to print one JSON result.
+
+Commands that take `--id` default to the agent of the folder you run them in. Outside an agent folder, pass `--id`.
+
+## major agent list
+
+List the agents in your organization, with their IDs and whether each is published or a draft.
+
+```bash
+major agent list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--include-read-only` | Include agents you can use but not edit. |
+
+## major agent create
+
+Create a new agent and set up a local folder for it. The directory must not exist yet.
+
+```bash
+major agent create <dir> --name <name> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--name` | Agent name. Required. |
+| `--description` | Agent description. |
+
+```bash
+major agent create support-triage --name "Support triage" --description "Routes inbound tickets"
+```
+
+## major agent clone
+
+Download an existing agent's latest saved version into a new local folder. Without `--id`, you pick from the agents you can edit.
+
+```bash
+major agent clone [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Agent ID. Required with `--non-interactive`. |
+| `--dir` | New directory. Defaults to the agent ID. |
+
+## major agent info
+
+Show an agent's published state and latest saved version. Inside the agent's folder, it also shows your local version and whether it is behind the latest.
+
+```bash
+major agent info [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Agent ID. Defaults to the agent folder's. |
+
+## major agent run
+
+Start a run of the agent's published version. The command prints the run ID.
+
+```bash
+major agent run --prompt <prompt> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `-p`, `--prompt` | Initial prompt for the run. Required. |
+| `--name` | Run title shown in Major. |
+| `--id` | Agent ID. Defaults to the agent folder's. |
+
+```bash
+major agent run -p "Summarize yesterday's open tickets" --name "Daily summary"
+```
+
+### major agent run list
+
+List the agent's runs, newest first.
+
+```bash
+major agent run list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Agent ID. Defaults to the agent folder's. |
+| `--limit` | Maximum runs to return. Default 20. |
+| `--offset` | Runs to skip. |
+| `--live` | Only runs with a live session. |
+| `--mine` | Only runs you started. |
+| `--source` | Only runs from this source: `web`, `slack`, `external_channel`, `app`, `schedule`, `manual`, `agent`, `workflow`. |
+
+### major agent run content
+
+Read a run's messages.
+
+```bash
+major agent run content <runId> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--next-token` | Token from a previous page, for older messages. |
+
+### major agent run send
+
+Send a message to a run, resuming it if it finished.
+
+```bash
+major agent run send <runId> --message <message>
+```
+
+| Flag | Description |
+| --- | --- |
+| `-m`, `--message` | Message to send. Required. |
+
+### major agent run stop
+
+Stop a run.
+
+```bash
+major agent run stop <runId>
+```
+
+## major agent slack
+
+Manage the agent's own Slack app. All `major agent slack` subcommands take `--id`, which defaults to the agent folder's.
+
+### major agent slack connect
+
+Provision the agent's Slack app and print its install URL.
+
+```bash
+major agent slack connect [flags]
+```
+
+### major agent slack pause
+
+Silence the agent's Slack app.
+
+```bash
+major agent slack pause [flags]
+```
+
+### major agent slack resume
+
+Re-enable a paused Slack app.
+
+```bash
+major agent slack resume [flags]
+```
+
+### major agent slack delete
+
+Permanently delete the agent's Slack app. You are asked to confirm unless you pass `--yes`.
+
+```bash
+major agent slack delete [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--yes` | Skip confirmation. Required with `--non-interactive`. |

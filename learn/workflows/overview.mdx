@@ -1,0 +1,187 @@
+---
+title: "Overview"
+description: "Chain agents, app calls, branches, loops, and human approvals into a graph that runs on its own."
+---
+
+A workflow is a graph of steps that Major runs for you. Each step is a node: run an [agent](/learn/agents/overview) with a prompt, call one of your deployed [apps](/learn/apps/overview), branch on a value, loop over a list, wait, or ask a person to approve in Slack. A workflow starts when you click **Run now**, or on its own from a [trigger](/learn/triggers/overview): a schedule, a connector event, or a webhook call.
+
+Use a workflow when the work has a fixed shape - the same steps, in the same order, every time - and you want each step's input and output recorded. Use a single agent when the work is open-ended and the agent should decide the steps.
+
+## Example requests
+
+Describe the workflow to the [Platform Agent](/build/platform-agent) or any client connected through [MCP](/build/mcp):
+
+- "Every weekday at 9am, pull yesterday's signups from the CRM app and have the lead-scoring agent score each one."
+- "When a Stripe payment over $1,000 fails, have the billing agent draft a note to the customer and ask #finance to approve it before it's sent."
+- "When someone posts in #support, have the triage agent classify the message and open a ticket through the helpdesk app."
+- "Give me a webhook our backend can call with an order id to start a refund review."
+
+## How workflows are defined
+
+A workflow is a single JSONC file (JSON with comments). It lists the workflow's `triggers`, its `nodes`, the `edges` between them, and the `entry` node where a run starts. The format is published as a JSON Schema at `https://api.prod.major.build/public/workflow.schema.json`, which also lists the graph rules every definition must pass.
+
+This workflow starts from a webhook, has an agent assess a refund request, asks a person in Slack, and issues the refund only if they approve:
+
+```jsonc
+{
+  "label": "Refund review",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "order_id": { "type": "string" },
+      "amount": { "type": "number" }
+    },
+    "required": ["order_id", "amount"]
+  },
+  "triggers": [
+    { "id": "refund_request", "type": "webhook", "label": "Refund request" }
+  ],
+  "entry": "lookup_order",
+  "nodes": [
+    {
+      "id": "lookup_order",
+      "type": "app_call",
+      "label": "Look up order",
+      "config": {
+        "app_id": "8d0f3c6e-2b1a-4c9e-9f7d-1a2b3c4d5e6f",
+        "method": "GET",
+        "path": "/api/orders",
+        "input": { "id": { "$state": "trigger.input.order_id" } }
+      }
+    },
+    {
+      "id": "assess",
+      "type": "agent_call",
+      "label": "Assess refund",
+      "config": {
+        "agent_id": "3f9a7b2c-5d4e-4a1b-8c6d-7e8f9a0b1c2d",
+        "prompt": "Review this order and refund request. Order: {{json lookup_order}}. Requested amount: {{trigger.input.amount}}.",
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "recommendation": { "type": "string", "enum": ["approve", "deny"] },
+            "reason": { "type": "string" }
+          },
+          "required": ["recommendation", "reason"]
+        }
+      }
+    },
+    {
+      "id": "approval",
+      "type": "human_approval",
+      "label": "Finance approval",
+      "config": {
+        "channel": { "type": "slack", "channel_id": "C0123456789" },
+        "message": "Refund of {{trigger.input.amount}} for order {{trigger.input.order_id}}. Agent says {{assess.recommendation}}: {{assess.reason}}",
+        "options": [
+          { "value": "approve", "label": "Approve", "style": "primary" },
+          { "value": "deny", "label": "Deny", "style": "danger" }
+        ],
+        "timeout_seconds": 86400,
+        "on_timeout": "deny"
+      }
+    },
+    {
+      "id": "decide",
+      "type": "router",
+      "config": {
+        "branches": [
+          { "label": "Approved", "when": { "$expr": "approval.choice == 'approve'" }, "to": ["issue_refund"] }
+        ],
+        "default": ["done"],
+        "default_label": "Denied"
+      }
+    },
+    {
+      "id": "issue_refund",
+      "type": "app_call",
+      "label": "Issue refund",
+      "config": {
+        "app_id": "8d0f3c6e-2b1a-4c9e-9f7d-1a2b3c4d5e6f",
+        "method": "POST",
+        "path": "/api/refunds",
+        "input": {
+          "order_id": { "$state": "trigger.input.order_id" },
+          "amount": { "$state": "trigger.input.amount" }
+        }
+      }
+    },
+    { "id": "done", "type": "end", "config": {} }
+  ],
+  "edges": [
+    { "id": "e1", "from": "lookup_order", "to": "assess" },
+    { "id": "e2", "from": "assess", "to": "approval" },
+    { "id": "e3", "from": "approval", "to": "decide" },
+    { "id": "e4", "from": "decide", "to": "issue_refund", "label": "Approved" },
+    { "id": "e5", "from": "decide", "to": "done", "label": "Denied" },
+    { "id": "e6", "from": "issue_refund", "to": "done" }
+  ]
+}
+```
+
+Each node's output is stored under its id, so later nodes can read it: `{ "$state": "lookup_order.total" }` looks up a value, `{ "$expr": "..." }` computes one with a CEL expression, and `"{{assess.reason}}"` interpolates one into a string. The workflow's own input is under `trigger.input`. See [State and input](/learn/workflows/state).
+
+## What workflows can do
+
+| Node | What it does |
+| --- | --- |
+| `agent_call` | Runs an agent with a prompt. With an `output_schema`, the agent returns structured data that later nodes can branch on. |
+| `app_call` | Calls an endpoint on one of your deployed apps over HTTP (`GET`, `POST`, `PUT`, `PATCH`, or `DELETE`). The response body becomes the node's output. |
+| `router` | Branches on state. The first branch whose condition is true wins; otherwise the `default` targets run. A branch can start several nodes in parallel. |
+| `for_each` | Runs a loop body once per item in a list, in sequence or in parallel, and collects the results. |
+| `join` | Waits until every parallel branch leading into it has arrived, then continues. |
+| `wait` | Pauses the run for a fixed number of seconds. |
+| `human_approval` | Posts a message with buttons to a Slack channel and waits for someone to click one, or for a timeout. |
+| `end` | Finishes the run with a `success` or `failure` status and an optional output. |
+
+A workflow can have up to 50 nodes. See [Nodes](/learn/workflows/nodes) for every field and the graph rules.
+
+## Building a workflow
+
+Ask the [Platform Agent](/build/platform-agent) in the web app, or any AI client connected through [MCP](/build/mcp). It looks up the agents and apps to use, drafts the definition, and runs it to test. The **Workflows** page in the web app shows the graph as it's built, and you can also add nodes and triggers there directly. To edit the file yourself, use the [CLI](/reference/cli/workflow).
+
+Like agents and skills, workflows have two separate steps:
+
+- **Save** writes the definition as a new immutable version. Saving validates the file first; if it fails, nothing is saved and you get the list of errors. Saving never changes what runs automatically.
+- **Publish** makes the latest saved version live. This is the only step that turns triggers on: schedules start firing, connector event subscriptions are set up, and webhook URLs start accepting calls. Publish an earlier version to roll back.
+
+<Warning>
+Triggers in a saved but unpublished version do nothing. After you add or change a trigger, publish before you expect it to fire.
+</Warning>
+
+## Running a workflow
+
+- **Run now** runs the latest **saved** version immediately, so you can test without publishing. If the workflow has an `input_schema`, you're asked for the input first. When the workflow calls apps, choose whether `app_call` nodes hit the deployed apps or your live app sandboxes (**Run with app drafts**).
+- **Triggers** run the **published** version on their own and always call deployed apps. See [Triggers](/learn/triggers/overview).
+
+You can also run a single node on its own to test it, with stand-in outputs for the nodes before it.
+
+Every run is recorded in the workflow's run history with a per-node trace: status, resolved input, output, and any error. Runs execute as the person who last published the workflow (or its creator, before the first publish), so agents and apps use that person's access.
+
+## Approvals in Slack
+
+Workflows use Slack for two kinds of approval. Both need the Major Slack integration installed for your organization.
+
+- A **`human_approval` node** is a step in the graph. It posts its message to a channel with one button per option, can send reminders, and waits for a click or its timeout. Point its single outgoing edge at a `router` that branches on `<node_id>.choice`. Only people who are Major members with access to the workflow can answer.
+- An **`agent_call` `approval_channel`** routes that agent's [tool approval](/learn/agents/tool-permissions) requests to a Slack channel. Without one, approvals stay in the app. Use it when an agent has tools set to **Ask** and no one is watching the run.
+
+## Sharing and access
+
+Workflows have their own roles: **User** can view and run the workflow and answer its approvals, **Editor** can also edit and publish, and **Admin** can also share and delete.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Nodes" icon="diagram-project" href="/learn/workflows/nodes">
+    Every node type, its fields, and the graph rules.
+  </Card>
+  <Card title="State and input" icon="code" href="/learn/workflows/state">
+    Pass data between nodes and define workflow input.
+  </Card>
+  <Card title="Triggers" icon="bolt" href="/learn/triggers/overview">
+    Start a workflow from a schedule, a connector event, or a webhook.
+  </Card>
+  <Card title="CLI" icon="terminal" href="/reference/cli/workflow">
+    Create and edit workflow files locally.
+  </Card>
+</CardGroup>

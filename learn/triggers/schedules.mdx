@@ -1,39 +1,74 @@
 ---
 title: "Schedules"
-description: "Run an agent automatically on a recurring schedule."
+description: "Run a workflow automatically on a recurring cron schedule."
 ---
 
-Schedules run an agent on a recurring cron schedule with a fixed prompt — no person needs to start the run. Use them for recurring work like a daily standup summary, a weekly report, or an hourly data check.
+A schedule is a `cron` trigger on a [workflow](/learn/workflows/overview). It starts a run every time its cron expression matches, with no one needing to click anything. Use it for recurring work like a daily standup summary, a weekly report, or an hourly data check.
 
-A schedule attaches to an existing agent and is made up of these fields:
+To run an agent on a schedule, put it in a workflow with an `agent_call` node and give the workflow a `cron` trigger.
 
-| Field | Description |
-| --- | --- |
-| **Name** | A display label for the schedule. |
-| **Agent** | The agent that runs when the schedule fires. |
-| **Prompt** | The instruction sent to the agent on each run. |
-| **Schedule** | A standard 5-field cron expression (e.g. `0 9 * * 1` = every Monday at 9 AM). |
-| **Timezone** | An IANA timezone (e.g. `America/New_York`) the cron is evaluated against. |
-| **Approval channel** | Optional, Slack-only — where the run's [approval requests](#approvals) go. |
-| **Shared template** | Optional — lets others reuse this schedule as a starting point. See [Templates](#templates). |
+## Example requests
+
+- "Every weekday at 9am Eastern, have the standup agent summarize yesterday's commits and post them to #eng."
+- "Run the invoice-reconciliation workflow on the first of every month at 6am UTC."
+- "Check for stale support tickets every hour."
+
+## How a schedule is defined
+
+```jsonc
+"triggers": [
+  {
+    "id": "weekly_review",
+    "type": "cron",
+    "label": "Weekly review",
+    "config": {
+      "cron": "0 9 * * 1",
+      "timezone": "America/New_York"
+    },
+    "input": { "region": "EMEA", "lookback_days": 7 }
+  }
+]
+```
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `config.cron` | Yes | A five-field cron expression: minute, hour, day of month, month, day of week. `0 9 * * 1` is every Monday at 9:00. |
+| `config.timezone` | Yes | The IANA timezone the expression is evaluated in, such as `America/New_York` or `UTC`. |
+| `input` | No | Values passed to the run as `trigger.input`. They must be literals; `$state` and `$expr` aren't allowed here. |
+| `label` | No | The name shown on the trigger and in run history. |
+
+If the workflow has an `input_schema`, its defaults are filled in and the scheduled input is validated on every run. See [State and input](/learn/workflows/state#workflow-input).
 
 ## Building a schedule
 
-Like agents and skills, schedules are [built conversationally](/learn/agents/overview#building-with-chat) — tell Major which agent to run and how often. It translates your cadence into a cron expression and timezone (e.g. "every weekday at 9am ET" → `0 9 * * 1-5` in `America/New_York`), asking for your timezone if it isn't clear. The schedule goes **live immediately** and starts firing on the next matching time. Refine it the same way later ("change it to 8am", "only on Mondays"), or [disable](#managing-schedules) it while you make changes.
+Tell the [Platform Agent](/build/platform-agent) what to run and how often. It turns a cadence like "every weekday at 9am ET" into `0 9 * * 1-5` in `America/New_York`, and asks for your timezone if it isn't clear.
 
-## Templates
+In the workflow editor, add a trigger and choose a schedule. You can type a cadence under **Describe it** and click **Generate**, or enter a **Cron expression** directly. The editor previews the upcoming run times. If the workflow has an `input_schema`, fill in the **Scheduled input** there too.
 
-Mark a schedule as a **shared template** to let other people in your organization reuse it. A shared template is visible org-wide and others can copy it as the starting point for their own schedule — the copy runs as them, with their own prompt and credentials, so a template never points runs or approvals at someone else's account.
+<Note>
+A new or changed schedule starts firing only after you **publish** the workflow. Saving alone leaves it inert. Use **Run now** to test the workflow before you publish.
+</Note>
 
 ## Managing schedules
 
-- **Enable / disable** — pause a schedule without deleting it, and resume it later.
-- **Run now** — trigger a run immediately, outside the schedule, to test it.
-- **View runs** — see the history of past runs and open any of them.
-- **Share** — grant other users edit access to a schedule (unless its agent uses per-user connectors — see below).
+- **Pause** a schedule by removing its trigger (or commenting it out), then saving and publishing.
+- **Change** the cadence or input by editing the trigger, then saving and publishing.
+- **Run now** starts a run immediately, outside the schedule, using the latest saved version.
+- **Run history** on the workflow lists every scheduled run with its per-node trace.
 
-Scheduled runs execute as the user who created the schedule, so the agent uses that person's credentials for any connectors that require them. For this reason, a schedule whose agent uses [per-user connectors](/learn/connectors/overview#shared-vs-per-user-connections) can't be shared, and only its creator can run it. See [Access & Permissions](/learn/agents/access#schedules) for the full rules.
+Scheduled runs use the published version and run as the person who last published the workflow, so agents and app calls use that person's access.
 
-## Approvals
+## Approvals in unattended runs
 
-If an agent has tools set to **Ask** (see [Tool Permissions](/learn/agents/tool-permissions)), an unattended scheduled run has no one to prompt. You can configure a schedule to route those approval requests to a **Slack channel**, where a person can approve or deny the action. Connect Slack and select the channel when configuring the schedule.
+A scheduled run usually has no one watching it. If an agent in the workflow has tools set to **Ask** (see [Tool permissions](/learn/agents/tool-permissions)), set an `approval_channel` on its `agent_call` node to send those approval requests to a Slack channel. To have a person sign off on a step, add a `human_approval` node. See [Approvals in Slack](/learn/workflows/overview#approvals-in-slack).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Workflows" icon="diagram-project" href="/learn/workflows/overview">
+    Build the workflow a schedule runs.
+  </Card>
+  <Card title="Connector events" icon="plug" href="/learn/triggers/connector-events">
+    Start a workflow when something happens instead of on a timer.
+  </Card>
+</CardGroup>

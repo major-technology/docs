@@ -1,5 +1,5 @@
 ---
-title: "Skills"
+title: "Overview"
 description: "Reusable instruction bundles that extend what your agents can do."
 ---
 
@@ -7,12 +7,28 @@ Skills are reusable bundles of instructions, reference material, and scripts tha
 
 ## What's in a skill
 
-A skill is a `SKILL.md` file with YAML frontmatter (a name and description), plus optional:
+A skill is a versioned bundle of files:
 
-- **Reference docs** — additional context the agent reads on demand.
-- **Scripts** — files in a `scripts/` directory the agent can execute.
+```text
+SKILL.md          required - frontmatter (name, description) and instructions
+references/*.md   optional - longer reference material the agent reads on demand
+scripts/*.ts      optional - scripts the agent runs, e.g. to call a connector
+package.json      scaffolded for you; add dependencies here if scripts need them
+```
 
-When an agent with an attached skill runs, the skill's `SKILL.md` is loaded into the agent's context automatically. The agent reads the reference docs or runs the scripts only when it needs them, so attaching a skill doesn't bloat every prompt.
+When an agent with an attached skill runs, it sees each skill's `description` and loads `SKILL.md` only when the task calls for it. It reads references or runs scripts only when it needs them, so attaching a skill doesn't bloat every prompt.
+
+<Tip>
+The `description` decides when an agent loads the skill. Say what it does, when to use it, and the phrases users might say. For example: "Fetches and summarises Stripe charges and refunds. Use when the user asks to summarise charges, look up a refund, or mentions a Stripe customer id."
+</Tip>
+
+### Scripts
+
+Scripts do real work, such as querying a connector. `@major-tech/resource-client` is preinstalled, so a script can call any connector the agent has access to without handling credentials (see [Resource client](/learn/connectors/resource-client)). A script prints one JSON line to stdout, `{"ok": true, ...}` or `{"ok": false, "error": "..."}`, and exits non-zero on failure.
+
+## Building a skill
+
+Describe the skill to the [Platform Agent](/build/platform-agent) or any client connected through [MCP](/build/mcp), and it writes the bundle on the skill's sandbox, where scripts can be tested before saving. You can also edit the files yourself with the [CLI](/reference/cli/skill).
 
 ## Attaching skills to an agent
 
@@ -20,7 +36,12 @@ In the agent builder, attach or detach skills from your agent. Major suggests sk
 
 ## Versioning
 
-Skills are versioned. Each time you publish changes, Major snapshots a new version, so agents always load a stable, published version rather than work-in-progress edits. Edits you make while building are kept in a separate working area until you publish them.
+Skills are versioned, with two separate steps:
+
+- **Save** writes the bundle as a new immutable version. Attached agents don't see it yet.
+- **Publish** points the skill at its latest saved version. Attached agents load the published version from their next run.
+
+You can roll back by publishing an earlier version.
 
 ## Access
 

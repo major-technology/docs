@@ -1,0 +1,47 @@
+---
+title: "major skill"
+description: "Create, clone, and list file-based skills from the CLI."
+---
+
+`major skill` manages [skills](/learn/skills/overview) as local folders. A skill folder must have a `SKILL.md` at its root and can hold any other files the skill needs, such as references and scripts. A `.major/config.json` links the folder to the skill. Once you have a folder, edit the files and use [`major validate`, `major push`, and `major publish`](/reference/cli/sync) to save and release changes.
+
+The skill's name comes from the `SKILL.md` frontmatter, so `major skill create` does not take a name.
+
+Every `major skill` subcommand accepts `--json` to print one JSON result.
+
+## major skill list
+
+List the skills in your organization, with their IDs and status.
+
+```bash
+major skill list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--include-read-only` | Include skills you can see but not edit. |
+
+## major skill create
+
+Create a new skill and set up a local folder for it. The directory must not exist yet.
+
+```bash
+major skill create <dir>
+```
+
+```bash
+major skill create invoice-lookup
+```
+
+## major skill clone
+
+Download an existing skill's latest saved version into a new local folder. Without `--id`, you pick from the skills you can edit.
+
+```bash
+major skill clone [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Skill ID. Required with `--non-interactive`. |
+| `--dir` | New directory. Defaults to the skill ID. |

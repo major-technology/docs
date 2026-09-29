@@ -1,86 +1,38 @@
 ---
 title: "major org"
-description: "Switch between organizations and inspect membership from the CLI."
+description: "List organizations and choose your default one from the CLI."
 ---
 
-The `org` commands help you view and select organizations.
+`major org` shows the organizations you belong to and sets your default. Commands that create or list agents, skills, workflows, and apps use your default organization, except inside a linked folder, where they use that folder's organization.
 
-| Command | Purpose |
+## major org list
+
+List all organizations you are a member of.
+
+```bash
+major org list [flags]
+```
+
+| Flag | Description |
 | --- | --- |
-| `major org list` | List all your organizations. |
-| `major org select` | Select a default organization. |
-| `major org whoami` | Show the current organization. |
+| `--json` | Output in JSON format. |
 
-## `major org list`
+## major org select
 
-```bash
-major org list
-```
-
-**When to use:** viewing your available organizations.
-
-**What happens:**
-
-Lists all organizations you belong to and highlights the currently selected one.
-
-## `major org select`
+Choose your default organization from a list.
 
 ```bash
-major org select
+major org select [flags]
 ```
 
-**When to use:** switching between organizations.
+| Flag | Description |
+| --- | --- |
+| `--id` | Organization ID to select without a prompt. |
 
-**What happens:**
+## major org whoami
 
-1. Lists your available organizations.
-2. Allows you to select a new default organization.
-3. Updates your local configuration.
-
-## `major org whoami`
+Show the currently selected default organization.
 
 ```bash
 major org whoami
 ```
-
-**When to use:** checking which organization is currently selected.
-
-**What happens:**
-
-Displays the name and ID of the currently selected organization.
-
-## Organization resources via MCP
-
-The CLI exposes organization-level resources through MCP endpoints. You can authenticate using Bearer tokens and access organization resources without requiring an application context.
-
-**Available org-level MCP capabilities:**
-
-- List all resources in your organization.
-- Check AI proxy status for resources.
-- Get app status across your organization.
-- Read resource context documents.
-- Interact with resources through MCP tools.
-- Select and manage environments for resource operations.
-
-**Authentication:**
-
-Authenticate to org-level MCP endpoints using a Bearer token. Include your token in the request header:
-
-```bash
-Authorization: Bearer <your-token>
-```
-
-The CLI MCP server enforces resource permissions consistently across both app-level and org-level access modes through unified permission checking.
-
-### Environment selection in MCP
-
-The org-scoped MCP provides tools to select which environment resource tools operate in:
-
-- `set_environment` – Switch the active environment for resource operations. The choice persists across sessions.
-- `get_environment` – Check which environment is currently active.
-
-By default, resource operations use the default build environment. Use these tools to work with resources in a different environment, such as staging or production. This environment selection is separate from the per-app environment choice available in the web editor.
-
-<Card title="Learn more about Resources" icon="box" href="/reference/cli/resource">
-  See how to manage connectors and resources for your applications.
-</Card>

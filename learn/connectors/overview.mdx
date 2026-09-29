@@ -1,9 +1,9 @@
 ---
-title: "Connectors"
-description: "Connect your apps to databases, APIs, and storage services."
+title: "Overview"
+description: "How connectors give apps, agents, and workflows secure access to your data."
 ---
 
-Connectors are the databases, APIs, and storage services your apps connect to. Major manages credentials securely so you never need to handle secrets in your code.
+Connectors are the databases, APIs, SaaS tools, and storage services that your apps, agents, skills, and workflows use. You configure a connector once, and Major holds its credentials and proxies every call, so secrets never appear in your code or your prompts. For the full list of supported connectors, see the [connector reference](/reference/connectors).
 
 - **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
 - **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
@@ -34,8 +34,8 @@ Resource credentials are encrypted and never exposed to the client-side applicat
 
 When you configure a connector, you choose how it authenticates:
 
-- **Shared** — one set of credentials for everyone. The person setting up the connector provides them, and every app user and agent run uses that same account. Best for system-owned resources like a production database.
-- **Per-user** — each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors — typically OAuth services — support this.
+- **Shared** - one set of credentials for everyone. The person setting up the connector provides them, and every app user and agent run uses that same account. Best for system-owned resources like a production database.
+- **Per-user** - each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors - typically OAuth services - support this.
 
 With a per-user connector, Major gates on the user's own authorization: anyone who opens an app or runs an agent without a connected account is redirected to a `/connect` page to complete OAuth, then returned where they were. Because the connector acts as whoever is using it, each person only touches data they're entitled to. Users manage the accounts they've authorized from [Connected Accounts](/settings/connected-accounts).
 
@@ -60,7 +60,7 @@ You can also enable **global configuration** for a resource, which uses a single
 
 ## Resource context
 
-You can upload context files — database schemas, OpenAPI specs, API documentation, and more — to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat — click it to configure the resource inline without leaving the editor.
+You can upload context files - database schemas, OpenAPI specs, API documentation, and more - to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat - click it to configure the resource inline without leaving the editor.
 
 ## Identity-based authentication
 
@@ -74,4 +74,4 @@ Identity-based authentication is more secure and avoids storing long-lived crede
 
 Set hourly and daily invocation limits on any connector to protect downstream services from runaway usage. When a limit is reached, requests return `429 Too Many Requests` until the window resets. Configure limits when creating or editing a connector.
 
-Don't see the connector you need? Click **Request it** in the Add Connector dialog to submit a request.
+Don't see the connector you need? Use [Custom API, GraphQL, or custom MCP](/reference/connectors) connectors, or click **Request it** in the Add Connector dialog to submit a request.

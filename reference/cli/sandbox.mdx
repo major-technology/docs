@@ -1,0 +1,28 @@
+---
+title: "major sandbox"
+description: "Commands that run inside a Major sandbox."
+---
+
+<Warning>
+`major sandbox` commands only work when run inside a Major sandbox. On a locally installed CLI, every `major sandbox` subcommand fails.
+</Warning>
+
+`major sandbox` groups commands that act on the Major sandbox the CLI is running in. The `major` CLI is preinstalled in sandboxes, so you can run these from a sandbox shell.
+
+## major sandbox upload-url
+
+Get a single-use URL that uploads one file into the sandbox at the given path. The command prints the URL, when it expires, and a `curl` command to upload with.
+
+```bash
+major sandbox upload-url --path <path> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--path` | Destination path relative to the sandbox workspace root, for example `public/logo.png`. Required. |
+| `--json` | Print one JSON result. |
+
+```bash
+major sandbox upload-url --path public/logo.png
+curl -T logo.png '<upload-url>'
+```

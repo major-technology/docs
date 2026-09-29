@@ -1,32 +1,224 @@
 ---
-title: "App lifecycle"
-description: "Follow this opinionated loop to build, preview, and deploy apps with the Major CLI."
+title: "CLI"
+description: "Build Major apps, agents, skills, and workflows from your own machine and IDE with the Major CLI."
 ---
 
+The `major` CLI lets you work on Major from your own machine. You get a local folder for each app, agent, skill, or workflow, edit it with any editor or coding assistant, and sync it back to Major when you are ready.
+
+- **Apps** are git repositories. You run them locally with your connectors wired in, then deploy.
+- **Agents, skills, and workflows** are small file bundles. You pull them, edit, validate, push a new version, and publish.
+
+For every command and flag, see the [CLI reference](/reference/cli/overview).
+
+## Set up
+
 <Steps>
-  <Step title="Authenticate & pick an org">
-    Run `major user login` to authenticate into your account.
+  <Step title="Check prerequisites">
+    You need macOS or Linux with Git installed. To work on apps, you also need Node.js 22.12 or later and pnpm.
   </Step>
-  <Step title="Create or clone the app">
-    - `major app create` scaffolds from templates, provisions a GitHub repo, attaches connectors, and generates your first `.env`.
-    - `major app clone` to clone into any existing application in your org.
+  <Step title="Install the CLI">
+    <CodeGroup>
+      ```bash curl
+      curl -fsSL https://install.major.build | bash
+      ```
+
+      ```bash Homebrew
+      brew tap major-technology/tap
+      brew install major-technology/tap/major
+      ```
+    </CodeGroup>
+
+    Confirm with `major --version`. Update later with `major update`.
   </Step>
-  <Step title="Iterate locally">
-    - Use `major app start` to install deps, mint a JWT, and boot `pnpm dev`.
-    - Edit code/UI as usual; requests to internal connectors automatically tunnel through Major.
-    - Use any existing IDE or setups you have locally to develop code with full context into your application stack.
+  <Step title="Log in">
+    ```bash
+    major user login
+    ```
+
+    This opens your browser to authorize the CLI, then asks you to pick a default organization. Check your session with `major user whoami` and your organization with `major org whoami`. Switch organizations with `major org select`.
   </Step>
-  <Step title="Refresh connectors as needed">
-    Call `major resource manage` whenever you attach or remove databases/APIs. The CLI will autogenerate clients for you to use against those connectors
-  </Step>
-  <Step title="Deploy with confidence">
-    `major app deploy` checks git status, prompts for a commit message if needed, pushes main, then creates a new version and streams deployment status until it's live.
-  </Step>
-  <Step title="Share access">
-    `major app configure` to manage access to admin, edit, or view your application.
+  <Step title="Set your GitHub username (apps only)">
+    App code lives in GitHub. The CLI detects your username from your SSH configuration. If it cannot, set it once:
+
+    ```bash
+    major user gitconfig --username "your-github-username"
+    ```
   </Step>
 </Steps>
 
-<Callout icon="sparkles">
-Treat apps as your own! You can develop normally in them, use git, etc. We aren't opinionated about how you build your apps.
-</Callout>
+## Build an app
+
+<Steps>
+  <Step title="Create or clone the app">
+    Create a new Next.js app with its own GitHub repository:
+
+    ```bash
+    major app create
+    ```
+
+    Or clone an app that already exists in your organization:
+
+    ```bash
+    major app clone
+    ```
+
+    Both commands set up the local folder, generate `.env`, and generate clients for the app's resources.
+  </Step>
+  <Step title="Run it locally">
+    From the app folder:
+
+    ```bash
+    major app start
+    ```
+
+    This refreshes `.env`, syncs theme files, runs `pnpm install`, and starts `pnpm dev`. Your local app reaches connectors through Major, so you do not need database credentials on your machine.
+  </Step>
+  <Step title="Attach connectors">
+    See which resources exist and which are attached, then attach the ones you need:
+
+    ```bash
+    major resource list
+    major resource add --id <resource-id>
+    ```
+
+    Or pick them interactively with `major resource manage`. The CLI regenerates resource clients for your code. Learn more in [Connectors](/learn/connectors/overview).
+
+    To switch the environment your app uses, run `major resource env`, then `major app start` again. Manage variables with [`major vars`](/reference/cli/vars).
+  </Step>
+  <Step title="Deploy">
+    Commit, push, and deploy in one step:
+
+    ```bash
+    major app deploy -m "Describe the change"
+    ```
+
+    The first deploy asks for a URL slug (or pass `--slug`). The command waits for the deployment and prints the app's URL.
+
+    If you prefer to commit with git yourself, use `major push` and then `major publish`. See [pull, push, validate, publish](/reference/cli/sync).
+  </Step>
+  <Step title="Check on it">
+    ```bash
+    major app info
+    major app logs --since 1h
+    major app errors list
+    ```
+
+    Manage who can use the app with `major app configure`, which opens its settings in your browser.
+  </Step>
+</Steps>
+
+<Tip>
+An app is an ordinary git repository. Use branches, your IDE, and your usual tools. Only `major push`, `major publish`, and `major app deploy` need you on the default branch.
+</Tip>
+
+## Build an agent, skill, or workflow
+
+[Agents](/learn/agents/overview), [skills](/learn/skills/overview), and [workflows](/learn/workflows/overview) are versioned file bundles. Each local folder has a `.major/config.json` that links it to its bundle, so the same four commands work for all three.
+
+| Kind | Files in the folder |
+| --- | --- |
+| Agent | `agent.jsonc` and `prompt.md` |
+| Skill | `SKILL.md` at the root, plus any references and scripts |
+| Workflow | `<workflowId>.jsonc` |
+
+<Steps>
+  <Step title="Create or clone">
+    <Tabs>
+      <Tab title="Agent">
+        ```bash
+        major agent create support-triage --name "Support triage"
+        # or
+        major agent clone --id <agent-id>
+        ```
+      </Tab>
+      <Tab title="Skill">
+        ```bash
+        major skill create invoice-lookup
+        # or
+        major skill clone --id <skill-id>
+        ```
+      </Tab>
+      <Tab title="Workflow">
+        ```bash
+        major workflow create nightly-sync
+        # or
+        major workflow clone --id <workflow-id>
+        ```
+      </Tab>
+    </Tabs>
+
+    Find IDs with `major agent list`, `major skill list`, or `major workflow list`. Without `--id`, `clone` lets you pick from a list. Then `cd` into the new folder.
+  </Step>
+  <Step title="Pull the latest version">
+    If someone else may have saved changes since you cloned, bring the folder up to date:
+
+    ```bash
+    major pull
+    ```
+
+    <Warning>
+    `major pull` overwrites the bundle's files with the latest saved version. Push any local edits you want to keep first.
+    </Warning>
+  </Step>
+  <Step title="Edit">
+    Edit the files in your editor. A skill's name comes from its `SKILL.md` frontmatter, and a workflow's label comes from its definition.
+  </Step>
+  <Step title="Validate">
+    ```bash
+    major validate
+    ```
+
+    Major checks the files and lists any errors and warnings. Nothing is saved.
+  </Step>
+  <Step title="Push a new version">
+    ```bash
+    major push -m "Describe the change"
+    ```
+
+    This saves the folder as a new unpublished version. Users keep getting the published version until you publish.
+  </Step>
+  <Step title="Publish">
+    ```bash
+    major publish
+    ```
+
+    This publishes the latest saved version, so push first. Pass `--yes` to skip the confirmation.
+  </Step>
+</Steps>
+
+For agents, you can then start and follow runs from the terminal:
+
+```bash
+major agent run -p "Summarize yesterday's open tickets"
+major agent run content <runId>
+```
+
+See [major agent](/reference/cli/agent) for runs and Slack apps.
+
+## Scripts and CI
+
+Pass `--non-interactive` to make any command fail instead of prompting or opening a browser, and supply the values it would have asked for as flags. For example:
+
+```bash
+major agent clone --id <agent-id> --non-interactive
+major publish --yes --non-interactive
+```
+
+Many commands also accept `--json` for machine-readable output.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="CLI reference" icon="terminal" href="/reference/cli/overview">
+    Every command and flag.
+  </Card>
+  <Card title="Apps" icon="browser" href="/learn/apps/overview">
+    How Major apps work.
+  </Card>
+  <Card title="MCP" icon="plug" href="/build/mcp">
+    Connect your coding assistant to Major.
+  </Card>
+  <Card title="Platform Agent" icon="sparkles" href="/build/platform-agent">
+    Build in the browser instead.
+  </Card>
+</CardGroup>

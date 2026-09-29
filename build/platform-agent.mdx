@@ -1,0 +1,99 @@
+---
+title: "Platform Agent"
+description: "The AI assistant in the Major web app that builds apps, agents, skills, and workflows and answers questions about your data."
+---
+
+The Platform Agent is the AI assistant you chat with in the [Major web app](/learn/web-app). Describe what you want and it plans the work, asks for approval where needed, and builds it: apps, agents, skills, and workflows. It can also query your connectors directly to answer questions about your data.
+
+## Example requests
+
+- "How many deals did we close last quarter, by region?"
+- "Build an app that tracks open support tickets from our Postgres database."
+- "Create an agent that posts a summary of new Salesforce leads to #sales every morning."
+- "Write a skill that explains how our billing tables fit together."
+- "Make a workflow that runs the lead-scoring agent whenever a new Attio record is created."
+- "Add a date filter to the revenue dashboard and deploy it."
+
+## What it can do
+
+| Capability | What it does |
+| --- | --- |
+| **Answer data questions** | Queries your [connectors](/learn/connectors/overview) and replies in the chat. For bulk work, such as paging through a full history, it writes and runs a script instead of calling tools one page at a time. |
+| **Build apps** | Creates and edits full-stack [apps](/learn/apps/overview) in a sandbox with a live preview, then deploys them. |
+| **Build agents** | Drafts an [agent's](/learn/agents/overview) prompt, attaches the connectors, apps, and skills it needs, and saves and publishes it. |
+| **Build skills** | Writes [skills](/learn/skills/overview) that agents load on demand. |
+| **Build workflows** | Builds [workflows](/learn/workflows/overview) and their [triggers](/learn/triggers/overview), and runs them to test. |
+| **Use what exists** | Calls your deployed apps' APIs, runs agents and workflows, and opens a deployed app in a side panel. |
+| **Set things up** | Asks you to add a connector, sign in to one, or enter an app's environment variables when the work needs it. |
+
+## How it works
+
+### Plans
+
+For complex, ambiguous, or long-running requests, the Platform Agent tells you its approach before it starts, or asks a question when there are meaningfully different ways to do the work.
+
+The mode selector in the chat composer has two modes:
+
+- **Auto** - the Platform Agent works through the request and pauses only for approvals.
+- **Plan** - the Platform Agent researches and writes a plan first. It appears as a **Plan review** card; click **Accept plan** to let it proceed, or **Decline plan** to redirect it.
+
+### Sandboxes
+
+Apps, agents, skills, and workflows are each edited on a sandbox attached to the chat. Several can be attached at once, so one conversation can build an app and the agent it calls. A sandbox is held by one person at a time; if someone else is editing the same item, the Platform Agent tells you it is locked.
+
+Chats you start from an item's editor are pinned to that item, and its sandbox starts automatically.
+
+### Tool cards
+
+Each action the Platform Agent takes appears in the conversation as a tool card, so you can see what it read, queried, edited, or ran. Plans, approvals, and setup requests appear as cards you act on directly.
+
+## Approvals
+
+When the Platform Agent wants to use a tool that needs your sign-off, it shows a **Permission request** card with the tool name, the reason, and the arguments it will send. Choose:
+
+| Button | Effect |
+| --- | --- |
+| **Approve** | Run this call once. |
+| **Deny** | Block this call. The Platform Agent is told it was denied. |
+| **Always approve** | Run this call and save an always-allow rule for this tool in your chats. Offered for connector tools and app endpoints. |
+
+By default, read-only connector tools and app `GET` requests run without asking, and tools that write ask first. Actions such as running an agent or a database migration always ask.
+
+Manage your saved rules, or set **always allow**, **ask**, or **always deny** for any tool ahead of time, on the [Tool Permissions](/settings/tool-permissions) page. When you chat with a specific agent, that agent's [tool permissions](/learn/agents/tool-permissions) apply instead of yours.
+
+## Models
+
+Pick a tier - **Smartest**, **Balanced**, or **Fastest** - from the model picker when you start a chat. Each tier maps to the model your organization configured for it. The model is fixed once the chat starts, and a chat with an agent that has a configured model uses that model. See [Models](/learn/agents/models).
+
+## Memory
+
+The Platform Agent reads your organization's [memory](/learn/agents/memory) before it acts: business definitions and conventions, notes about each connector's data and quirks, and what each app is for. It does not edit memory during a chat. After the session, a separate memory agent saves anything worth remembering.
+
+Files the Platform Agent writes in its working directory, such as notes, scripts, and intermediate results, persist for the conversation, so you can pick up where you left off.
+
+## Platform Agent and MCP
+
+The Platform Agent uses the same tools and skills as the [Major MCP server](/build/mcp). If you prefer to work in Claude Code, Codex, ChatGPT, Cursor, or another MCP client, connect it to Major and you get the same capabilities there. The main differences:
+
+| | Platform Agent | MCP client |
+| --- | --- | --- |
+| **Where** | The Major web app | Your own AI client |
+| **Approvals** | Permission request cards and your [tool permissions](/settings/tool-permissions) | Your client's own tool approval settings |
+| **Connector and env var setup** | Setup forms open in the chat | You get a link to open in Major |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Web app" icon="browser" href="/learn/web-app">
+    Find your way around chat, apps, agents, and settings.
+  </Card>
+  <Card title="Tool Permissions" icon="shield-check" href="/settings/tool-permissions">
+    Choose which tools run without asking in your chats.
+  </Card>
+  <Card title="MCP" icon="plug" href="/build/mcp">
+    Get the same capabilities in your own AI client.
+  </Card>
+  <Card title="Memory" icon="brain" href="/learn/agents/memory">
+    Teach Major about your business and data.
+  </Card>
+</CardGroup>

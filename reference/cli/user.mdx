@@ -1,71 +1,48 @@
 ---
 title: "major user"
-description: "Authenticate to Major, manage your session, and inspect who you are logged in as."
+description: "Log in to Major, log out, and set your GitHub username from the CLI."
 ---
 
-The `user` group handles authentication. Tokens are stored securely in your OS keychain.
+`major user` handles authentication. Your session token is stored in your system keychain.
 
-| Command | Purpose |
-| --- | --- |
-| `major user login` | Log in and select an organization. |
-| `major user logout` | Log out and remove credentials. |
-| `major user whoami` | Show current user and organization. |
-| `major user gitconfig` | Set your GitHub username. |
+## major user login
 
-## `major user login`
+Log in and store your session token.
 
 ```bash
 major user login
 ```
 
-**When to use:** authenticating with Major.
+The CLI opens an authorization page in your browser. If the browser does not open, or you want to authorize from another device, open the URL the CLI prints. After you approve, you pick a default organization. If you belong to only one, it is selected automatically.
 
-**What happens:**
+## major user logout
 
-1. Opens the login page in your browser.
-2. Authenticate with email/password or SSO (if configured for your organization).
-3. Securely stores your session token.
-4. Prompts you to select your default organization.
-
-<Note>
-You can re-run `login` anytime to refresh your token or switch organizations.
-</Note>
-
-## `major user logout`
+Revoke your CLI token and remove it from local storage.
 
 ```bash
 major user logout
 ```
 
-**When to use:** signing out or switching accounts.
+## major user whoami
 
-**What happens:**
-
-1. Revokes your session.
-2. Removes your stored credentials.
-
-## `major user whoami`
+Show the currently authenticated user, after verifying the stored token.
 
 ```bash
 major user whoami
 ```
 
-**When to use:** checking your current login status.
+## major user gitconfig
 
-**What happens:**
-
-Displays your email and current organization.
-
-## `major user gitconfig`
+Store your GitHub username. `major app create` and `major app clone` use it to give you access to app repositories.
 
 ```bash
-major user gitconfig
+major user gitconfig [flags]
 ```
 
-**When to use:** setting up or updating your GitHub username.
+| Flag | Description |
+| --- | --- |
+| `--username` | GitHub username to store. Skips the prompt. |
 
-**What happens:**
-
-1. Shows your currently stored username (if any).
-2. Prompts you to enter or update your GitHub username.
-3. Saves the username so Major can automatically invite you to new repositories.
+```bash
+major user gitconfig --username "your-github-username"
+```
