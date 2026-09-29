@@ -1,0 +1,22 @@
+/* Keep the left column of every table the same width across pages. */
+@media (min-width: 768px) {
+  .mdx-content table {
+    table-layout: fixed;
+  }
+
+  /* Two-column tables: label on the left, description on the right. */
+  .mdx-content table tr > :first-child:nth-last-child(2) {
+    width: 32%;
+  }
+
+  /* Three or more columns: a narrower left column, the rest share the space. */
+  .mdx-content table tr > :first-child:nth-last-child(n + 3) {
+    width: 22%;
+  }
+
+  .mdx-content table th,
+  .mdx-content table td {
+    min-width: 0 !important;
+    overflow-wrap: anywhere;
+  }
+}
