@@ -1,0 +1,154 @@
+---
+title: "Agents client"
+description: "Start and manage agent runs from your app's server code with @major-tech/agents-client."
+---
+
+`@major-tech/agents-client` lets an app's server code start [agent](/learn/agents/overview) runs, read their messages, send follow-ups, stop them, and answer their tool approvals. For when to use it and who a run acts as, see [App triggers](/learn/triggers/app-triggers).
+
+## Add an agent to your app
+
+Each agent your app calls gets a generated client in the app's `clients/` folder (`src/clients/` if the app has a `src` directory). The client is bound to the agent's id and reads the app's credentials from the environment, so there is nothing to configure.
+
+<Tabs>
+  <Tab title="Platform Agent or MCP">
+    Ask for it: "Use the support-bot agent from this app." The client is generated for you and the import line is added to your code.
+  </Tab>
+  <Tab title="Locally">
+    From the app's root, with the agent's id (find it with [`major agent list`](/reference/cli/agent)):
+
+    ```bash
+    npx @major-tech/agents-client add <agent-id> support-bot "Handles support tickets"
+    ```
+
+    This records the agent in `agents.json` and writes `clients/supportBot.ts`. Remove it with `npx @major-tech/agents-client remove support-bot`, and list configured agents with `npx @major-tech/agents-client list`.
+  </Tab>
+</Tabs>
+
+Then import the client:
+
+```typescript
+import { supportBotClient } from "./clients";
+```
+
+<Warning>
+Always use the generated client. When you deploy, Major reads your code to find which agent ids the app uses and only allows those. An id it can't see in the code, such as one read from an environment variable or built at runtime, isn't allowed, and calls with it fail with `AgentsAuthError`.
+</Warning>
+
+To stop calling an agent, delete the code that uses it and remove its client.
+
+## Server code only
+
+Use the client in Server Components, Server Actions, and Route Handlers, never in client components. It sends the app's `MAJOR_JWT_TOKEN`, which must not reach the browser. The same credentials are injected while you build and after you deploy, so you can test the whole loop in the editor preview.
+
+## Start a run
+
+```typescript
+const { runId } = await supportBotClient.run({
+  prompt: "Summarize today's unread email and flag what needs a reply.",
+  name: "Daily email summary", // optional, shown in the Major UI
+});
+```
+
+`run()` returns `{ runId, status: "started" }` as soon as the run is accepted. The agent runs in the background, so render a pending state and poll for results. Pass `runId` to every other method.
+
+## Read a run's messages
+
+```typescript
+const page = await supportBotClient.getAgentContent(runId, { limit: 20 });
+
+for (const msg of page.messages) {
+  // msg: { role, type, content, timestamp }
+}
+
+// Read the page before it
+if (page.nextToken) {
+  const older = await supportBotClient.getAgentContent(runId, {
+    limit: 20,
+    nextToken: page.nextToken,
+  });
+}
+```
+
+Each page holds the newest `limit` messages (1-100), oldest first. `role` is `user`, `assistant`, or `system`. `content` depends on `type` (`message`, `thinking`, `tool_use`, `tool_result`, `result`, and system types), so render it defensively.
+
+## Send a follow-up, stop, and list runs
+
+```typescript
+// Send a follow-up. If the run already finished, this resumes it on the same runId.
+await supportBotClient.sendMessage(runId, "Now draft replies for the urgent ones.");
+
+// Stop a run. Stopping a finished run still succeeds.
+await supportBotClient.stopAgent(runId);
+
+// Runs of this agent, started by this app, that are still executing.
+const running = await supportBotClient.getRunningInstancesOfAgent();
+// [{ runId, agentId, status: "running", startedAt }]
+```
+
+An app can only manage runs it started.
+
+## Answer tool approvals
+
+If the agent has tools set to **Ask** (see [Tool permissions](/learn/agents/tool-permissions)), the run pauses when it wants to use one. Your app can show the pending call and let the user decide without leaving the page.
+
+```typescript
+const pending = await supportBotClient.listPendingApprovals(runId);
+// [{ approvalId, toolName, toolArgs, description?, expiresAt? }]
+
+await supportBotClient.respondToApproval(runId, pending[0].approvalId, {
+  approved: true,
+  feedback: "Looks right.", // optional, useful on a denial
+  remember: false,          // true stops prompting for this tool on future runs
+});
+// { status: "recorded" }
+```
+
+- Show `toolName` and `toolArgs` so the user sees exactly what will run. Use `description` as a summary when it's present.
+- An approval left unanswered is denied at its `expiresAt` time, and the run continues.
+- Poll `listPendingApprovals` when the user opens the run or on a sensible interval, not in a tight loop. The run is already paused.
+
+## Methods
+
+| Method | Returns |
+| --- | --- |
+| `run({ prompt, name? })` | `{ runId, status: "started" }` |
+| `getAgentContent(runId, { limit?, nextToken? })` | `{ messages, nextToken? }` |
+| `sendMessage(runId, message)` | `{ status: "queued" }` |
+| `stopAgent(runId)` | `{ status: "stopped" }` |
+| `getRunningInstancesOfAgent()` | `AgentRun[]` |
+| `listPendingApprovals(runId)` | `PendingApproval[]` |
+| `respondToApproval(runId, approvalId, { approved, feedback?, remember? })` | `{ status: "recorded" }` |
+
+All types are exported from `@major-tech/agents-client`.
+
+## Errors
+
+Every error extends `AgentsClientError`, which carries `httpStatus` and `requestId` (include the request id when you contact support). Branch on the subclass rather than parsing messages:
+
+| Error | When |
+| --- | --- |
+| `AgentsValidationError` | Invalid input, such as a missing `prompt` or `message`. |
+| `AgentsAuthError` | The app's deployer can't use the agent, or the generated client is missing or out of date. Regenerate the client. |
+| `AgentNotFoundError` | Unknown run or agent, a run this app didn't start, or an approval that is no longer pending. Re-fetch and re-render. |
+| `AgentRunNotStartedError` | The run couldn't start or accept the message: the organization is out of credits, a safety rule rejected the message, or the Major API was unreachable. Show the error; don't retry in a loop. |
+
+```typescript
+import { AgentRunNotStartedError } from "@major-tech/agents-client";
+
+try {
+  await supportBotClient.sendMessage(runId, text);
+} catch (err) {
+  if (err instanceof AgentRunNotStartedError) {
+    return { error: err.message };
+  }
+  throw err;
+}
+```
+
+## Costs
+
+Every run is a real agent session and uses credits. Start only the runs a page needs, and never start runs in a render loop or recursively.
+
+## If the agent should call your app back
+
+Triggering an agent doesn't let it call your app. If the agent should write results to the app or call its endpoints, add the app to the agent's applications and publish the agent. Otherwise its requests to the app are rejected with HTTP 403. See [Agents](/learn/agents/overview#what-makes-up-an-agent).

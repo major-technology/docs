@@ -1,32 +1,145 @@
 ---
-title: "AI Proxy"
-description: "Call Anthropic, OpenAI, and Gemini APIs through Major's managed gateway."
+title: "AI proxy"
+description: "Call Anthropic, OpenAI, and Gemini from your app without API keys, billed to your Major credits."
 ---
 
-The AI proxy lets your apps call Anthropic, OpenAI, and Gemini APIs through Major's managed gateway. Instead of managing API keys and billing for each provider separately, your apps authenticate via JWT tokens and usage is tracked automatically.
+The AI proxy lets your app call Anthropic, OpenAI, and Gemini through Major. You use each provider's official SDK as usual, but point it at the proxy and authenticate with the app's Major token instead of a provider API key. Usage is billed at cost against your organization's credits and shows up in the [usage dashboard](/settings/billing#usage-dashboard).
 
-## Supported providers
+## Example requests
 
-| Provider | Endpoint prefix |
+- "Add a Summarize button that uses Claude to summarize the selected ticket."
+- "Classify each new lead as hot, warm, or cold with GPT and store the label."
+- "Generate a product image from the description field with Gemini."
+
+## Enable it for an app
+
+The proxy is enabled per app. When you enable it, the app gets a default monthly spending limit of $10.
+
+<Tabs>
+  <Tab title="Editor">
+    Open the app in the editor, go to the **Settings** tab, and turn on **Enable AI proxy for this app** in the **AI Proxy** section. You can change the monthly spending limit there.
+  </Tab>
+  <Tab title="CLI">
+    From the app's directory:
+
+    ```bash
+    major app ai-proxy status   # enabled? and this month's spend
+    major app ai-proxy enable   # enable with the default $10/month limit
+    ```
+
+    See [`major app`](/reference/cli/app).
+  </Tab>
+  <Tab title="Platform Agent">
+    Ask for a feature that needs a model. The Platform Agent checks whether the proxy is enabled and asks before enabling it.
+  </Tab>
+</Tabs>
+
+## Use it in your code
+
+Two environment variables are available in the app's runtime, in the editor preview, and after deploy:
+
+| Variable | Use |
 | --- | --- |
-| Anthropic | `/anthropic/` |
-| OpenAI | `/openai/` |
-| Gemini | `/genai/` |
+| `MAJOR_AI_PROXY_URL` | Base URL of the proxy. Append the provider prefix: `/anthropic`, `/openai`, or `/genai`. |
+| `MAJOR_JWT_TOKEN` | The app's token. Pass it as the SDK's `apiKey`. Requests without it are rejected. |
 
-Gemini supports text generation, streaming, token counting, and image generation. Use the `/genai/v1beta/models/{model}:generateContent` and `:streamGenerateContent` endpoints the same way you would call the Gemini API directly.
+Call the proxy from server code only, so the token never reaches the browser. Use the provider's own SDK, not a unified SDK, and never hard-code keys or proxy URLs.
+
+<CodeGroup>
+
+```typescript Anthropic
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic({
+  baseURL: process.env.MAJOR_AI_PROXY_URL + "/anthropic",
+  apiKey: process.env.MAJOR_JWT_TOKEN,
+});
+
+const message = await client.messages.create({
+  model: "claude-sonnet-4-6",
+  max_tokens: 1024,
+  messages: [{ role: "user", content: "Summarize this ticket: ..." }],
+});
+```
+
+```typescript OpenAI
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: process.env.MAJOR_AI_PROXY_URL + "/openai",
+  apiKey: process.env.MAJOR_JWT_TOKEN,
+});
+
+const completion = await client.chat.completions.create({
+  model: "gpt-4.1",
+  messages: [{ role: "user", content: "Classify this lead: ..." }],
+});
+```
+
+```typescript Gemini
+import { GoogleGenAI } from "@google/genai";
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.MAJOR_JWT_TOKEN,
+  httpOptions: { baseUrl: process.env.MAJOR_AI_PROXY_URL + "/genai" },
+});
+
+const response = await ai.models.generateContent({
+  model: "gemini-2.5-flash",
+  contents: "Write a product description for ...",
+});
+```
+
+</CodeGroup>
+
+For Gemini, set `httpOptions.baseUrl` to the `/genai` prefix only. The SDK adds `/v1beta/models/...` itself. Streaming (`generateContentStream`) and token counting (`countTokens`) use the same client.
+
+### Images and audio
+
+```typescript
+// OpenAI: text to image, image edit
+const image = await openai.images.generate({ model: "gpt-image-1", prompt: "A white siamese cat", size: "1024x1024" });
+const edited = await openai.images.edit({ model: "gpt-image-1", image: fs.createReadStream("input.png"), prompt: "Add a top hat" });
+
+// OpenAI: text to speech, speech to text
+const speech = await openai.audio.speech.create({ model: "tts-1", voice: "alloy", input: "Hello!" });
+const transcript = await openai.audio.transcriptions.create({ model: "whisper-1", file: audioFile });
+
+// Gemini: image model through generateContent; the image comes back as inlineData parts
+const res = await ai.models.generateContent({ model: "gemini-2.5-flash-image", contents: "A banana dish in a fancy restaurant" });
+
+// Gemini: Imagen through generateImages
+const imagen = await ai.models.generateImages({ model: "imagen-3.0-generate-002", prompt: "Robot holding a red skateboard", config: { numberOfImages: 1 } });
+```
+
+Image endpoints are stateless: input images live only in that request's body, and nothing is stored on the server.
+
+## Supported endpoints
+
+Only these endpoints are available. Any other path returns `endpoint_not_allowed`.
+
+| Provider | Endpoints |
+| --- | --- |
+| Anthropic | `/v1/messages`, `/v1/messages/count_tokens` |
+| OpenAI | `/v1/chat/completions`, `/v1/responses`, `/v1/audio/speech`, `/v1/audio/transcriptions`, `/v1/images/generations`, `/v1/images/edits`, `/v1/images/variations` |
+| Gemini | `/v1beta/models/{model}:generateContent`, `:streamGenerateContent`, `:countTokens`, `:generateImages` |
+
+Not supported: embeddings, video generation, file uploads, the OpenAI Assistants API, and Gemini cached contents, tuning, and the Live API.
+
+## Spending limits and errors
+
+Each request is checked before it reaches the provider:
+
+| Error | Status | Meaning |
+| --- | --- | --- |
+| `missing_authorization` | 401 | No token was sent. Pass `MAJOR_JWT_TOKEN` as `apiKey`. |
+| `invalid_token` | 401 | The token is invalid or expired. |
+| `proxy_disabled` | 403 | The proxy isn't enabled for this app. |
+| `spending_limit_exceeded` | 403 | The app reached its monthly spending limit. Raise the limit or wait for the next month. |
+| `insufficient_balance` | 403 | Your organization is out of credits. See [Billing](/settings/billing). |
+
+The monthly limit counts only this app's proxy usage and resets at the start of each month.
 
 <Note>
-To run agent coding sessions on non-Anthropic models, see [Models](/learn/agents/models). Those sessions route through this proxy for billing.
+Agents and the Platform Agent choose their models separately. See [Models](/learn/agents/models).
 </Note>
-
-## Setup
-
-Enable the AI proxy for your organization in **Organization Settings**. Once enabled, your apps can make LLM API calls through the proxy.
-
-## Spending Limits
-
-Set a monthly spending limit to control costs. When the limit is reached, proxy requests are blocked until the next billing cycle or until you increase the limit.
-
-## Usage
-
-AI proxy usage appears in your [Usage Dashboard](/settings/billing#usage-dashboard) under the "AI Proxy" category alongside coding sessions and app compute.

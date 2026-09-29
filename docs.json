@@ -33,6 +33,7 @@
               "learn/apps/authentication",
               "learn/apps/managed-databases",
               "learn/apps/ai-proxy",
+              "learn/apps/agents-client",
               "learn/apps/domains",
               "learn/apps/theming",
               "learn/apps/queries",
