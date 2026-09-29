@@ -108,19 +108,9 @@ The MCP server acts as you:
 - **Scoped to your roles.** `list` returns only what you can access, and each tool checks your access to the item it touches. Creating things, starting sandboxes, running agents and workflows, and connector setup require permission to build in the organization. Members without it see only the connector, deployed-app, and listing tools. See [Members & roles](/settings/members-and-roles).
 - **Approvals happen in your client.** Your personal [tool permissions](/settings/tool-permissions) apply to Platform Agent chats in the web app, not to MCP clients. Use your client's own tool approval settings to control what runs without asking.
 
-## MCP server vs. app MCP
-
-Major has two kinds of MCP endpoints:
-
-| | Major MCP server (this page) | [App MCP](/learn/apps/mcp) |
-| --- | --- | --- |
-| **Endpoint** | `https://mcp.major.build/mcp` | `https://mcp.major.build/<org-slug>` |
-| **Exposes** | Major itself: building, editing, running, and deploying | Your deployed apps' own endpoints, as tools |
-| **Use it to** | Build on Major from your AI client | Let AI clients use the apps you built |
-
 ## Next steps
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card title="Quickstart" icon="rocket" href="/get-started/quickstart">
     Install the Major plugin in your client.
   </Card>
@@ -129,8 +119,5 @@ Major has two kinds of MCP endpoints:
   </Card>
   <Card title="CLI" icon="terminal" href="/build/cli">
     Build on Major from your own terminal.
-  </Card>
-  <Card title="App MCP" icon="plug" href="/learn/apps/mcp">
-    Expose your deployed apps as MCP tools.
   </Card>
 </CardGroup>

@@ -37,7 +37,6 @@
               "learn/apps/theming",
               "learn/apps/queries",
               "learn/apps/errors",
-              "learn/apps/mcp",
               "learn/apps/webhook-routes"
             ]
           },
@@ -266,7 +265,7 @@
     },
     {
       "source": "/web/mcp",
-      "destination": "/learn/apps/mcp"
+      "destination": "/build/mcp"
     },
     {
       "source": "/web/build-mcp",
