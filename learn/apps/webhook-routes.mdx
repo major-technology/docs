@@ -1,0 +1,27 @@
+---
+title: "Webhook routes"
+description: "Receive raw, unauthenticated HTTP callbacks from external services in your app."
+---
+
+Receive HTTP callbacks from external services (Stripe, GitHub, Twilio, etc.) by creating routes matching `/api/webhook/*` and turning on **Webhook Access** in your app's settings. When enabled, only `/api/webhook/*` routes are publicly accessible - all other routes remain protected.
+
+<Tip>
+If you want an external event to start work in Major, use a [webhook trigger](/learn/triggers/webhooks) instead. Webhook triggers start a workflow and every call is authenticated with a credential, so they are the more secure and preferred option. Use webhook routes only when a service must post raw payloads to your app and can't send a credential.
+</Tip>
+
+## Setup
+
+Create an API route in your app under the `/api/webhook/` path:
+
+```typescript
+// src/app/api/webhook/stripe/route.ts
+export async function POST(request: Request) {
+  const body = await request.json();
+  // Handle the webhook payload
+  return new Response("OK", { status: 200 });
+}
+```
+
+## Security
+
+Best practice is to verify webhook signatures to ensure requests come from the expected source. Most services (Stripe, GitHub, etc.) include a signature header that you can validate against a shared secret.

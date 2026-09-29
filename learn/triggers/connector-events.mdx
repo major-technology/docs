@@ -1,0 +1,135 @@
+---
+title: "Connector events"
+description: "Start a workflow when something happens in a connected service, like a Slack message or a Stripe payment."
+---
+
+A connector event trigger starts a [workflow](/learn/workflows/overview) when one of your [connectors](/learn/connectors/overview) reports an event: a message posted in Slack, a payment succeeding in Stripe, an issue opened on GitHub. You choose the events, optionally filter them, and decide which parts of the event become the workflow's input.
+
+## Example requests
+
+- "When someone posts a top-level message in #support, run the triage workflow with the message text and author."
+- "When a Stripe payment of $100 or more succeeds, start the thank-you workflow."
+- "When an issue is opened in our main repo, have the triage agent label it."
+- "Whenever the Major app is mentioned in Slack, run the Q&A workflow."
+
+## Supported connectors
+
+Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar, Google Drive, and Attio, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
+
+| Connector | Example events |
+| --- | --- |
+| Slack | `message`, `app_mention`, `block_actions`, `view_submission` |
+| Stripe | `payment_intent.succeeded`, `checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted` |
+| GitHub | `issues.opened`, `pull_request.opened`, `push`, `release.published` |
+| Google Calendar | Event changed (created, edited, or cancelled) on one calendar |
+| Google Drive | File changed |
+
+The connector must already be connected and configured in your organization. Ask the [Platform Agent](/build/platform-agent) which events a connector supports and what their payloads contain; it looks them up rather than guessing.
+
+## How a connector event trigger is defined
+
+```jsonc
+"triggers": [
+  {
+    "id": "support_message",
+    "type": "connector-event",
+    "label": "New message in #support",
+    "config": {
+      "connector_type": "slack",
+      "resource_id": "5b7e1c2a-9d3f-4e8b-a1c6-2f4d6e8a0b1c",
+      "options": {
+        "events": ["message"],
+        "filter": "event.json.channel == 'C0123456789' && !('thread_ts' in event.json) && !('subtype' in event.json)"
+      }
+    },
+    "input": {
+      "text": { "$expr": "event.json.text" },
+      "user": { "$expr": "event.json.user" },
+      "ts": { "$expr": "event.json.ts" }
+    }
+  }
+]
+```
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `config.connector_type` | Yes | The connector, such as `slack`, `stripe`, or `github`. |
+| `config.resource_id` | Yes | The id of the connected resource to listen to. If you have two Stripe accounts connected, this picks which one. |
+| `config.options.events` | Yes | One or more event types, with no duplicates. |
+| `config.options.filter` | No | A CEL expression. Only events for which it's true start a run. |
+| `config.options.includeBotMessages` | No | Slack only. Include messages from bots and apps, which are excluded by default. |
+| `config.options.calendarId` | No | Google Calendar only. `primary` or a calendar id to watch. |
+| `input` | No | A projection that picks or reshapes the event into the workflow's input. |
+
+In the workflow editor, add a trigger, choose **Connector event**, pick the connected connector, and select events from the list. Some catalog connectors take one event per trigger and show extra **Event options** for it.
+
+## The event object
+
+The filter and the input projection both see a single `event` object:
+
+| Field | Description |
+| --- | --- |
+| `event.id` | The event's id. |
+| `event.type` | The event type, such as `message` or `payment_intent.succeeded`. Useful when a trigger subscribes to several events. |
+| `event.occurred_at` | When the event happened, if the connector reports it. |
+| `event.json` | The normalized event payload. For Slack, the message; for Stripe, the object the event is about (the PaymentIntent, the invoice, and so on). |
+
+The filter and projection can't see workflow nodes or `trigger`, because they run before the workflow starts.
+
+## Filtering events
+
+Put every deterministic condition, such as channel, amount, repository, or subtype, in `options.filter` instead of starting a run for every event and having an agent ignore the ones you don't want. Events that don't match never start a run.
+
+The filter is a boolean [CEL](https://cel.dev) expression. Guard optional fields with `in` or `has()` before reading them.
+
+```jsonc
+// Slack: top-level messages in one channel, skipping edits, joins, and other subtypes
+"filter": "event.json.channel == 'C0123456789' && !('thread_ts' in event.json) && !('subtype' in event.json)"
+
+// Stripe: successful USD payments of at least $100 (amounts are in cents)
+"filter": "event.json.amount >= 10000 && event.json.currency == 'usd'"
+
+// GitHub: issues opened in one repository
+"filter": "event.json.repository.full_name == 'acme/web'"
+
+// Several events on one trigger: every failed invoice, but only paid invoices of $500 or more
+"filter": "event.type == 'invoice.payment_failed' || (event.type == 'invoice.paid' && event.json.amount_paid >= 50000)"
+```
+
+<Warning>
+If you turn on **Include bot messages** for Slack, a workflow that posts to the same channel can trigger itself. Use a narrow filter that excludes the messages your workflow posts.
+</Warning>
+
+## Shaping the input
+
+By default, the whole `event.json` object becomes `trigger.input`, so a Slack message's fields are available as `trigger.input.text`, `trigger.input.channel`, and so on.
+
+Set `input` to pass only what the workflow needs, or to rename fields. Each value is either a JSON literal or `{ "$expr": "..." }`:
+
+```jsonc
+"input": {
+  "customer": { "$expr": "event.json.customer" },
+  "amount_usd": { "$expr": "double(event.json.amount) / 100.0" },
+  "event_type": { "$expr": "event.type" },
+  "source": "stripe"
+}
+```
+
+One `input` applies to every event the trigger subscribes to; there are no per-event overrides. `{{ }}` string interpolation isn't supported here, so use `$expr`.
+
+If the workflow has an `input_schema`, the projected input is validated against it. When a filter or projection fails to evaluate, or the input fails validation, the run is recorded as failed with the reason, and no nodes run.
+
+## Publishing
+
+Connector event subscriptions are created when you **publish** the workflow, and removed when a publish drops the trigger. Until then the trigger is inert. Use **Run now** with sample input to test the workflow first.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Webhooks" icon="globe" href="/learn/triggers/webhooks">
+    Start a workflow from your own systems with an authenticated call.
+  </Card>
+  <Card title="State and input" icon="code" href="/learn/workflows/state">
+    Use `trigger.input` in your nodes.
+  </Card>
+</CardGroup>

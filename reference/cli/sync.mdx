@@ -1,0 +1,118 @@
+---
+title: "pull, push, validate, publish"
+description: "Sync, check, and release the app, agent, skill, or workflow in the current folder."
+---
+
+`major pull`, `major push`, `major validate`, and `major publish` work on whatever the current folder is linked to: an app, an agent, a skill, or a workflow. The link lives in `.major/config.json`, which `major <kind> create` and `major <kind> clone` write for you. You can run these commands from the folder or any subfolder.
+
+If no `.major/config.json` is found, the commands fail and tell you to create or clone something first.
+
+| Command | Agent, skill, or workflow | App |
+| --- | --- | --- |
+| `major pull` | Download the latest saved version into the folder. | `git pull` (merge, no rebase). |
+| `major push` | Save the folder as a new unpublished version. | Push commits to the default branch. |
+| `major validate` | Check the files against the server's rules. | Run the app's `lint` script. |
+| `major publish` | Publish the latest saved version. | Deploy the pushed commit on the default branch. |
+
+All four commands accept `--json` to print one JSON result.
+
+<Note>
+For an app, `major push` and `major publish` require you to be checked out on the repository's default branch. The CLI never switches branches or force-pushes.
+</Note>
+
+## Files each kind uses
+
+| Kind | Files |
+| --- | --- |
+| Agent | `prompt.md` and exactly one of `agent.jsonc` or `agent.json`. |
+| Skill | `SKILL.md` at the root, plus every other file in the folder except `tsconfig.json` at the root, `.DS_Store`, `Thumbs.db`, and anything under `.major`, `.git`, `node_modules`, or `__MACOSX`. |
+| Workflow | One file named `<workflowId>.jsonc`. |
+
+Symlinks are rejected. Other files in the folder are left alone.
+
+## major pull
+
+Bring the folder up to date with Major.
+
+```bash
+major pull [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Print one JSON result. |
+
+- **Agent, skill, or workflow:** downloads the latest saved version and replaces the kind's files in the folder. Files the version no longer has are deleted. Local edits to those files are overwritten, so push first if you want to keep them.
+- **App:** runs `git pull --no-rebase`. On a conflict, git's conflict markers are left in place for you to resolve.
+
+## major push
+
+Save the folder as a new version.
+
+```bash
+major push [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `-m`, `--message` | Version notes. For an app, the commit message for all uncommitted changes. |
+| `--json` | Print one JSON result. |
+
+- **Agent, skill, or workflow:** uploads the folder as a new unpublished version and prints its version number. `-m` sets the version notes (workflows do not store notes). Nothing changes for users until you run `major publish`.
+- **App:** pushes local commits to the default branch.
+  - With uncommitted changes and `-m`, push stages every change in the repository (`git add -A`), commits with `-m` as the message, then pushes.
+  - With uncommitted changes and no `-m`, push fails and commits nothing.
+  - With a clean tree, push pushes `HEAD` and commits nothing.
+
+  To push only some changes, commit them with git yourself, then run `major push` with a clean tree. If the remote has commits you do not have, run `major pull`, resolve any conflicts, and push again.
+
+```bash
+major push -m "Tighten the escalation rules"
+```
+
+## major validate
+
+Check the folder before you push or publish.
+
+```bash
+major validate [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Print one JSON result. |
+
+- **Agent, skill, or workflow:** sends the local files to Major for validation. It reports that the bundle is valid, with any warnings, or fails with each error and the file it applies to. Validating does not save a version.
+- **App:** runs `pnpm run lint` in the app folder. The command fails if `package.json` has no `lint` script, and exits with lint's exit code if lint fails.
+
+## major publish
+
+Release the latest saved version. You are asked to confirm unless you pass `--yes`.
+
+```bash
+major publish [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--yes` | Skip confirmation. Required with `--non-interactive`. |
+| `--slug` | App only. URL slug for the app's first deploy. Ignored once the app has one. |
+| `--json` | Print one JSON result. |
+
+- **Agent, skill, or workflow:** publishes the latest saved version on Major, not your local files. Run `major push` first to publish local edits. For a workflow, the output lists any triggers that failed to register.
+- **App:** deploys the latest commit on the default branch and waits for the deployment to finish. Your local `HEAD` must already be on the remote: if it is not, run `major push` first. If the remote is ahead, run `major pull` first. An app that has never been deployed needs `--slug` to choose its URL.
+
+```bash
+major publish --yes
+major publish --slug orders-dashboard --yes
+```
+
+## Typical loop
+
+```bash
+major pull
+# edit files
+major validate
+major push -m "Describe the change"
+major publish
+```

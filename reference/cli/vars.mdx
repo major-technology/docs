@@ -1,0 +1,92 @@
+---
+title: "major vars"
+description: "Read and change an app's environment variables from the CLI."
+---
+
+`major vars` manages the [environment variables](/learn/apps/environment-variables) of the app in the current directory. Run these commands from inside the app's folder.
+
+Variables are scoped per environment (for example development, staging, production). Every subcommand targets your current environment unless you pass `--env`. To change your current environment, use [`major resource env`](/reference/cli/resource#major-resource-env).
+
+## major vars list
+
+List all variables for the environment. Values are masked by default.
+
+```bash
+major vars list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--env` | Target environment name. Defaults to your current environment. |
+| `--show-values` | Show full values instead of masking them. |
+| `--json` | Output in JSON format, with full values. |
+
+```bash
+major vars list --env staging
+```
+
+## major vars get
+
+Print one variable's raw value to stdout, with no prefix. Exits non-zero if the key does not exist or has no value in the environment.
+
+```bash
+major vars get <KEY> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--env` | Target environment name. Defaults to your current environment. |
+| `--json` | Output in JSON format: `{key, value, environment}`. |
+
+```bash
+export DATABASE_URL=$(major vars get DATABASE_URL)
+```
+
+## major vars set
+
+Create or update one variable in the environment. Values in other environments are kept. Only the first `=` separates the key from the value, so values can contain `=`.
+
+```bash
+major vars set <KEY>=<VALUE> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--env` | Target environment name. Defaults to your current environment. |
+| `--json` | Output in JSON format. |
+
+```bash
+major vars set DATABASE_URL=postgres://localhost/mydb --env staging
+```
+
+## major vars unset
+
+Remove a variable. By default only the value in the target environment is removed. Asks for confirmation unless you pass `--yes`.
+
+```bash
+major vars unset <KEY> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--env` | Target environment name. Defaults to your current environment. |
+| `--all-environments` | Remove the key from every environment. |
+| `-y`, `--yes` | Skip the confirmation prompt. |
+| `--json` | Output in JSON format. |
+
+## major vars pull
+
+Download all variables for the environment into a local dotenv file. The file includes your own variables and the platform-managed `MAJOR_*` system variables needed for local development. The target file is overwritten. If it is inside a git repository and not already ignored, it is added to the repository's `.gitignore`.
+
+```bash
+major vars pull [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--env` | Target environment name. Defaults to your current environment. |
+| `--file` | Path to write the dotenv file. Default `.env`. |
+
+```bash
+major vars pull --env staging --file .env.staging
+```

@@ -1,0 +1,282 @@
+---
+title: "major app"
+description: "Create, clone, run, deploy, and inspect Major apps from the CLI."
+---
+
+`major app` manages [apps](/learn/apps/overview): Next.js projects backed by a GitHub repository and deployed on Major. Most subcommands act on the app in the current directory, so run them from inside the app's folder.
+
+<Note>
+Every `major app` subcommand checks that Node.js 22.12 or later and pnpm are installed before it runs.
+</Note>
+
+| Subcommand | Purpose |
+| --- | --- |
+| [`create`](#major-app-create) | Create a new app. |
+| [`clone`](#major-app-clone) | Clone an existing app's repository. |
+| [`start`](#major-app-start) | Run the app locally. |
+| [`deploy`](#major-app-deploy) | Commit, push, and deploy a new version. |
+| [`deploy-status`](#major-app-deploy-status) | Check the status of a deployment. |
+| [`info`](#major-app-info) | Show the app's ID, deploy status, and URL. |
+| [`logs`](#major-app-logs) | Read deployed or preview logs. |
+| [`errors`](#major-app-errors) | Inspect runtime errors. |
+| [`configure`](#major-app-configure) | Open the app's settings in your browser. |
+| [`theme`](#major-app-theme) | Read and apply your organization's brand themes. |
+| [`ai-proxy`](#major-app-ai-proxy) | Inspect and enable the app's AI proxy. |
+| [`browser`](#major-app-browser) | Drive the sandbox browser against the preview server (sandbox only). |
+
+## major app create
+
+Create a new Next.js app with its own GitHub repository.
+
+```bash
+major app create [flags]
+```
+
+By default the command prompts for a name and description. Your GitHub username is detected from your SSH configuration, or from [`major user gitconfig`](/reference/cli/user#major-user-gitconfig).
+
+| Flag | Description |
+| --- | --- |
+| `--name` | App name. Skips the prompt. |
+| `--description` | App description. Skips the prompt. |
+| `--theme-id` | Theme ID to apply. If omitted, the server default is used. See [`major app theme list`](#major-app-theme-list). |
+| `--github-user` | GitHub username for repository access, for non-interactive use. |
+
+```bash
+major app create --name "my-app" --description "My application" --theme-id <theme-id> --github-user <user> --non-interactive
+```
+
+## major app clone
+
+Select and clone an app repository from your organization, then generate its `.env` file and resource clients.
+
+```bash
+major app clone [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--app-id` | App ID to clone. Skips the selection prompt. |
+| `--github-user` | GitHub username for repository access, for non-interactive use. |
+
+```bash
+major app clone --app-id "your-application-id"
+```
+
+## major app start
+
+Start the app locally. The command regenerates `.env`, syncs theme files, runs `pnpm install`, then runs `pnpm dev`. It warns if your local branch is behind `origin/main`.
+
+```bash
+major app start [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--upgrade-theme` | Apply an available theme upgrade. In non-interactive mode the current theme version is kept unless you pass this flag. |
+
+## major app deploy
+
+Create a new version by committing and pushing your changes, then deploying it to Major. The command waits and reports the deployment status unless you pass `--no-wait`.
+
+```bash
+major app deploy [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `-m`, `--message` | Commit message for uncommitted changes. Skips the prompt. |
+| `--slug` | URL slug for the app's first deploy. Skips the prompt. |
+| `--no-wait` | Return right after triggering the deployment instead of waiting for it to finish. |
+| `--json` | Output in JSON format. |
+
+```bash
+major app deploy -m "Add orders table" --slug orders-dashboard
+```
+
+<Tip>
+[`major push`](/reference/cli/sync#major-push) and [`major publish`](/reference/cli/sync#major-publish) split this into two steps: push your commits, then deploy the pushed commit.
+</Tip>
+
+## major app deploy-status
+
+Show the current deployment status for a version.
+
+```bash
+major app deploy-status --version-id <version-id> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--version-id` | Version ID to check. |
+| `--json` | Output in JSON format. |
+
+## major app info
+
+Show the app in the current directory, including its application ID, deploy status, and URL.
+
+```bash
+major app info [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Output in JSON format. |
+
+## major app logs
+
+Show logs for the app in the current directory, newest first. By default you get the deployed app's logs. Pass `--preview` to read the sandbox dev server's logs instead.
+
+```bash
+major app logs [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--since` | Show logs since a duration (for example `30m`, `1h`) or an RFC3339 timestamp. |
+| `--until` | Show logs up until an RFC3339 timestamp. |
+| `--search` | Filter by substring. Case-sensitive for deployed logs, case-insensitive with `--preview`. |
+| `--limit` | Maximum log lines. 1-5000, default 500. With `--preview`: 1-1000, default 100. |
+| `--next-token` | Pagination cursor from a previous response. Keep `--preview` when paging preview logs. |
+| `--preview` | Read the sandbox dev server's logs instead of the deployed app's. |
+| `--json` | Output in JSON format. |
+
+```bash
+major app logs --since 1h --search "timeout"
+```
+
+## major app errors
+
+Inspect the app's runtime errors.
+
+### major app errors list
+
+List recent runtime errors. Active errors are returned by default.
+
+```bash
+major app errors list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--environment` | Filter by environment: `deployment`, `coding-session`, or `local-dev`. |
+| `--fixed` | Return fixed errors that have not regressed, instead of active ones. |
+| `--ignored` | Return ignored errors instead of active ones. |
+| `--limit` | Maximum errors to return. 1-100, default 100. |
+| `--since` | Earliest time window bound, as RFC3339. |
+| `--until` | Latest time window bound, as RFC3339. |
+
+### major app errors get
+
+Show one error's full detail, including its stack trace.
+
+```bash
+major app errors get <errorId>
+```
+
+### major app errors resolve
+
+Mark an error fixed.
+
+```bash
+major app errors resolve <errorId>
+```
+
+### major app errors enable
+
+Mark the app as having runtime error reporting enabled. This drives the "monitoring active" state in the dashboard. Run it only after the Major error-reporter scaffolding is committed to the repository. Running it more than once has no extra effect.
+
+```bash
+major app errors enable
+```
+
+## major app configure
+
+Open the current app's settings in your default browser.
+
+```bash
+major app configure
+```
+
+## major app theme
+
+Read and apply your organization's saved brand themes.
+
+### major app theme list
+
+List your organization's saved themes.
+
+```bash
+major app theme list
+```
+
+### major app theme get
+
+Print the app's design system, as guidance to follow before frontend work.
+
+```bash
+major app theme get
+```
+
+### major app theme apply
+
+Re-brand the app to one of your organization's saved themes. The command pins the theme on the app, then writes the generated files into your checkout: `app/theme.css`, `lib/theme.ts`, and `components/ui/logo.tsx`. It works in any checkout of the repository, including a plain local clone.
+
+```bash
+major app theme apply <themeId>
+```
+
+<Warning>
+Use this command to change the app's appearance. Hand-editing colors, fonts, or logo markup bypasses the theme pipeline.
+</Warning>
+
+## major app ai-proxy
+
+Inspect and enable the app's AI proxy.
+
+### major app ai-proxy status
+
+Show whether the AI proxy is enabled and this month's spend.
+
+```bash
+major app ai-proxy status
+```
+
+### major app ai-proxy enable
+
+Enable the AI proxy for the app. It starts with a default spending limit of $10 per month, charged to the organization. Requires the `application:edit` permission.
+
+```bash
+major app ai-proxy enable
+```
+
+## major app browser
+
+Drive the browser in an app sandbox. Navigation is limited to the preview server at `localhost:3000`.
+
+<Warning>
+`major app browser` commands only run inside a Major app sandbox. They do not work on a locally installed CLI.
+</Warning>
+
+| Subcommand | Purpose |
+| --- | --- |
+| `navigate <url>` | Open a page of the preview server. A relative path like `/dashboard` works. |
+| `snapshot` | Print the page's accessibility snapshot. |
+| `screenshot [filename]` | Save a screenshot under `.session-files/` in the app workspace and print its path. |
+| `console` | Print the page's console messages. |
+| `network` | Print the network requests since the page loaded. |
+| `wait-for` | Wait for text to appear or disappear, or for a number of seconds. |
+| `close` | Close the browser page. |
+
+```bash
+major app browser navigate /dashboard
+major app browser screenshot --full-page
+```
+
+| Flag | Subcommand | Description |
+| --- | --- | --- |
+| `--full-page` | `screenshot` | Capture the full scrollable page instead of the viewport. |
+| `--level` | `console` | Lowest level to show: `error`, `warning`, `info`, or `debug`. Default `info`. |
+| `--include-static` | `network` | Include successful static resources (images, fonts, scripts). |
+| `--text` | `wait-for` | Text to wait for. |
+| `--text-gone` | `wait-for` | Text to wait to disappear. |
+| `--time` | `wait-for` | Seconds to wait. |

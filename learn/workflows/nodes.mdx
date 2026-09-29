@@ -1,0 +1,132 @@
+---
+title: "Nodes"
+description: "Every workflow node type, its fields, and the rules a workflow graph must follow."
+---
+
+A workflow's `nodes` are its steps and its `edges` connect them. Every node has an `id`, a `type`, a `config`, and an optional `label` that's shown in the graph. This page lists each node type's `config` fields. The authoritative definition is the JSON Schema at `https://api.prod.major.build/public/workflow.schema.json`.
+
+<Tip>
+Use underscores, not hyphens, in node ids. A hyphenated id can't be referenced from a `$expr` expression.
+</Tip>
+
+## agent_call
+
+Runs an [agent](/learn/agents/overview) with a prompt.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `agent_id` | Yes | The agent to run. |
+| `prompt` | Yes | The instruction sent to the agent. Supports `{{ }}` interpolation. |
+| `output_schema` | No | A JSON Schema for the agent's answer. With it, the node's output has exactly that shape. Without it, the output is `{ "result": "<final message text>" }`. |
+| `approval_channel` | No | `{ "type": "slack", "channel_id": "...", "channel_name": "..." }`. Sends the agent's [tool approval](/learn/agents/tool-permissions) requests to a Slack channel instead of the app. |
+
+## app_call
+
+Calls an endpoint on one of your deployed [apps](/learn/apps/overview).
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `app_id` | Yes | The app to call. |
+| `method` | Yes | `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`. |
+| `path` | Yes | The endpoint path, for example `/api/orders`. |
+| `input` | No | An object of values. Sent as query parameters for `GET` and `DELETE`, and as a JSON body otherwise. |
+
+The node's output is the response body. A body that isn't a JSON object is wrapped as `{ "body": ... }`.
+
+## router
+
+Branches the run on state.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `branches` | Yes | A list of `{ "when": { "$expr": "..." }, "to": ["node_id", ...], "label": "..." }`. |
+| `default` | Yes | Node ids to run when no branch matches. |
+| `default_label` | No | Label for the default path in the graph. |
+
+Branches are checked top to bottom and the first one whose `when` is true wins. A condition that evaluates to `null` doesn't match. Every target in the winning `to` list runs in parallel. The router must have exactly one outgoing edge per target named in its branches and default.
+
+## for_each
+
+Runs a loop body once per item in a list.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `input.iterable` | Yes | The list to loop over, usually a `$state` or `$expr` reference. |
+| `mode` | No | `sequential` (default) or `parallel`. |
+| `max_concurrency` | No | Upper bound on parallel iterations. |
+| `max_iterations` | No | Upper bound on the number of iterations. |
+| `collect_results` | No | Defaults to `true`. Set to `false` to skip collecting results. |
+
+A `for_each` has two outgoing edges: one with `"loop": "body"` into the loop body, and one with `"loop": "exit"` that runs after the last iteration. Every path from the body must lead back to the `for_each`. Loop bodies are the only cycles a workflow may have.
+
+Inside the body, `<for_each_id>.item` and `<for_each_id>.index` are the current item and its position. After the exit edge, `<for_each_id>.results` holds each iteration's final output, in item order.
+
+## join
+
+Waits for parallel branches to meet.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `mode` | Yes | `all`. The join releases once every inbound edge has arrived. |
+
+Every edge into a join must come from the same fan-out (a `router` branch with several targets, for example), with no other join in between. Keep each parallel leg a simple line into the join.
+
+## wait
+
+Pauses the run.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `duration_seconds` | Yes | How long to wait, in seconds. |
+
+## human_approval
+
+Asks a person to choose in Slack. Requires the Major Slack integration.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `channel` | Yes | `{ "type": "slack", "channel_id": "..." }`. |
+| `message` | Yes | The message to post. Supports `{{ }}` interpolation. |
+| `options` | Yes | Buttons, each `{ "value": "...", "label": "...", "style": "..." }`. `value` is required; `style` is `primary`, `danger`, or `neutral`. |
+| `timeout_seconds` | No | How long to wait for a click. |
+| `on_timeout` | With a timeout | The option `value` to use if no one answers in time. Required when `timeout_seconds` is set. |
+| `reminder_interval_seconds` | No | Post a reminder at this interval while waiting. |
+
+The output is `{ "choice": "<value>", "responded_by": "<user id>" }`, or `{ "choice": "<on_timeout value>", "timed_out": true }` on timeout. A `human_approval` has one outgoing edge, which should lead to a `router` that branches on `<node_id>.choice`. Only Major members with access to the workflow can answer.
+
+## end
+
+Finishes the run.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `status` | No | `success` (default) or `failure`. |
+| `output` | No | An object of values to record as the run's output. |
+
+An `end` node has no outgoing edges.
+
+## Edges
+
+Each edge is `{ "id": "...", "from": "node_id", "to": "node_id" }`, with an optional `label` shown in the graph. Only `for_each` out-edges carry `"loop": "body"` or `"loop": "exit"`.
+
+## Graph rules
+
+Saving checks the definition against these rules, and errors name the path that failed:
+
+- At most 50 nodes, and the file is at most 256 KB.
+- Node ids and edge ids are unique. `trigger` is reserved and can't be a node id.
+- `entry` and every edge's `from` and `to` name an existing node.
+- Only `router` and `for_each` fan out. Every other node has exactly one outgoing edge, and `end` nodes have none.
+- A node can have several inbound edges only if at most one of them can be active at a time. Parallel paths must meet at a `join` first.
+- Every node is reachable from `entry`, and every path reaches an `end` node or loops back to a `for_each`.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="State and input" icon="code" href="/learn/workflows/state">
+    Reference node outputs and workflow input.
+  </Card>
+  <Card title="Triggers" icon="bolt" href="/learn/triggers/overview">
+    Start the workflow automatically.
+  </Card>
+</CardGroup>

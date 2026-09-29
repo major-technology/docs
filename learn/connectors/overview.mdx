@@ -1,0 +1,77 @@
+---
+title: "Overview"
+description: "How connectors give apps, agents, and workflows secure access to your data."
+---
+
+Connectors are the databases, APIs, SaaS tools, and storage services that your apps, agents, skills, and workflows use. You configure a connector once, and Major holds its credentials and proxies every call, so secrets never appear in your code or your prompts. For the full list of supported connectors, see the [connector reference](/reference/connectors).
+
+- **Secure Flow**: Your app connects to the Major API, which proxies requests to your actual connectors.
+- **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
+- **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
+
+## Generated clients
+
+When you attach a connector to an app, Major generates a client for it - one per resource, available at `src/clients/`. You don't wire up HTTP requests, authentication, or connection setup yourself; you import the client and call its `invoke` method.
+
+- **Type-safe** - full TypeScript support, so inputs and outputs are checked as you write against each resource.
+- **Tailored per resource** - each connector type gets a client with an `invoke` signature specific to it, so a Postgres query and a Slack message each use the shape that fits.
+- **No secrets in code** - authentication is handled by the platform, not your application.
+
+See [Resource client](/learn/connectors/resource-client) for usage and error handling.
+
+## Setting up a connector
+
+1. Navigate to **Connectors**
+2. Click **Add Connector** and select the type
+3. Configure the connection details and credentials
+4. Attach the connector to your app via the web editor or `major resource manage`
+
+<Note>
+Resource credentials are encrypted and never exposed to the client-side application code.
+</Note>
+
+## Shared vs. per-user connections
+
+When you configure a connector, you choose how it authenticates:
+
+- **Shared** - one set of credentials for everyone. The person setting up the connector provides them, and every app user and agent run uses that same account. Best for system-owned resources like a production database.
+- **Per-user** - each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors - typically OAuth services - support this.
+
+With a per-user connector, Major gates on the user's own authorization: anyone who opens an app or runs an agent without a connected account is redirected to a `/connect` page to complete OAuth, then returned where they were. Because the connector acts as whoever is using it, each person only touches data they're entitled to. Users manage the accounts they've authorized from [Connected Accounts](/settings/connected-accounts).
+
+<Card title="Per-user OAuth" icon="key" href="/learn/connectors/overview#shared-vs-per-user-connections">
+  Full details on shared vs. per-user authentication modes.
+</Card>
+
+## Per-environment configuration
+
+When editing a connector, you can configure each environment independently. This lets you use different credentials or endpoints for staging and production.
+
+| Environment | Host | Database |
+| --- | --- | --- |
+| default | prod.example.com | myapp_prod |
+| staging | staging.example.com | myapp_staging |
+
+You can also enable **global configuration** for a resource, which uses a single configuration from the default environment across all environments instead of per-environment configs. When enabled, non-default environment tabs are locked with an explanatory tooltip.
+
+<Card title="Learn more about Environments" icon="layer-group" href="/learn/apps/environments">
+  See how to create and manage environments for your organization.
+</Card>
+
+## Resource context
+
+You can upload context files - database schemas, OpenAPI specs, API documentation, and more - to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat - click it to configure the resource inline without leaving the editor.
+
+## Identity-based authentication
+
+For AWS services (S3 and DynamoDB), you can use IAM Assume Role Identities instead of access keys. Create an identity in **Settings > Identities**, review the generated trust policy for your IAM role, and select identity-based authentication when configuring the resource.
+
+For GCP services (BigQuery), you can authenticate via a service account JSON key in addition to OAuth. Create a GCP identity in **Settings > Identities** to manage service accounts across resources.
+
+Identity-based authentication is more secure and avoids storing long-lived credentials.
+
+## Rate limiting
+
+Set hourly and daily invocation limits on any connector to protect downstream services from runaway usage. When a limit is reached, requests return `429 Too Many Requests` until the window resets. Configure limits when creating or editing a connector.
+
+Don't see the connector you need? Use [Custom API, GraphQL, or custom MCP](/reference/connectors) connectors, or click **Request it** in the Add Connector dialog to submit a request.

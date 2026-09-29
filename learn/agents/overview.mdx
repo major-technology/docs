@@ -1,0 +1,71 @@
+---
+title: "Overview"
+description: "Build reusable AI agents that act on your data and apps."
+---
+
+Agents are reusable AI configurations you build once and run on demand. An agent pairs a system prompt with the connectors, apps, skills, and permissions it's allowed to use - so it can autonomously query your data, call your APIs, and take action within boundaries you define.
+
+## What makes up an agent
+
+| Field | Description |
+| --- | --- |
+| **System prompt** | The instructions that define the agent's behavior and goals. |
+| **Model** | The model family the agent runs on, such as Opus, GPT Sol, or Gemini Flash. See [Models](/learn/agents/models). |
+| **Connectors** | The [resources](/learn/connectors/overview) the agent may query (Postgres, Slack, Salesforce, ...). |
+| **Applications** | Deployed Major apps the agent may invoke. |
+| **Skills** | Reusable instruction bundles that extend the agent's abilities. See [Skills](/learn/skills/overview). |
+| **Tool permissions** | Per-tool allow/ask/deny rules for connectors and app endpoints. See [Tool Permissions](/learn/agents/tool-permissions). |
+| **Environment variables** | Key/value pairs made available to the agent at runtime, encrypted at rest. |
+
+## How agents are defined
+
+An agent is a versioned bundle of two files:
+
+```text
+agent.jsonc   name, description, model, skills, env keys, connectors and apps
+              (with per-tool permission decisions nested inline)
+prompt.md     the system prompt
+```
+
+The format of `agent.jsonc` is published as a JSON Schema at `https://api.prod.major.build/public/agent.schema.json`. Environment variable values are never stored in the bundle: declare the key, then fill in the value in the agent panel in the web app. Values are encrypted and kept across versions.
+
+## Building an agent
+
+You build agents by describing them. Ask the [Platform Agent](/build/platform-agent) in the web app, or any AI client connected through [MCP](/build/mcp), and it drafts the prompt, researches the connectors and apps it should use, and attaches them. You refine it by asking ("use the production database", "never let it delete anything"). You can also edit the two files yourself with the [CLI](/reference/cli/agent).
+
+1. Create the agent. It starts as a private **draft**.
+2. Describe its purpose. The system prompt, connectors, apps, and skills are drafted for you.
+3. Review the auto-applied [tool permissions](/learn/agents/tool-permissions) and adjust if needed.
+4. **Save** as often as you like. Each save is a new immutable version and changes nothing for anyone running the agent.
+5. **Publish** to make the latest saved version live. An agent with no published version can't be run.
+
+<Note>
+Drafts stay private to you until you publish. Published agents can be [shared](#sharing-and-access) with others in your organization. You can roll back by publishing an earlier version.
+</Note>
+
+## Running an agent
+
+Start a new chat and pick your agent, and it runs with the prompt, connectors, skills, and permissions you configured. Agents can also run without a person in the loop:
+
+<CardGroup cols={2}>
+  <Card title="Workflows" icon="diagram-project" href="/learn/workflows/overview">
+    Use the agent as a step in a multi-step workflow.
+  </Card>
+  <Card title="Triggers" icon="clock" href="/learn/triggers/overview">
+    Run an agent from a workflow on a schedule, a connector event, or a webhook.
+  </Card>
+  <Card title="App triggers" icon="bolt" href="/learn/triggers/app-triggers">
+    Let your deployed apps start and manage agent runs.
+  </Card>
+  <Card title="External channels" icon="hash" href="/learn/agents/external-channels">
+    Deploy the agent as its own Slack bot to receive and reply in channels.
+  </Card>
+</CardGroup>
+
+## Sharing and access
+
+Agent access is role-based - **User** (run), **Editor** (edit and publish), and **Admin** (share) - and an agent can be shared with individuals or groups. When an agent is shared and run by someone other than its author, Major uses per-user credentials where a connector requires them, so each runner acts as themselves.
+
+<Card title="Access & Permissions" icon="lock" href="/learn/agents/access">
+  Full RBAC details for agents and skills.
+</Card>

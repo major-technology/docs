@@ -1,0 +1,48 @@
+---
+title: "App triggers"
+description: "Let your deployed apps start and manage agent runs."
+---
+
+Your Major [apps](/learn/apps/overview) can start [agent](/learn/agents/overview) runs from their server code and interact with those runs: read their messages, send follow-ups, stop them, and answer their tool approvals. A common pattern is a dashboard that, on load, starts a few agents (summarize my inbox, prep my calendar, review open PRs) and shows their results as they come in.
+
+App triggers start agents, not workflows. To start a [workflow](/learn/workflows/overview) from your own code, call its [webhook](/learn/triggers/webhooks).
+
+## Example requests
+
+- "When the dashboard loads, have the inbox agent summarize today's unread email and show the result."
+- "Add a Research button to each account row that starts the account-research agent on that company."
+- "Show the agent's pending approvals in the app so users can approve them without leaving the page."
+
+## Triggering from code
+
+Add the agent to your app to get a generated client, then call it from server code:
+
+```typescript
+import { supportBotClient } from "./clients";
+
+const { runId } = await supportBotClient.run({
+  prompt: "Summarize today's unread email and flag what needs a reply.",
+});
+
+const page = await supportBotClient.getAgentContent(runId, { limit: 20 });
+```
+
+Runs are asynchronous: `run()` returns right away and you poll for messages. The client can also send follow-ups, stop runs, and answer tool approvals. See [Agents client](/learn/apps/agents-client) for setup and the full API.
+
+## Who the run acts as
+
+When a signed-in user triggers the run through your app, the run is attributed to that user, and agents with per-user connectors act with that user's credentials. A call made outside a user's request runs as the person who deployed the app. A call made for an anonymous visitor, such as on a public page, is rejected because there's no user to attribute the run to. In every case, the deployer must have access to use the agent.
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Agents client" icon="code" href="/learn/apps/agents-client">
+    Setup, methods, approvals, and errors.
+  </Card>
+  <Card title="Webhooks" icon="globe" href="/learn/triggers/webhooks">
+    Start a workflow from your app or backend.
+  </Card>
+  <Card title="Tool permissions" icon="shield" href="/learn/agents/tool-permissions">
+    Decide which tools need approval.
+  </Card>
+</CardGroup>

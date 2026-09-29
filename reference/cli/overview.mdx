@@ -1,0 +1,68 @@
+---
+title: "CLI overview"
+description: "Install the Major CLI, log in, and find every command."
+---
+
+The `major` CLI lets you build Major apps, agents, skills, and workflows from your own machine. This reference covers CLI version 1.0.18. Run `major --version` to check yours, and `major update` to upgrade.
+
+For a walkthrough of the day-to-day loop, see [CLI](/build/cli).
+
+## Install
+
+<CodeGroup>
+  ```bash curl
+  curl -fsSL https://install.major.build | bash
+  ```
+
+  ```bash Homebrew
+  brew tap major-technology/tap
+  brew install major-technology/tap/major
+  ```
+</CodeGroup>
+
+The install script places the binary in `~/.major/bin`. Confirm the install:
+
+```bash
+major --version
+```
+
+<Note>
+The `major app` commands need Node.js 22.12 or later and pnpm installed locally. The CLI checks for them before any `major app` subcommand runs.
+</Note>
+
+## Log in
+
+```bash
+major user login
+```
+
+This opens a browser page to authorize the CLI, stores your session token in your system keychain, and asks you to pick a default organization. If you only belong to one organization, it is selected automatically. See [major user](/reference/cli/user) and [major org](/reference/cli/org).
+
+## Global flags
+
+These flags work on every command.
+
+| Flag | Description |
+| --- | --- |
+| `--non-interactive` | Never prompt or open a browser. Commands that would otherwise prompt fail unless you pass the needed values as flags. It does not imply `--yes`. If you set `GIT_SSH_COMMAND`, it must be a single direct `ssh` invocation; wrappers and compound commands are rejected. |
+| `-h`, `--help` | Show help for any command. |
+| `-v`, `--version` | Print the CLI version (root command only). |
+
+Many commands also accept `--json` to print one machine-readable JSON result. Each command page lists where it is available.
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| [`major app`](/reference/cli/app) | Create, clone, run, deploy, and inspect apps. |
+| [`major agent`](/reference/cli/agent) | Manage file-based agents, their runs, and their Slack apps. |
+| [`major skill`](/reference/cli/skill) | Manage file-based skills. |
+| [`major workflow`](/reference/cli/workflow) | Manage file-based workflows. |
+| [`major pull`, `push`, `validate`, `publish`](/reference/cli/sync) | Sync, check, and publish the app, agent, skill, or workflow in the current folder. |
+| [`major resource`](/reference/cli/resource) | Attach connectors to an app and switch environments. |
+| [`major vars`](/reference/cli/vars) | Manage an app's environment variables. |
+| [`major sandbox`](/reference/cli/sandbox) | Commands that only work inside a Major sandbox. |
+| [`major org`](/reference/cli/org) | List and select organizations. |
+| [`major user`](/reference/cli/user) | Log in, log out, and set your GitHub username. |
+| [`major update`](/reference/cli/update) | Update the CLI to the latest version. |
+| `major docs` | Open the Major documentation in your browser. |

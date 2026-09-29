@@ -1,0 +1,84 @@
+---
+title: "Proxy fetch"
+description: "Call any HTTP API on a connector through Major with a drop-in fetch, so third-party SDKs work without API keys."
+---
+
+`createProxyFetch` from `@major-tech/resource-client` returns a `fetch`-compatible function that sends every request through a [connector](/learn/connectors/overview). Major checks the URL against the connector, injects the connector's credentials, and streams the response back. Your code never sees the API key.
+
+Use it when:
+
+- You want a third-party SDK that accepts a custom `fetch` (Stripe, Twilio, OpenAI-compatible APIs, and so on) to run on a connected account.
+- You need an endpoint the [resource client](/learn/connectors/resource-client) doesn't cover.
+- The connector has no generated client, such as most [catalog connectors](/reference/connectors).
+
+Prefer the resource client when it covers what you need, since it gives you typed inputs and outputs.
+
+## Create a proxy fetch
+
+In a Next.js app, import from `@major-tech/resource-client/next` and call it from server code (Server Components, Route Handlers, Server Actions):
+
+```typescript
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const proxyFetch = createProxyFetch({
+  baseUrl: process.env.MAJOR_API_BASE_URL!,
+  resourceId: process.env.HUBSPOT_RESOURCE_ID!,
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+});
+
+const res = await proxyFetch("https://api.hubapi.com/crm/v3/objects/contacts", {
+  method: "GET",
+  headers: { "Content-Type": "application/json" },
+});
+const data = await res.json();
+```
+
+`MAJOR_API_BASE_URL` and `MAJOR_JWT_TOKEN` are set for you in the editor preview and after deploy. The call looks like a normal `fetch` to the upstream URL. Under the hood it goes to `/v1/proxy/<resourceId>` with the target URL in a header.
+
+| Option | Required | Description |
+| --- | --- | --- |
+| `baseUrl` | Yes | The Major API base URL. Use `process.env.MAJOR_API_BASE_URL`. |
+| `resourceId` | Yes | The connector's id. |
+| `majorJwtToken` | Yes | The app's token. Use `process.env.MAJOR_JWT_TOKEN`. |
+| `timeoutMs` | No | Default request timeout. Maximum 60000. |
+| `fetch` | No | A custom `fetch` implementation. Defaults to `globalThis.fetch`. |
+
+<Warning>
+Pass `resourceId` as a string literal or an environment variable read at module scope. Major finds the connectors your app uses by reading your code at deploy, so an id computed at runtime isn't tracked and calls with it fail.
+</Warning>
+
+## Use it with an SDK
+
+Hand the proxy fetch to any SDK that accepts one. The SDK may insist on an API key in its constructor. Pass a placeholder: the proxy strips it and injects the real credential.
+
+```typescript
+import Stripe from "stripe";
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const proxyFetch = createProxyFetch({
+  baseUrl: process.env.MAJOR_API_BASE_URL!,
+  resourceId: process.env.STRIPE_RESOURCE_ID!,
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+});
+
+const stripe = new Stripe("sk_unused_proxy_injects_real_key", {
+  httpClient: Stripe.createFetchHttpClient(proxyFetch),
+});
+
+const customers = await stripe.customers.list({ limit: 10 });
+```
+
+## Per-user connectors
+
+For connectors that use [per-user connections](/learn/connectors/overview#shared-vs-per-user-connections) (such as Gmail, Google Calendar, or Google Drive), the `/next` entry forwards the signed-in user's identity automatically, so each request uses that user's connected account.
+
+Outside a user request, such as a background job, there is no user to forward, and calls to per-user connectors fail. Shared connectors keep working.
+
+Outside Next.js, for example in a [skill](/learn/skills/overview) script or plain Node, import `createProxyFetch` from `@major-tech/resource-client` (the package root). It has no Next.js dependency and takes an optional `getUserJwt` function if you have a user token to forward.
+
+## Headers and limits
+
+- **Don't set `Authorization`.** The proxy injects the connector's credentials and strips any `Authorization` you send.
+- These request headers are always stripped: `Authorization`, `Cookie`, `Host`, `Forwarded`, `X-Forwarded-*`, `X-Real-Ip`, and anything starting with `X-Major-` or `X-Pd-`. The exception is `X-Major-Timeout-Ms`, which sets the timeout for one request.
+- The target URL must be one the connector allows, usually the service's API host.
+- Request and response bodies are limited to 50 MB. Timeouts are capped at 60 seconds.

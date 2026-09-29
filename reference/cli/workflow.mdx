@@ -1,0 +1,47 @@
+---
+title: "major workflow"
+description: "Create, clone, and list file-based workflows from the CLI."
+---
+
+`major workflow` manages [workflows](/learn/workflows/overview) as local folders. A workflow folder holds a single definition file named `<workflowId>.jsonc`, plus a `.major/config.json` that links the folder to the workflow. Once you have a folder, edit the definition and use [`major validate`, `major push`, and `major publish`](/reference/cli/sync) to save and release changes.
+
+The workflow's label comes from its definition, so `major workflow create` does not take a name.
+
+Every `major workflow` subcommand accepts `--json` to print one JSON result.
+
+## major workflow list
+
+List the workflows in your organization, with their IDs and whether each is published or a draft.
+
+```bash
+major workflow list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--include-read-only` | Include workflows you can use but not edit. |
+
+## major workflow create
+
+Create a new workflow and set up a local folder for it. The directory must not exist yet.
+
+```bash
+major workflow create <dir>
+```
+
+```bash
+major workflow create nightly-sync
+```
+
+## major workflow clone
+
+Download an existing workflow's latest saved version into a new local folder. Without `--id`, you pick from the workflows you can edit.
+
+```bash
+major workflow clone [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Workflow ID. Required with `--non-interactive`. |
+| `--dir` | New directory. Defaults to the workflow ID. |

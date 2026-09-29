@@ -9,133 +9,122 @@
   },
   "favicon": "/favicon.png",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Getting Started",
-        "groups": [
-          {
-            "group": "Introduction",
-            "pages": [
-              "index",
-              {
-                "group": "Core Concepts",
-                "pages": [
-                  "getting-started/core-concepts",
-                  "getting-started/core-concepts/apps",
-                  "getting-started/core-concepts/agents",
-                  "getting-started/core-concepts/models",
-                  "getting-started/core-concepts/connectors",
-                  "getting-started/core-concepts/rbac",
-                  "getting-started/core-concepts/memory"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Quickstart",
-            "pages": [
-              "getting-started/quickstart-cli",
-              "getting-started/quickstart-web"
-            ]
-          }
+        "group": "Get Started",
+        "pages": [
+          "index",
+          "get-started/quickstart",
+          "get-started/use-cases"
         ]
       },
       {
-        "tab": "CLI Reference",
-        "groups": [
+        "group": "Learn",
+        "pages": [
+          "learn/web-app",
           {
-            "group": "Overview",
-            "pages": ["cli/overview", "getting-started/quickstart-cli"]
+            "group": "Apps",
+            "pages": [
+              "learn/apps/overview",
+              "learn/apps/editor",
+              "learn/apps/deploying",
+              "learn/apps/environments",
+              "learn/apps/environment-variables",
+              "learn/apps/authentication",
+              "learn/apps/managed-databases",
+              "learn/apps/ai-proxy",
+              "learn/apps/agents-client",
+              "learn/apps/domains",
+              "learn/apps/theming",
+              "learn/apps/queries",
+              "learn/apps/errors",
+              "learn/apps/webhook-routes"
+            ]
+          },
+          {
+            "group": "Agents",
+            "pages": [
+              "learn/agents/overview",
+              "learn/agents/models",
+              "learn/agents/tool-permissions",
+              "learn/agents/external-channels",
+              "learn/agents/access"
+            ]
+          },
+          {
+            "group": "Skills",
+            "pages": [
+              "learn/skills/overview"
+            ]
           },
           {
             "group": "Workflows",
-            "pages": ["workflows/app-lifecycle"]
-          },
-          {
-            "group": "App Commands",
-            "pages": ["cli/app", "cli/resource"]
-          },
-          {
-            "group": "Access & Orgs",
-            "pages": ["cli/user", "cli/org"]
-          },
-          {
-            "group": "Maintenance",
-            "pages": ["cli/update"]
-          }
-        ]
-      },
-      {
-        "tab": "Apps",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["web/index", "web/editor", "web/deploying", "web/environments", "web/authn"]
-          },
-          {
-            "group": "Features",
             "pages": [
-              "web/queries",
-              "web/managed-databases",
-              "web/webhooks",
-              "web/mcp",
-              "web/theming",
-              "web/env-vars",
-              "web/domains",
-              "web/ai-proxy",
-              "web/errors"
+              "learn/workflows/overview",
+              "learn/workflows/nodes",
+              "learn/workflows/state"
+            ]
+          },
+          {
+            "group": "Triggers",
+            "pages": [
+              "learn/triggers/overview",
+              "learn/triggers/schedules",
+              "learn/triggers/connector-events",
+              "learn/triggers/webhooks",
+              "learn/triggers/app-triggers"
+            ]
+          },
+          {
+            "group": "Connectors",
+            "pages": [
+              "learn/connectors/overview",
+              "learn/connectors/resource-client",
+              "learn/connectors/proxy-fetch"
             ]
           }
         ]
       },
       {
-        "tab": "Agents",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["agents/index"]
-          },
-          {
-            "group": "Features",
-            "pages": [
-              "agents/models",
-              "agents/skills",
-              "agents/tool-permissions",
-              "agents/schedules",
-              "agents/app-triggers",
-              "agents/external-channels",
-              "agents/permissions"
-            ]
-          }
+        "group": "Build",
+        "pages": [
+          "build/mcp",
+          "build/cli",
+          "build/platform-agent"
         ]
       },
       {
-        "tab": "Connectors",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["connectors/index", "resource-client/index"]
-          }
+        "group": "Settings",
+        "pages": [
+          "settings/members-and-roles",
+          "settings/connected-accounts",
+          "settings/tool-permissions",
+          "settings/models",
+          "settings/audit-log",
+          "settings/billing"
         ]
       },
       {
-        "tab": "Settings",
-        "groups": [
+        "group": "Reference",
+        "pages": [
           {
-            "group": "Your Account",
+            "group": "CLI",
             "pages": [
-              "settings/connected-accounts",
-              "settings/tool-permissions"
+              "reference/cli/overview",
+              "reference/cli/app",
+              "reference/cli/agent",
+              "reference/cli/skill",
+              "reference/cli/workflow",
+              "reference/cli/resource",
+              "reference/cli/vars",
+              "reference/cli/sync",
+              "reference/cli/sandbox",
+              "reference/cli/org",
+              "reference/cli/user",
+              "reference/cli/update"
             ]
           },
-          {
-            "group": "Organization",
-            "pages": [
-              "web/permissions",
-              "settings/audit-log",
-              "getting-started/billing"
-            ]
-          }
+          "reference/connectors"
         ]
       }
     ],
@@ -182,5 +171,195 @@
       "cursor",
       "vscode"
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/getting-started/quickstart-cli",
+      "destination": "/build/cli"
+    },
+    {
+      "source": "/getting-started/quickstart-web",
+      "destination": "/get-started/quickstart"
+    },
+    {
+      "source": "/getting-started/core-concepts",
+      "destination": "/learn/apps/overview"
+    },
+    {
+      "source": "/getting-started/core-concepts/apps",
+      "destination": "/learn/apps/overview"
+    },
+    {
+      "source": "/getting-started/core-concepts/agents",
+      "destination": "/learn/agents/overview"
+    },
+    {
+      "source": "/getting-started/core-concepts/models",
+      "destination": "/learn/agents/models"
+    },
+    {
+      "source": "/getting-started/core-concepts/connectors",
+      "destination": "/learn/connectors/overview"
+    },
+    {
+      "source": "/getting-started/core-concepts/rbac",
+      "destination": "/settings/members-and-roles"
+    },
+    {
+      "source": "/getting-started/core-concepts/memory",
+      "destination": "/learn/agents/overview"
+    },
+    {
+      "source": "/getting-started/billing",
+      "destination": "/settings/billing"
+    },
+    {
+      "source": "/web",
+      "destination": "/learn/apps/overview"
+    },
+    {
+      "source": "/web/index",
+      "destination": "/learn/apps/overview"
+    },
+    {
+      "source": "/web/editor",
+      "destination": "/learn/apps/editor"
+    },
+    {
+      "source": "/web/deploying",
+      "destination": "/learn/apps/deploying"
+    },
+    {
+      "source": "/web/environments",
+      "destination": "/learn/apps/environments"
+    },
+    {
+      "source": "/web/env-vars",
+      "destination": "/learn/apps/environment-variables"
+    },
+    {
+      "source": "/web/authn",
+      "destination": "/learn/apps/authentication"
+    },
+    {
+      "source": "/web/managed-databases",
+      "destination": "/learn/apps/managed-databases"
+    },
+    {
+      "source": "/web/ai-proxy",
+      "destination": "/learn/apps/ai-proxy"
+    },
+    {
+      "source": "/web/domains",
+      "destination": "/learn/apps/domains"
+    },
+    {
+      "source": "/web/theming",
+      "destination": "/learn/apps/theming"
+    },
+    {
+      "source": "/web/queries",
+      "destination": "/learn/apps/queries"
+    },
+    {
+      "source": "/web/errors",
+      "destination": "/learn/apps/errors"
+    },
+    {
+      "source": "/web/mcp",
+      "destination": "/build/mcp"
+    },
+    {
+      "source": "/web/build-mcp",
+      "destination": "/build/mcp"
+    },
+    {
+      "source": "/web/webhooks",
+      "destination": "/learn/apps/webhook-routes"
+    },
+    {
+      "source": "/web/permissions",
+      "destination": "/settings/members-and-roles"
+    },
+    {
+      "source": "/agents",
+      "destination": "/learn/agents/overview"
+    },
+    {
+      "source": "/agents/index",
+      "destination": "/learn/agents/overview"
+    },
+    {
+      "source": "/agents/models",
+      "destination": "/learn/agents/models"
+    },
+    {
+      "source": "/agents/skills",
+      "destination": "/learn/skills/overview"
+    },
+    {
+      "source": "/agents/tool-permissions",
+      "destination": "/learn/agents/tool-permissions"
+    },
+    {
+      "source": "/agents/schedules",
+      "destination": "/learn/triggers/schedules"
+    },
+    {
+      "source": "/agents/app-triggers",
+      "destination": "/learn/triggers/app-triggers"
+    },
+    {
+      "source": "/agents/external-channels",
+      "destination": "/learn/agents/external-channels"
+    },
+    {
+      "source": "/agents/permissions",
+      "destination": "/learn/agents/access"
+    },
+    {
+      "source": "/connectors",
+      "destination": "/learn/connectors/overview"
+    },
+    {
+      "source": "/connectors/index",
+      "destination": "/learn/connectors/overview"
+    },
+    {
+      "source": "/resource-client",
+      "destination": "/learn/connectors/resource-client"
+    },
+    {
+      "source": "/resource-client/index",
+      "destination": "/learn/connectors/resource-client"
+    },
+    {
+      "source": "/workflows/app-lifecycle",
+      "destination": "/build/cli"
+    },
+    {
+      "source": "/cli/overview",
+      "destination": "/reference/cli/overview"
+    },
+    {
+      "source": "/cli/app",
+      "destination": "/reference/cli/app"
+    },
+    {
+      "source": "/cli/resource",
+      "destination": "/reference/cli/resource"
+    },
+    {
+      "source": "/cli/org",
+      "destination": "/reference/cli/org"
+    },
+    {
+      "source": "/cli/user",
+      "destination": "/reference/cli/user"
+    },
+    {
+      "source": "/cli/update",
+      "destination": "/reference/cli/update"
+    }
+  ]
 }

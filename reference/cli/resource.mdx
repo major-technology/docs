@@ -1,0 +1,88 @@
+---
+title: "major resource"
+description: "Attach connectors to an app and switch its environment from the CLI."
+---
+
+`major resource` controls which [connectors](/learn/connectors/overview) the app in the current directory can reach, and which environment it uses. Run these commands from inside the app's folder.
+
+When you attach resources, the CLI generates local resource clients in your app so your code can call them.
+
+## major resource list
+
+List all resources in your organization, showing which are attached to the current app.
+
+```bash
+major resource list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Output in JSON format. |
+
+## major resource add
+
+Attach a resource to the current app by ID. Use `major resource list` to find IDs.
+
+```bash
+major resource add --id <resource-id> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Resource ID to add. |
+| `--json` | Output in JSON format. |
+
+## major resource remove
+
+Detach a resource from the current app by ID. Use `major resource list` to see attached resources.
+
+```bash
+major resource remove --id <resource-id> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Resource ID to remove. |
+| `--json` | Output in JSON format. |
+
+## major resource manage
+
+Pick the app's resources from an interactive list.
+
+```bash
+major resource manage
+```
+
+## major resource create
+
+Open the resource creation page in your default browser.
+
+```bash
+major resource create
+```
+
+## major resource env-list
+
+List the environments available to the app and show which one is selected.
+
+```bash
+major resource env-list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Output in JSON format. |
+
+## major resource env
+
+Show the app's current environment and switch to another one.
+
+```bash
+major resource env [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Environment ID to select without a prompt. |
+
+After switching, run [`major app start`](/reference/cli/app#major-app-start) to use the new environment locally.

@@ -1,0 +1,74 @@
+---
+title: "Schedules"
+description: "Run a workflow automatically on a recurring cron schedule."
+---
+
+A schedule is a `cron` trigger on a [workflow](/learn/workflows/overview). It starts a run every time its cron expression matches, with no one needing to click anything. Use it for recurring work like a daily standup summary, a weekly report, or an hourly data check.
+
+To run an agent on a schedule, put it in a workflow with an `agent_call` node and give the workflow a `cron` trigger.
+
+## Example requests
+
+- "Every weekday at 9am Eastern, have the standup agent summarize yesterday's commits and post them to #eng."
+- "Run the invoice-reconciliation workflow on the first of every month at 6am UTC."
+- "Check for stale support tickets every hour."
+
+## How a schedule is defined
+
+```jsonc
+"triggers": [
+  {
+    "id": "weekly_review",
+    "type": "cron",
+    "label": "Weekly review",
+    "config": {
+      "cron": "0 9 * * 1",
+      "timezone": "America/New_York"
+    },
+    "input": { "region": "EMEA", "lookback_days": 7 }
+  }
+]
+```
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `config.cron` | Yes | A five-field cron expression: minute, hour, day of month, month, day of week. `0 9 * * 1` is every Monday at 9:00. |
+| `config.timezone` | Yes | The IANA timezone the expression is evaluated in, such as `America/New_York` or `UTC`. |
+| `input` | No | Values passed to the run as `trigger.input`. They must be literals; `$state` and `$expr` aren't allowed here. |
+| `label` | No | The name shown on the trigger and in run history. |
+
+If the workflow has an `input_schema`, its defaults are filled in and the scheduled input is validated on every run. See [State and input](/learn/workflows/state#workflow-input).
+
+## Building a schedule
+
+Tell the [Platform Agent](/build/platform-agent) what to run and how often. It turns a cadence like "every weekday at 9am ET" into `0 9 * * 1-5` in `America/New_York`, and asks for your timezone if it isn't clear.
+
+In the workflow editor, add a trigger and choose a schedule. You can type a cadence under **Describe it** and click **Generate**, or enter a **Cron expression** directly. The editor previews the upcoming run times. If the workflow has an `input_schema`, fill in the **Scheduled input** there too.
+
+<Note>
+A new or changed schedule starts firing only after you **publish** the workflow. Saving alone leaves it inert. Use **Run now** to test the workflow before you publish.
+</Note>
+
+## Managing schedules
+
+- **Pause** a schedule by removing its trigger (or commenting it out), then saving and publishing.
+- **Change** the cadence or input by editing the trigger, then saving and publishing.
+- **Run now** starts a run immediately, outside the schedule, using the latest saved version.
+- **Run history** on the workflow lists every scheduled run with its per-node trace.
+
+Scheduled runs use the published version and run as the person who last published the workflow, so agents and app calls use that person's access.
+
+## Approvals in unattended runs
+
+A scheduled run usually has no one watching it. If an agent in the workflow has tools set to **Ask** (see [Tool permissions](/learn/agents/tool-permissions)), set an `approval_channel` on its `agent_call` node to send those approval requests to a Slack channel. To have a person sign off on a step, add a `human_approval` node. See [Approvals in Slack](/learn/workflows/overview#approvals-in-slack).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Workflows" icon="diagram-project" href="/learn/workflows/overview">
+    Build the workflow a schedule runs.
+  </Card>
+  <Card title="Connector events" icon="plug" href="/learn/triggers/connector-events">
+    Start a workflow when something happens instead of on a timer.
+  </Card>
+</CardGroup>

@@ -1,0 +1,271 @@
+---
+title: "Quickstart"
+description: "Install the Major plugin in your AI client and build your first app."
+---
+
+This guide connects your AI client to Major and walks you through building and deploying your first app.
+
+<Tip>
+Don't use an AI client? Go to [app.major.build](https://app.major.build), sign in, and describe what you want to the [Platform Agent](/build/platform-agent). You can skip to [Step 2](#step-2-build-something).
+</Tip>
+
+## Step 1: Install the Major plugin
+
+The Major plugin adds the Major MCP server (`https://mcp.major.build/mcp`) and the Major skills to your client. Pick your client:
+
+<Tabs>
+  <Tab title="Claude Code CLI">
+    <Steps>
+      <Step title="Add the Major plugin marketplace">
+        Run this command in your terminal.
+
+        ```bash
+        claude plugin marketplace add major-technology/cli
+        ```
+      </Step>
+      <Step title="Install the major plugin">
+        ```bash
+        claude plugin install major@major
+        ```
+      </Step>
+      <Step title="Sign in to Major">
+        Your browser opens the Major sign-in page. Sign in and accept the access request.
+
+        ```bash
+        claude mcp login plugin:major:major
+        ```
+      </Step>
+      <Step title="Make sure that the server is connected">
+        The "plugin:major:major" server shows the URL `https://mcp.major.build/mcp` and the status "Connected".
+
+        ```bash
+        claude mcp list
+        ```
+      </Step>
+      <Step title="Test the connection">
+        Start Claude Code and ask a question about your Major workspace.
+
+        ```bash
+        claude
+        ```
+
+        ```text
+        List my Major apps.
+        ```
+      </Step>
+    </Steps>
+
+    <Note>
+    You can also run the same steps inside a Claude Code session: `/plugin marketplace add major-technology/cli`, then `/plugin install major@major`.
+    </Note>
+  </Tab>
+  <Tab title="Codex CLI">
+    <Steps>
+      <Step title="Add the Major plugin marketplace">
+        Run this command in your terminal.
+
+        ```bash
+        codex plugin marketplace add major-technology/cli
+        ```
+      </Step>
+      <Step title="Install the major plugin">
+        ```bash
+        codex plugin add major@major
+        ```
+      </Step>
+      <Step title="Sign in to Major">
+        Your browser opens the Major sign-in page. Sign in and accept the access request.
+
+        ```bash
+        codex mcp login major
+        ```
+      </Step>
+      <Step title="Make sure that the server is connected">
+        The "major" server shows the URL `https://mcp.major.build/mcp`. The Auth column no longer shows "Not logged in".
+
+        ```bash
+        codex mcp list
+        ```
+      </Step>
+      <Step title="Test the connection">
+        Start Codex and ask a question about your Major workspace.
+
+        ```bash
+        codex
+        ```
+
+        ```text
+        List my Major apps.
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="ChatGPT Desktop">
+    <Steps>
+      <Step title="Open the Plugins page">
+        In the ChatGPT desktop app, click **Plugins** in the side panel.
+
+        <Frame>
+          <img src="/images/quickstart/chatgpt/01-plugins-page.jpg" alt="ChatGPT Plugins page" />
+        </Frame>
+      </Step>
+      <Step title="Open the marketplace menu">
+        Click **Add** in the top right, then **Add a marketplace**.
+
+        <Frame>
+          <img src="/images/quickstart/chatgpt/02-add-marketplace.jpg" alt="Add menu with Add a marketplace" />
+        </Frame>
+      </Step>
+      <Step title="Add the Major marketplace">
+        In **Source**, type `major-technology/cli`. Leave **Git ref** and **Sparse paths** empty. Click **Add marketplace**.
+
+        ```text
+        major-technology/cli
+        ```
+
+        <Frame>
+          <img src="/images/quickstart/chatgpt/03-marketplace-source.jpg" alt="Add plugin marketplace dialog with major-technology/cli" />
+        </Frame>
+      </Step>
+      <Step title="Find the Major plugin">
+        Search for "major", then click the Major plugin: "Build apps and agents on Major".
+
+        <Frame>
+          <img src="/images/quickstart/chatgpt/04-search-major.jpg" alt="Plugin search results for major" />
+        </Frame>
+      </Step>
+      <Step title="Install the plugin">
+        The plugin page shows the Major MCP server and the Major skills. Click **Install plugin**.
+
+        <Frame>
+          <img src="/images/quickstart/chatgpt/05-install-plugin.jpg" alt="Major plugin page with Install plugin" />
+        </Frame>
+      </Step>
+      <Step title="Start using Major">
+        The skills are on after the install. Click **Try now**. When ChatGPT asks, sign in to Major and accept the access request.
+
+        <Frame>
+          <img src="/images/quickstart/chatgpt/06-installed.jpg" alt="Major plugin installed, with Try now" />
+        </Frame>
+      </Step>
+      <Step title="Test the connection">
+        Ask a question about your Major workspace.
+
+        ```text
+        List my Major apps.
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Claude Desktop">
+    <Steps>
+      <Step title="Open the plugin marketplace menu">
+        In the side panel, click **Customize**, then open the **Plugins** tab. Click **+ Add**, then **Add marketplace**.
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/01-add-marketplace.jpg" alt="Customize, Plugins tab, with the Add menu open" />
+        </Frame>
+      </Step>
+      <Step title="Add the Major marketplace">
+        In the URL field, type `major-technology/cli`. Keep **Sync automatically** on, then click **Sync**.
+
+        ```text
+        major-technology/cli
+        ```
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/02-marketplace-url.jpg" alt="Add marketplace dialog with major-technology/cli" />
+        </Frame>
+      </Step>
+      <Step title="Add the Major plugin">
+        The Major plugin shows in the list. Click **Add**.
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/03-plugin-listed.jpg" alt="Major plugin in the plugin list" />
+        </Frame>
+      </Step>
+      <Step title="Open the plugin's connector">
+        On the Major plugin page, open the **Connectors** tab. Next to "major", click **Add for your team**.
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/04-plugin-connectors.jpg" alt="Major plugin page, Connectors tab" />
+        </Frame>
+      </Step>
+      <Step title="Confirm for your team">
+        Click **Add to your team**. This makes the connector available to everyone in your organization.
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/05-add-to-team.jpg" alt="Add connector to your team dialog" />
+        </Frame>
+      </Step>
+      <Step title="Check the connector URL">
+        The form already contains the name "major" and the URL `https://mcp.major.build/mcp`. Click **Continue**.
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/06-connector-url.jpg" alt="Add custom connector dialog with the Major URL" />
+        </Frame>
+      </Step>
+      <Step title="Choose the sign-in settings">
+        Keep **Sign in now** and **Register automatically**. Both are detected for Major. Click **Add**.
+
+        <Frame>
+          <img src="/images/quickstart/claude-desktop/07-connector-auth.jpg" alt="Authentication and OAuth client options" />
+        </Frame>
+      </Step>
+      <Step title="Sign in to Major">
+        Claude opens the Major sign-in page. Sign in and accept the access request.
+      </Step>
+      <Step title="Test the connection">
+        Start a new chat and ask a question about your Major workspace.
+
+        ```text
+        List my Major apps.
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Step 2: Build something
+
+Describe the app you want and name the system its data lives in. For example:
+
+```text
+Build me an app that shows open deals by stage and owner from my HubSpot, with a filter for close date.
+```
+
+Here is what happens next:
+
+<Steps>
+  <Step title="Connector setup">
+    If the connector you named isn't set up yet, you get a setup card (or a link, in an AI client). Open it, connect the account, and the build continues. See [Connectors](/learn/connectors/overview).
+  </Step>
+  <Step title="Sandbox">
+    The agent creates the app and writes the code in a cloud sandbox. It reads the connector's schema and context documents so the queries match your data.
+  </Step>
+  <Step title="Preview">
+    You get a live preview URL of the running app. Ask for changes in plain language and the preview updates.
+  </Step>
+  <Step title="Deploy">
+    When it looks right, ask the agent to deploy. The app gets a production URL that you can share with your team. See [Deploying](/learn/apps/deploying).
+  </Step>
+</Steps>
+
+For more ideas, see [Use cases](/get-started/use-cases).
+
+## Step 3: Next steps
+
+<CardGroup cols={2}>
+  <Card title="Use cases" icon="lightbulb" href="/get-started/use-cases">
+    Copyable prompts for apps, agents, and workflows.
+  </Card>
+  <Card title="Apps" icon="window" href="/learn/apps/overview">
+    How apps are built, versioned, and deployed.
+  </Card>
+  <Card title="Agents" icon="robot" href="/learn/agents/overview">
+    Build agents that act on your data, in Slack or on a schedule.
+  </Card>
+  <Card title="Connectors" icon="database" href="/reference/connectors">
+    See every connector Major supports.
+  </Card>
+</CardGroup>

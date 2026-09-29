@@ -1,0 +1,54 @@
+---
+title: "Access & Permissions"
+description: "Role-based access control for agents and skills."
+---
+
+Agents and skills each have their own role-based access control (RBAC), layered on top of your [organization roles and groups](/settings/members-and-roles). Access is granted per object - you can share a single agent or skill with specific people or groups without giving them access to everything.
+
+Don't confuse this with [tool permissions](/learn/agents/tool-permissions): RBAC controls **who can use and edit** an agent or skill; tool permissions control **what an agent itself is allowed to do** once it runs.
+
+## Agents
+
+| Role | Can do |
+| --- | --- |
+| **User** | Run the agent and start chats with it. |
+| **Editor** | Everything a User can, plus edit the definition (prompt, model, connectors, apps, skills, env vars, tool permissions) and publish. |
+| **Admin** | Everything an Editor can, plus share the agent with others. |
+
+Creating a new agent requires the organization-level **app-creation** permission (Builder role or higher), the same permission used to create apps.
+
+### Sharing
+
+The agent's owner or an Admin can grant access to:
+
+- **Individuals** - invite users by email.
+- **Groups** - grant access to an entire team at once (see [Groups](/settings/members-and-roles#groups)).
+
+## Skills
+
+[Skills](/learn/skills/overview) use the same three roles, so authorship can be separated from use:
+
+| Role | Can do |
+| --- | --- |
+| **User** | Read a skill and attach it to agents they can edit. |
+| **Editor** | Everything a User can, plus modify the skill's content and publish new versions. |
+| **Admin** | Everything an Editor can, plus share the skill and delete it. |
+
+Deleting a skill is blocked while it's still attached to any agent - detach it everywhere first.
+
+## Workflows
+
+A [workflow](/learn/workflows/overview) that calls an agent runs as the person who last published the workflow, using their credentials for shared and per-user connectors. See [Triggers](/learn/triggers/overview) for how each trigger type starts a run.
+
+## Shared agents and identity
+
+When an agent is shared and someone other than its author runs it, Major distinguishes two identities:
+
+- The **author/deployer** - the subject of RBAC checks and the source of shared credentials.
+- The **runner** - the person who started the run, used for any [per-user OAuth](/learn/connectors/overview#shared-vs-per-user-connections) connectors.
+
+This means a shared agent uses shared connectors via the author's credentials, but per-user connectors act as whoever is running it - so each person only ever touches data they're entitled to.
+
+## App triggers
+
+For an app to [trigger an agent](/learn/triggers/app-triggers), the agent must be explicitly attached to that app. Attaching requires **edit** access to both the app and the agent - it's a deliberate grant, never inferred from your code.

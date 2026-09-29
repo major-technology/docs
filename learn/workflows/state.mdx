@@ -1,0 +1,82 @@
+---
+title: "State and input"
+description: "Pass data between workflow nodes and define the input a workflow accepts."
+---
+
+As a workflow runs, each node's output is stored under its node id. The workflow's input is stored under `trigger.input`. Later nodes read these values in their `config.input`, `prompt`, `message`, `output`, `iterable`, and router conditions.
+
+## Referencing state
+
+There are three ways to read state:
+
+| Form | Example | Behavior |
+| --- | --- | --- |
+| `$state` | `{ "$state": "lookup_order.items.0.sku" }` | Looks up a value by path. Array indexes are allowed. A missing path fails the run. |
+| `$expr` | `{ "$expr": "lookup_order.total > 1000" }` | Evaluates a [CEL](https://cel.dev) expression. A missing path evaluates to `null` instead of failing. |
+| `{{ }}` | `"Order {{trigger.input.order_id}} is ready"` | Interpolates a value into a string. Use `{{json node_id.path}}` to insert an object or array as JSON. |
+
+In a `$expr`, every node id is a variable, and a node that hasn't run yet is `null`. Besides standard CEL, you can use:
+
+- `has(node_id.field)` to check whether an optional field is present.
+- `coalesce(a, b, ...)` (2 to 5 arguments) to take the first non-null value.
+- `count(x)` to count the items in a list.
+
+```jsonc
+// Router branch: only large orders from new customers
+{ "$expr": "lookup_order.total >= 1000 && !has(lookup_order.previous_order_id)" }
+
+// Fallback value in an app_call input
+{ "email": { "$expr": "coalesce(trigger.input.email, lookup_order.customer_email)" } }
+```
+
+## What each node outputs
+
+| Node | Output |
+| --- | --- |
+| `agent_call` | The shape of its `output_schema`, or `{ "result": "<final message text>" }` without one. |
+| `app_call` | The response body. A non-object body is wrapped as `{ "body": ... }`. |
+| `human_approval` | `{ "choice": "...", "responded_by": "..." }`, plus `"timed_out": true` on timeout. |
+| `for_each` | `item` and `index` inside the loop body, and `results` after it exits. |
+| `router`, `join`, `wait` | Nothing worth referencing. |
+
+## Workflow input
+
+Every run has an input object at `trigger.input`. Where it comes from depends on how the run started:
+
+| Started by | `trigger.input` |
+| --- | --- |
+| **Run now** | The values you enter before running. |
+| [Schedule](/learn/triggers/schedules) | The literal `input` on the cron trigger. |
+| [Connector event](/learn/triggers/connector-events) | The event payload, or the trigger's `input` projection of it. |
+| [Webhook](/learn/triggers/webhooks) | The JSON request body, or the trigger's `input` projection of it. |
+
+### input_schema
+
+Add an `input_schema` at the top of the definition to describe and validate the input. It's a standard JSON Schema whose root is an object. Mark required fields with `required`, and allow `null` with a type union such as `["string", "null"]`.
+
+```jsonc
+"input_schema": {
+  "type": "object",
+  "properties": {
+    "region": { "type": "string", "default": "US" },
+    "limit": { "type": "integer", "default": 50 },
+    "customer_email": { "type": ["string", "null"] }
+  },
+  "required": ["region"]
+}
+```
+
+Before every run, Major fills in the schema's `default` values, merges the trigger's input over them (explicit values win, including `null`, and arrays replace arrays), and validates the result. Values aren't coerced, so `"50"` doesn't pass as an integer. If the input fails validation, **Run now** shows the error, and a triggered run is recorded as failed without running any nodes. Without an `input_schema`, the input is passed through as is.
+
+With an `input_schema`, **Run now** shows a form for the input, and you can save the values you enter as the workflow's defaults.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Nodes" icon="diagram-project" href="/learn/workflows/nodes">
+    Every node type and its fields.
+  </Card>
+  <Card title="Triggers" icon="bolt" href="/learn/triggers/overview">
+    Start a workflow and shape its input.
+  </Card>
+</CardGroup>

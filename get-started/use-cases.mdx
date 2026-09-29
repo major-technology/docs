@@ -1,0 +1,125 @@
+---
+title: "Use cases"
+description: "Example apps, agents, and workflows you can build on Major, with prompts you can copy."
+---
+
+Each example below includes a prompt you can paste into the [Platform Agent](/build/platform-agent) or your AI client with the [Major plugin](/get-started/quickstart). Replace the connector names with the tools your company uses.
+
+## Apps
+
+### Sales pipeline dashboard
+
+See pipeline by stage, owner, and close date, with deals that have gone quiet flagged for follow-up.
+
+```text
+Build me a pipeline dashboard from my Salesforce. Show open opportunities by stage and owner, total amount per stage, and a table of deals with no activity in the last 14 days. Add filters for owner and close date.
+```
+
+### Customer health dashboard
+
+Combine product usage, support tickets, and billing into one health score per account.
+
+```text
+Build a customer health app. For each account, pull ticket volume from Zendesk, subscription status from Stripe, and weekly active users from our PostgreSQL database. Compute a health score, sort accounts from lowest to highest, and let me click into an account to see the details.
+```
+
+### Finance close tracker
+
+Track month-end close tasks and reconcile accounting data in one place.
+
+```text
+Build a month-end close tracker. List open invoices and unpaid bills from QuickBooks, and add a checklist of close tasks with an owner, due date, and status that the team can update. Store the checklist in a managed database.
+```
+
+### Internal admin panel
+
+Give support or ops a safe way to look up and edit records without direct database access.
+
+```text
+Build an admin panel on our PostgreSQL database. Let me search users by email, view their account and recent orders, and update their plan. Only members of the Support group can make changes, and every edit is logged.
+```
+
+### Marketing performance report
+
+Compare ad spend and results across channels.
+
+```text
+Build a marketing dashboard that shows spend, clicks, and conversions per campaign from Meta Ads and LinkedIn Ads, next to sessions and conversions from Google Analytics. Show the last 30 days with a date range picker.
+```
+
+## Agents
+
+### Data analyst in Slack
+
+Let your team ask questions about company data in plain language and get answers in Slack.
+
+```text
+Create an agent that answers questions about our data. It can query our Snowflake warehouse and read the table descriptions attached to it. Deploy it as a Slack bot so people can mention it in channels and DMs.
+```
+
+### Call intelligence agent
+
+Turn meeting transcripts into structured notes and CRM updates.
+
+```text
+Create an agent that reads new Fireflies transcripts for sales calls, summarizes the call, lists next steps and objections, and adds a note to the matching company in HubSpot.
+```
+
+### Support triage agent
+
+Categorize and route incoming tickets.
+
+```text
+Create an agent that reviews new Zendesk tickets, tags each one with a category and priority, looks up the customer's plan in Stripe, and posts urgent tickets from paying customers to the #support-escalations Slack channel.
+```
+
+## Workflows
+
+### New signup triage
+
+Research and route every new signup automatically.
+
+```text
+Build a workflow that runs when a new user signs up. Look up their company, score whether they are a good fit, create or update the contact in HubSpot, and post high-fit signups to the #sales Slack channel.
+```
+
+### Daily metrics report
+
+Send a summary of key numbers every morning.
+
+```text
+Build a workflow that runs every weekday at 8am. Pull yesterday's signups, revenue, and open support tickets, have an agent write a short summary with notable changes, and post it to the #metrics Slack channel.
+```
+
+### Approval flow for refunds
+
+Keep a human in the loop for actions that move money.
+
+```text
+Build a workflow for refund requests. When a request comes in through a webhook, have an agent check the customer's history in Stripe and recommend approve or deny. Send it to a finance approver, and only issue the refund in Stripe after they approve.
+```
+
+### Weekly pipeline review
+
+Prepare a pipeline summary before the weekly sales meeting.
+
+```text
+Build a workflow that runs every Monday at 7am. Pull deals that changed stage, slipped their close date, or were created last week from Salesforce, and email a summary to the sales leads with Gmail.
+```
+
+## Learn more
+
+<CardGroup cols={2}>
+  <Card title="Apps" icon="window" href="/learn/apps/overview">
+    How apps work.
+  </Card>
+  <Card title="Agents" icon="robot" href="/learn/agents/overview">
+    How agents work.
+  </Card>
+  <Card title="Workflows" icon="diagram-project" href="/learn/workflows/overview">
+    How workflows work.
+  </Card>
+  <Card title="Connectors" icon="database" href="/reference/connectors">
+    Every connector you can use.
+  </Card>
+</CardGroup>

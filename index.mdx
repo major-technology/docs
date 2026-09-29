@@ -1,34 +1,54 @@
 ---
-title: "What is Major?"
-description: "Build, deploy, and share internal tools faster with AI-powered development and secure resource access."
+title: "Introduction"
+description: "Major is a platform for building apps, agents, skills, and workflows on your company's data."
 ---
 
-Major is an AI-powered platform for building and deploying internal tools. It combines a live code editor with integrated AI assistance, secure resource management, and one-command deployments.
+Major is a platform for building apps, agents, skills, and workflows on top of your company's data. You connect your databases, SaaS tools, and APIs once as [connectors](/learn/connectors/overview). Everything you build on Major uses those connectors securely, with access controlled per user.
 
-## What Major does for you
+You describe what you want, an AI agent builds it in a sandbox, you preview it, and you deploy it to your team.
 
-<CardGroup cols={2}>
-  <Card title="Deploy instantly" icon="rocket">
-    Ship internal tools in seconds. No infrastructure setup, no CI/CD pipelines to configure.
+## Three ways to build
+
+<CardGroup cols={3}>
+  <Card title="Platform" icon="browser" href="/build/platform-agent">
+    Build in the Major web app at [app.major.build](https://app.major.build) by chatting with the Platform Agent.
   </Card>
-  <Card title="Secure connector access" icon="shield-check">
-    Access databases and APIs without managing secrets. Credentials never touch your code.
+  <Card title="MCP" icon="plug" href="/build/mcp">
+    Install the Major plugin in Claude Code, Codex, ChatGPT, or Claude Desktop and build from the AI client you already use.
   </Card>
-  <Card title="Build with AI" icon="sparkles">
-    Get AI assistance that understands your entire codebase and can implement features directly.
-  </Card>
-  <Card title="Control access" icon="users">
-    Manage who can view, edit, and deploy each app with built-in RBAC.
+  <Card title="CLI" icon="terminal" href="/build/cli">
+    Develop apps locally in your own editor with the `major` CLI, then deploy with one command.
   </Card>
 </CardGroup>
 
-## How Major is different
+All three use the same platform. Apps, agents, and connectors you create in one are available in the others.
 
-### No secrets in your code
+## Core concepts
 
-Traditional development requires managing `.env` files, rotating credentials, and hoping nobody commits secrets to git. Major eliminates this entirely.
+<CardGroup cols={2}>
+  <Card title="Apps" icon="window" href="/learn/apps/overview">
+    Full-stack internal tools, such as dashboards and admin panels, deployed with a URL your team can open.
+  </Card>
+  <Card title="Agents" icon="robot" href="/learn/agents/overview">
+    Reusable AI agents that act on your data and apps, from the web, in Slack, or on a schedule.
+  </Card>
+  <Card title="Skills" icon="book-open" href="/learn/skills/overview">
+    Versioned instruction bundles that agents load on demand to handle specific tasks.
+  </Card>
+  <Card title="Workflows" icon="diagram-project" href="/learn/workflows/overview">
+    Multi-step automations that chain agents, app calls, branches, and human approvals.
+  </Card>
+  <Card title="Triggers" icon="bolt" href="/learn/triggers/overview">
+    Start agents and workflows from schedules, connector events, webhooks, or your apps.
+  </Card>
+  <Card title="Connectors" icon="database" href="/learn/connectors/overview">
+    Databases, SaaS tools, and APIs your apps and agents read from and write to.
+  </Card>
+</CardGroup>
 
-Connectors (databases, APIs, storage) are configured once in the dashboard. Your code uses generated clients that authenticate automatically through the Major platform. The same code works locally, in the web editor, and in production.
+## No secrets in your code
+
+Connectors are configured once in Major. Your code uses generated clients that authenticate through the Major platform, so there are no connection strings, API keys, or `.env` files to manage. The same code works in the sandbox, locally, and in production.
 
 ```typescript
 // No connection strings, no API keys, no .env files
@@ -41,44 +61,10 @@ const result = await myDatabaseClient.invoke(
 );
 ```
 
-### AI that understands your code
+Connectors can use one shared account or let each person sign in with their own account, so every user only reaches the data they are allowed to see. See [Connectors](/learn/connectors/overview) for details.
 
-The Major editor includes an AI assistant with full context of your application. It can:
+## Get started
 
-- Explain complex logic in your codebase
-- Implement new features by writing code directly
-- Refactor components while maintaining existing patterns
-
-### Unified experience everywhere
-
-Whether you're developing locally with the CLI or in the browser with the web editor, the experience is consistent:
-
-- Same resource access
-- Same deployment commands
-- Same version control (every app is backed by GitHub)
-
-## Choose your workflow
-
-Major supports two development paths. Pick the one that fits your style:
-
-<CardGroup cols={2}>
-  <Card title="CLI Workflow" icon="terminal" href="/getting-started/quickstart-cli">
-    Develop in your local IDE with full control. Use `major app start` to run locally and `major app deploy` to ship.
-  </Card>
-  <Card title="Web Dashboard" icon="browser" href="/getting-started/quickstart-web">
-    Build entirely in the browser with the live editor. Get AI assistance and deploy with a single click.
-  </Card>
-</CardGroup>
-
-Both workflows use the same underlying platform. You can switch between them anytime or use them together.
-
-## Next steps
-
-<CardGroup cols={2}>
-  <Card title="Core Concepts" icon="book" href="/getting-started/core-concepts">
-    Learn about Apps, Connectors, RBAC, and Environments.
-  </Card>
-  <Card title="Get Started" icon="play" href="/getting-started/quickstart-cli">
-    Jump into building your first app.
-  </Card>
-</CardGroup>
+<Card title="Quickstart" icon="play" href="/get-started/quickstart">
+  Install the Major plugin and build your first app in a few minutes.
+</Card>

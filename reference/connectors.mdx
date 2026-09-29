@@ -1,0 +1,138 @@
+---
+title: "Connectors"
+description: "Every connector Major supports, grouped by category, with the authentication modes each one offers."
+---
+
+This page lists the connectors you can add to your organization. For how connectors work, how credentials are stored, and how to set one up, see [Connectors](/learn/connectors/overview).
+
+## Authentication modes
+
+The **Auth** column shows how each connector can authenticate:
+
+- **Shared** - one set of credentials for everyone. Every app user and agent run uses the same account.
+- **Per-user** - each person signs in with their own account through OAuth, so they only reach data they are entitled to. People manage these accounts from [Connected Accounts](/settings/connected-accounts).
+- **Identity** - Major assumes a cloud identity you create in **Settings > Identities** (an AWS IAM role or a GCP service account) instead of storing long-lived keys.
+
+See [Shared vs. per-user connections](/learn/connectors/overview#shared-vs-per-user-connections) for details.
+
+<Note>
+Don't see what you need? Use [Custom API](#generic-and-custom), [GraphQL](#generic-and-custom), or a [custom MCP server](#generic-and-custom), or click **Request it** in the Add Connector dialog.
+</Note>
+
+## Databases
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| PostgreSQL | Run SQL queries and migrations against a PostgreSQL database. | Shared |
+| MySQL | Run SQL queries against a MySQL database. | Shared |
+| Microsoft SQL Server | Run queries and explore schemas in SQL Server. | Shared |
+| ClickHouse | Run analytical SQL queries against ClickHouse. | Shared |
+| DynamoDB | Query, scan, and write items in AWS DynamoDB tables. | Shared (access keys or identity) |
+| Azure CosmosDB | Query containers and create, update, and patch documents. | Shared |
+| Neo4j | Run Cypher queries and traverse nodes and relationships. | Shared |
+
+## Data warehouses
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| Snowflake | Query warehouse data and explore schemas. | Shared (key pair or OAuth), per-user |
+| BigQuery | Explore datasets and run SQL queries in Google BigQuery. | Shared (OAuth or identity) |
+
+## CRM and sales
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| Salesforce | Run SOQL queries, read and write sObjects, and explore metadata. | Shared |
+| HubSpot | Read and write contacts, companies, and deals, and search CRM objects. | Shared |
+| Attio | Read and write people, companies, lists, notes, and tasks. | Shared |
+| Microsoft Dynamics 365 | Access Dynamics 365 CRM data. | Shared |
+| Outreach | Manage prospects and sequences. | Shared |
+| Apollo | Prospecting, enrichment, and sequences in Apollo.io. | Shared |
+| ZoomInfo | Company, contact, and intent data. Available on request. | Shared |
+| Fireflies | Read meeting transcripts, summaries, and users, and upload audio. | Shared |
+
+## Finance and operations
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| QuickBooks Online | Read customers, invoices, items, accounts, vendors, bills, and payments. | Shared |
+| Stripe | Access customers, payments, subscriptions, invoices, and balance. | Shared |
+| Plaid | Link a bank account to pull transactions and balances. | Shared |
+| Acumatica | Access Acumatica ERP entities, Generic Inquiries, and actions. | Shared |
+| SAP S/4HANA | Call SAP S/4HANA OData and REST APIs, in sandbox or production. | Shared |
+| DocuSign | Access DocuSign eSignature. | Shared |
+| Vanta | Access compliance automation data. Available on request. | Shared |
+
+## Productivity and communication
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| Slack | Send messages, work with channels, and call the Slack Web API. Set up through the Slack integration on the Connectors page. | Shared |
+| Gmail | Read, search, send, and draft emails. | Shared, per-user |
+| Google Calendar | Read and manage events across calendars. | Shared, per-user |
+| Google Drive | Search, read, and manage files. | Shared, per-user |
+| Google Sheets | Read, write, and format spreadsheets. | Shared |
+| Outlook | Read, search, send, and manage email. | Shared, per-user |
+| Microsoft Teams | Access Teams through the Microsoft Graph API. | Shared, per-user |
+| SharePoint | Access sites, lists, document libraries, and files. | Shared, per-user |
+| Notion | Read and write pages, databases, and blocks, and search a workspace. | Shared, per-user |
+| Linear | Access issues, projects, and more. | Shared, per-user |
+| Smartsheet | Access sheets, dashboards, and more. | Shared, per-user |
+| Zendesk | Read and update tickets, users, and comments, and search Zendesk Support. | Shared |
+
+## Marketing and ads
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| Google Analytics | Run GA4 reports and explore metadata. | Shared |
+| Google Search Console | Read search analytics, sitemaps, and URL inspection data. | Shared |
+| LinkedIn Marketing API | Access ad accounts, campaigns, creatives, and ad analytics. | Shared |
+| Meta Marketing | Access Meta (Facebook) campaigns, ads, insights, and lead forms. Available on request. | Shared |
+| TikTok Ads | Access ad accounts, campaigns, and ad reports. | Shared |
+| Snitchfeed (API) | Monitor X/Twitter and LinkedIn posts. | Shared |
+| Snitchfeed (MCP) | Use Snitchfeed's MCP server for mentions, listeners, feeds, and analytics. | Shared, per-user |
+
+## Developer and infrastructure
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| GitHub | Work with repositories, issues, pull requests, releases, and branches. | Shared |
+| AWS Lambda | Invoke and manage Lambda functions. | Shared (access keys or identity) |
+| AWS SQS | Send, receive, and manage queue messages. | Shared (access keys or identity) |
+| PostHog | Product analytics, feature flags, and experiments. | Shared |
+| Langfuse | LLM observability, tracing, and prompts. | Shared |
+| Browserbase | Headless browser automation. | Shared |
+| Clerk | Call the Clerk Backend API to manage users and sessions. | Shared |
+
+## Storage
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| Amazon S3 | Read and write objects, generate presigned URLs, and upload and download files. | Shared (access keys or identity) |
+
+Google Drive and SharePoint are listed under [Productivity and communication](#productivity-and-communication). For storage that Major hosts for you, see [Managed file storage](#major-platform-resources).
+
+## Generic and custom
+
+| Connector | Description | Auth |
+| --- | --- | --- |
+| Custom API | Call any REST API. Major injects the auth headers you configure. | Shared |
+| GraphQL | Run queries and mutations against a GraphQL endpoint. | Shared |
+| Custom MCP Server | Connect any remote MCP server by URL and call its tools. | Shared, per-user |
+| Pipedream Instance | Connect your own Pipedream account. | Shared |
+| HTTP proxy | Call any connected resource with a plain HTTP API through a drop-in `fetch` wrapper. See [Proxy fetch](/learn/connectors/proxy-fetch). Not a separate connector; available on connectors that support it. | Uses the connector's auth |
+
+## Catalog connectors
+
+In addition to the connectors above, the Add Connector dialog includes a catalog of more than 200 additional apps, such as Jira, Confluence, Asana, Airtable, monday, ClickUp, Zoom, Intercom, Gong, RingCentral, Shopify, Xero, Pipedrive, Greenhouse, Box, Dropbox, Google Ads, Datadog, Sentry, and GitLab. Search the dialog to find one. Catalog connectors use shared authentication and are reached through the [HTTP proxy](#generic-and-custom).
+
+## Major platform resources
+
+These are hosted by Major. You don't bring your own credentials.
+
+| Resource | Description | Auth |
+| --- | --- | --- |
+| Managed database | A Major-managed PostgreSQL database for your app's own data. See [Managed databases](/learn/apps/managed-databases). | Managed by Major |
+| Managed file storage | Major-managed object storage for uploads, downloads, images, and documents. | Managed by Major |
+| Major Auth | Share or revoke access to an app for users by email. See [Authentication](/learn/apps/authentication). | Managed by Major |
+| AI proxy | Add LLM calls and chat features to an app without your own model API keys. See [AI proxy](/learn/apps/ai-proxy). | Managed by Major |

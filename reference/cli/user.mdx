@@ -1,0 +1,48 @@
+---
+title: "major user"
+description: "Log in to Major, log out, and set your GitHub username from the CLI."
+---
+
+`major user` handles authentication. Your session token is stored in your system keychain.
+
+## major user login
+
+Log in and store your session token.
+
+```bash
+major user login
+```
+
+The CLI opens an authorization page in your browser. If the browser does not open, or you want to authorize from another device, open the URL the CLI prints. After you approve, you pick a default organization. If you belong to only one, it is selected automatically.
+
+## major user logout
+
+Revoke your CLI token and remove it from local storage.
+
+```bash
+major user logout
+```
+
+## major user whoami
+
+Show the currently authenticated user, after verifying the stored token.
+
+```bash
+major user whoami
+```
+
+## major user gitconfig
+
+Store your GitHub username. `major app create` and `major app clone` use it to give you access to app repositories.
+
+```bash
+major user gitconfig [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--username` | GitHub username to store. Skips the prompt. |
+
+```bash
+major user gitconfig --username "your-github-username"
+```

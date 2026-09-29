@@ -1,0 +1,38 @@
+---
+title: "major org"
+description: "List organizations and choose your default one from the CLI."
+---
+
+`major org` shows the organizations you belong to and sets your default. Commands that create or list agents, skills, workflows, and apps use your default organization, except inside a linked folder, where they use that folder's organization.
+
+## major org list
+
+List all organizations you are a member of.
+
+```bash
+major org list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--json` | Output in JSON format. |
+
+## major org select
+
+Choose your default organization from a list.
+
+```bash
+major org select [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Organization ID to select without a prompt. |
+
+## major org whoami
+
+Show the currently selected default organization.
+
+```bash
+major org whoami
+```
