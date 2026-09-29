@@ -46,7 +46,6 @@
               "learn/agents/overview",
               "learn/agents/models",
               "learn/agents/tool-permissions",
-              "learn/agents/memory",
               "learn/agents/external-channels",
               "learn/agents/access"
             ]
@@ -205,7 +204,7 @@
     },
     {
       "source": "/getting-started/core-concepts/memory",
-      "destination": "/learn/agents/memory"
+      "destination": "/learn/agents/overview"
     },
     {
       "source": "/getting-started/billing",
