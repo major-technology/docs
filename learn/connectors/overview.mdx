@@ -9,6 +9,16 @@ Connectors are the databases, APIs, and storage services your apps connect to. M
 - **Authentication**: Powered by a `MAJOR_JWT_TOKEN` issued to your session. This token contains your user scopes, ensuring the client can only access what you're permitted to access.
 - **Generated Clients**: Major generates resource clients for you. You'll find one per resource in `src/clients/`.
 
+## Generated clients
+
+When you attach a connector to an app, Major generates a client for it - one per resource, available at `src/clients/`. You don't wire up HTTP requests, authentication, or connection setup yourself; you import the client and call its `invoke` method.
+
+- **Type-safe** - full TypeScript support, so inputs and outputs are checked as you write against each resource.
+- **Tailored per resource** - each connector type gets a client with an `invoke` signature specific to it, so a Postgres query and a Slack message each use the shape that fits.
+- **No secrets in code** - authentication is handled by the platform, not your application.
+
+See [Resource client](/learn/connectors/resource-client) for usage and error handling.
+
 ## Setting up a connector
 
 1. Navigate to **Connectors**
@@ -29,7 +39,7 @@ When you configure a connector, you choose how it authenticates:
 
 With a per-user connector, Major gates on the user's own authorization: anyone who opens an app or runs an agent without a connected account is redirected to a `/connect` page to complete OAuth, then returned where they were. Because the connector acts as whoever is using it, each person only touches data they're entitled to. Users manage the accounts they've authorized from [Connected Accounts](/settings/connected-accounts).
 
-<Card title="Per-user OAuth" icon="key" href="/web/permissions#per-user-oauth">
+<Card title="Per-user OAuth" icon="key" href="/learn/connectors/overview#shared-vs-per-user-connections">
   Full details on shared vs. per-user authentication modes.
 </Card>
 
@@ -44,7 +54,7 @@ When editing a connector, you can configure each environment independently. This
 
 You can also enable **global configuration** for a resource, which uses a single configuration from the default environment across all environments instead of per-environment configs. When enabled, non-default environment tabs are locked with an explanatory tooltip.
 
-<Card title="Learn more about Environments" icon="layer-group" href="/web/environments">
+<Card title="Learn more about Environments" icon="layer-group" href="/learn/apps/environments">
   See how to create and manage environments for your organization.
 </Card>
 

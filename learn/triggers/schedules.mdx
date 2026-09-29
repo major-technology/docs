@@ -19,7 +19,7 @@ A schedule attaches to an existing agent and is made up of these fields:
 
 ## Building a schedule
 
-Like agents and skills, schedules are [built conversationally](/agents#building-with-chat) — tell Major which agent to run and how often. It translates your cadence into a cron expression and timezone (e.g. "every weekday at 9am ET" → `0 9 * * 1-5` in `America/New_York`), asking for your timezone if it isn't clear. The schedule goes **live immediately** and starts firing on the next matching time. Refine it the same way later ("change it to 8am", "only on Mondays"), or [disable](#managing-schedules) it while you make changes.
+Like agents and skills, schedules are [built conversationally](/learn/agents/overview#building-with-chat) — tell Major which agent to run and how often. It translates your cadence into a cron expression and timezone (e.g. "every weekday at 9am ET" → `0 9 * * 1-5` in `America/New_York`), asking for your timezone if it isn't clear. The schedule goes **live immediately** and starts firing on the next matching time. Refine it the same way later ("change it to 8am", "only on Mondays"), or [disable](#managing-schedules) it while you make changes.
 
 ## Templates
 
@@ -32,8 +32,8 @@ Mark a schedule as a **shared template** to let other people in your organizatio
 - **View runs** — see the history of past runs and open any of them.
 - **Share** — grant other users edit access to a schedule (unless its agent uses per-user connectors — see below).
 
-Scheduled runs execute as the user who created the schedule, so the agent uses that person's credentials for any connectors that require them. For this reason, a schedule whose agent uses [per-user connectors](/web/permissions#per-user-oauth) can't be shared, and only its creator can run it. See [Access & Permissions](/agents/permissions#schedules) for the full rules.
+Scheduled runs execute as the user who created the schedule, so the agent uses that person's credentials for any connectors that require them. For this reason, a schedule whose agent uses [per-user connectors](/learn/connectors/overview#shared-vs-per-user-connections) can't be shared, and only its creator can run it. See [Access & Permissions](/learn/agents/access#schedules) for the full rules.
 
 ## Approvals
 
-If an agent has tools set to **Ask** (see [Tool Permissions](/agents/tool-permissions)), an unattended scheduled run has no one to prompt. You can configure a schedule to route those approval requests to a **Slack channel**, where a person can approve or deny the action. Connect Slack and select the channel when configuring the schedule.
+If an agent has tools set to **Ask** (see [Tool Permissions](/learn/agents/tool-permissions)), an unattended scheduled run has no one to prompt. You can configure a schedule to route those approval requests to a **Slack channel**, where a person can approve or deny the action. Connect Slack and select the channel when configuring the schedule.

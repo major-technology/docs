@@ -1,6 +1,6 @@
 ---
-title: "Permissions"
-description: "Manage who can access your apps and connectors."
+title: "Members & Roles"
+description: "Invite members and manage who can access your apps, agents, and connectors."
 ---
 
 Major provides granular access control at both the organization and application level.
@@ -30,6 +30,10 @@ You can share access to your application with specific:
 Deployed applications check the deployer's permissions when invoked. If you deploy an app without sufficient resource permissions, you'll be prompted to confirm the deployment.
 </Note>
 
+## Agent, Skill, and Schedule Permissions
+
+Agents, skills, and schedules have their own roles. See [Agent access](/learn/agents/access).
+
 ## Resource Permissions
 
 Resource permissions control who can use connectors and at what level:
@@ -57,21 +61,6 @@ The dialog shows real-time progress for each email address (pending, sending, su
 ### Accepting an Invitation
 
 When you receive an invitation and sign up as a new user, your account is automatically added to the organization with the role specified in the invitation. You'll see a success confirmation and be redirected to your organization dashboard. No additional action is required to accept the invitation.
-
-## Per-User OAuth
-
-Some connectors (like Google Calendar) support per-user OAuth, allowing end-users to authenticate with their own accounts instead of using shared credentials.
-
-### Authentication Modes
-
-When configuring a resource, you choose between two modes:
-
-- **Shared** — One shared OAuth account for all app users. The person deploying the app provides the credentials.
-- **Per-user** — Each user authorizes their own account. Major redirects unauthenticated users to a `/connect` page to complete OAuth.
-
-### Connected Accounts
-
-Users manage the per-user accounts they've authorized from the [Connected Accounts](/settings/connected-accounts) settings page — viewing connected services, disconnecting them, and re-authenticating when credentials expire.
 
 ## Groups
 
