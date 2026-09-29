@@ -99,6 +99,7 @@
           "settings/members-and-roles",
           "settings/connected-accounts",
           "settings/tool-permissions",
+          "settings/models",
           "settings/audit-log",
           "settings/billing"
         ]
