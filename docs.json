@@ -79,7 +79,8 @@
             "group": "Connectors",
             "pages": [
               "learn/connectors/overview",
-              "learn/connectors/resource-client"
+              "learn/connectors/resource-client",
+              "learn/connectors/proxy-fetch"
             ]
           }
         ]
