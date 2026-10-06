@@ -16,16 +16,11 @@ The Major plugin adds the Major MCP server (`https://mcp.major.build/mcp`) and t
 <Tabs>
   <Tab title="Claude Code CLI">
     <Steps>
-      <Step title="Add the Major plugin marketplace">
-        Run this command in your terminal.
+      <Step title="Install the major plugin">
+        Run this command in your terminal. The plugin comes from the Anthropic plugin directory, which is built into Claude Code.
 
         ```bash
-        claude plugin marketplace add major-technology/cli
-        ```
-      </Step>
-      <Step title="Install the major plugin">
-        ```bash
-        claude plugin install major@major
+        claude plugin install major@anthropic-plugin-directory
         ```
       </Step>
       <Step title="Sign in to Major">
@@ -56,7 +51,7 @@ The Major plugin adds the Major MCP server (`https://mcp.major.build/mcp`) and t
     </Steps>
 
     <Note>
-    You can also run the same steps inside a Claude Code session: `/plugin marketplace add major-technology/cli`, then `/plugin install major@major`.
+    You can also install the plugin inside a Claude Code session: `/plugin install major@anthropic-plugin-directory`.
     </Note>
   </Tab>
   <Tab title="Codex CLI">
@@ -159,30 +154,12 @@ The Major plugin adds the Major MCP server (`https://mcp.major.build/mcp`) and t
   </Tab>
   <Tab title="Claude Desktop">
     <Steps>
-      <Step title="Open the plugin marketplace menu">
-        In the side panel, click **Customize**, then open the **Plugins** tab. Click **+ Add**, then **Add marketplace**.
+      <Step title="Install the Major plugin">
+        Open the install link, then click **Add**.
 
-        <Frame>
-          <img src="/images/quickstart/claude-desktop/01-add-marketplace.jpg" alt="Customize, Plugins tab, with the Add menu open" />
-        </Frame>
-      </Step>
-      <Step title="Add the Major marketplace">
-        In the URL field, type `major-technology/cli`. Keep **Sync automatically** on, then click **Sync**.
-
-        ```text
-        major-technology/cli
-        ```
-
-        <Frame>
-          <img src="/images/quickstart/claude-desktop/02-marketplace-url.jpg" alt="Add marketplace dialog with major-technology/cli" />
-        </Frame>
-      </Step>
-      <Step title="Add the Major plugin">
-        The Major plugin shows in the list. Click **Add**.
-
-        <Frame>
-          <img src="/images/quickstart/claude-desktop/03-plugin-listed.jpg" alt="Major plugin in the plugin list" />
-        </Frame>
+        <Card title="Install the Major plugin" icon="download" href="https://claude.ai/customize/plugins/id/c2a04a96-04ab-4a5b-98e4-96948a55fdeb%40anthropic-plugin-directory">
+          Opens the Major plugin in the Anthropic plugin directory.
+        </Card>
       </Step>
       <Step title="Open the plugin's connector">
         On the Major plugin page, open the **Connectors** tab. Next to "major", click **Add for your team**.
