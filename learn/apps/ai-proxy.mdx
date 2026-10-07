@@ -5,7 +5,7 @@ description: "Call Anthropic, OpenAI, and Gemini from your app without API keys,
 
 The AI proxy lets your app call Anthropic, OpenAI, and Gemini through Major. You use each provider's official SDK as usual, but point it at the proxy and authenticate with the app's Major token instead of a provider API key. Usage is billed at cost against your organization's credits and shows up in the [usage dashboard](/settings/billing#usage-dashboard).
 
-The proxy accepts only models in Major's [supported-model catalog](/settings/models#supported-models), including proxy-only embedding, decision, image, and audio models.
+See Major's [supported-model catalog](/settings/models#supported-models) for chat models and app-only embedding, decision, image, and audio models. The proxy checks app authorization and spending limits; it does not restrict model IDs to that catalog.
 
 ## Example requests
 
@@ -42,7 +42,7 @@ Two environment variables are available in the app's runtime, in the editor prev
 
 | Variable | Use |
 | --- | --- |
-| `MAJOR_AI_PROXY_URL` | Base URL of the proxy. Append the provider prefix: `/anthropic`, `/openai`, or `/genai`. |
+| `MAJOR_AI_PROXY_URL` | Base URL of the proxy. Append the provider prefix: `/anthropic`, `/openai`, `/genai`, or `/typesafe`. |
 | `MAJOR_JWT_TOKEN` | The app's token. Pass it as the SDK's `apiKey`. Requests without it are rejected. |
 
 Call the proxy from server code only, so the token never reaches the browser. Use the provider's own SDK, not a unified SDK, and never hard-code keys or proxy URLs.
@@ -96,6 +96,40 @@ const response = await ai.models.generateContent({
 
 For Gemini, set `httpOptions.baseUrl` to the `/genai` prefix only. The SDK adds `/v1beta/models/...` itself. Streaming (`generateContentStream`) and token counting (`countTokens`) use the same client.
 
+### Embeddings and decisions
+
+Use the OpenAI client above for embeddings:
+
+```typescript
+const embedding = await client.embeddings.create({
+  model: "text-embedding-3-small", // or text-embedding-3-large
+  input: "Text to index for semantic search",
+});
+```
+
+Call TypeSafe Jev's native endpoint for structured decisions:
+
+```typescript
+const response = await fetch(process.env.MAJOR_AI_PROXY_URL + "/typesafe/v1/systemone", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.MAJOR_JWT_TOKEN}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "jev-1.13.0",
+    state: "The customer wants to cancel their subscription.",
+    questions: {
+      cancellation: { type: "noul", instructions: "Does the customer want to cancel?" },
+    },
+  }),
+});
+if (!response.ok) throw new Error(`Decision request failed: ${response.status}`);
+const decision = await response.json();
+```
+
+These models are available to app code through the proxy, not as Chat or Agent models.
+
 ### Images and audio
 
 ```typescript
@@ -107,6 +141,11 @@ const edited = await openai.images.edit({ model: "gpt-image-1", image: fs.create
 const speech = await openai.audio.speech.create({ model: "tts-1", voice: "alloy", input: "Hello!" });
 const transcript = await openai.audio.transcriptions.create({ model: "whisper-1", file: audioFile });
 
+// Gemini: image model through generateContent; the image comes back as inlineData parts
+const res = await ai.models.generateContent({ model: "gemini-2.5-flash-image", contents: "A banana dish in a fancy restaurant" });
+
+// Gemini: Imagen through generateImages
+const imagen = await ai.models.generateImages({ model: "imagen-3.0-generate-002", prompt: "Robot holding a red skateboard", config: { numberOfImages: 1 } });
 ```
 
 Image endpoints are stateless: input images live only in that request's body, and nothing is stored on the server.
@@ -122,9 +161,9 @@ Only these endpoints are available. Any other path returns `endpoint_not_allowed
 | Gemini | `/v1beta/models/{model}:generateContent`, `:streamGenerateContent`, `:countTokens`, `:generateImages` |
 | TypeSafe | `/typesafe/v1/systemone`, or `/v1/decisions` using the Bifrost request format |
 
-An allowed endpoint still requires a catalog model that supports the operation. Gemini image-only models and Imagen are not currently in the catalog.
+Choose a model that supports the requested operation and is available through the configured provider.
 
-Not supported: video generation, file-storage APIs, the OpenAI Assistants API, and Gemini cached contents, tuning, and the Live API. Multipart uploads for supported image editing and transcription requests are allowed.
+Not supported: Gemini embeddings, video generation, file-storage APIs, the OpenAI Assistants API, and Gemini cached contents, tuning, and the Live API. Multipart uploads for supported image editing and transcription requests are allowed.
 
 ## Spending limits and errors
 
@@ -134,7 +173,6 @@ Each request is checked before it reaches the provider:
 | --- | --- | --- |
 | `missing_authorization` | 401 | No token was sent. Pass `MAJOR_JWT_TOKEN` as `apiKey`. |
 | `invalid_token` | 401 | The token is invalid or expired. |
-| `model_not_allowed` | 403 | The requested model is outside the supported-model catalog. |
 | `proxy_disabled` | 403 | The proxy isn't enabled for this app. |
 | `spending_limit_exceeded` | 403 | The app reached its monthly spending limit. Raise the limit or wait for the next month. |
 | `insufficient_balance` | 403 | Your organization is out of credits. See [Billing](/settings/billing). |
