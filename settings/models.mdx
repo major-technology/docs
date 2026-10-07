@@ -24,68 +24,26 @@ Tiers apply to Platform Agent chats. [Agents](/learn/agents/models) each use the
 
 ## Supported models
 
+The table lists the models currently offered in the chat and agent picker, plus proxy-only models.
 
-| Provider | Model | Supported in AI Proxy | Supported in Chat & Agents |
-| --- | --- | --- | --- |
-| Anthropic | `claude-opus-5-5` | Yes | Yes |
-| Anthropic | `claude-opus-5` | Yes | Yes |
-| Anthropic | `claude-opus-4-8` | Yes | Yes — legacy selection |
-| Anthropic | `claude-sonnet-5-5` | Yes | Yes |
-| Anthropic | `claude-sonnet-5` | Yes | Yes |
-| Anthropic | `claude-sonnet-4-6` | Yes | Yes — legacy selection |
-| Anthropic | `claude-haiku-5-5` | Yes | Yes |
-| Anthropic | `claude-haiku-4-5` | Yes | Yes — legacy selection |
-| OpenAI | `gpt-6.1-sol` | Yes | Yes |
-| OpenAI | `gpt-6-sol` | Yes | Yes |
-| OpenAI | `gpt-6-luna` | Yes | Yes |
-| OpenAI | `gpt-5.6-sol` | Yes | Yes |
-| OpenAI | `gpt-5.6-terra` | Yes | Yes |
-| OpenAI | `gpt-5.6-luna` | Yes | Yes |
-| Google | `gemini-3.7-flash` | Yes | Yes |
-| Google | `gemini-3.6-flash` | Yes | Yes |
-| Google | `gemini-3.5-flash` | Yes | Yes |
-| Google | `gemini-3.5-flash-lite` | Yes | Yes |
-| Google | `gemini-2.5-flash` | Yes | Yes |
-| Google | `gemini-3.1-flash-lite` | Yes | Yes |
-| Kimi | `kimi-k3` | Yes | Yes |
-| Kimi | `kimi-k2.7-code` | Yes — legacy route | Yes — runs on Kimi K3 |
-| Kimi | `kimi-k2.6` | Yes — legacy route | Yes — runs on Kimi K3 |
-| MiniMax | `minimax-m3` | Yes | Yes |
-| xAI | `grok-4.7` | Yes | Yes |
-| xAI | `grok-4.6` | Yes | Yes |
-| xAI | `grok-4.5` | Yes | Yes |
-| OpenAI | `text-embedding-3-small` | Yes — embeddings | No |
-| OpenAI | `text-embedding-3-large` | Yes — embeddings | No |
-| TypeSafe | `jev-1.13.0` | Yes — decisions | No |
-| OpenAI | `gpt-image-1` | Yes — image generation and editing | No |
-| OpenAI | `tts-1` | Yes — text-to-speech | No |
-| OpenAI | `tts-1-hd` | Yes — text-to-speech | No |
-| OpenAI | `whisper-1` | Yes — transcription | No |
+| Provider | Model | Supported in Apps | Supported in Chat & Agents | Best for |
+| --- | --- | --- | --- | --- |
+| Anthropic | `claude-opus-5-5` | Yes | Yes | Deep, multi-step reasoning. |
+| Anthropic | `claude-sonnet-5-5` | Yes | Yes | Everyday coding and analysis. |
+| Anthropic | `claude-haiku-5-5` | Yes | Yes | High-volume, lightweight tasks. |
+| OpenAI | `gpt-6.1-sol` | Yes | Yes | Complex coding and agentic work. |
+| OpenAI | `gpt-6-luna` | Yes | Yes | Focused, high-volume tasks. |
+| Google | `gemini-3.6-flash` | Yes | Yes | Sustained agentic and coding tasks. |
+| Google | `gemini-3.5-flash-lite` | Yes | Yes | Fast, high-throughput execution. |
+| Kimi | `kimi-k3` | Yes | Yes | Long-horizon agentic coding. |
+| MiniMax | `minimax-m3` | Yes | Yes | Long-horizon coding and agentic work. |
+| xAI | `grok-4.7` | Yes | Yes | Long-running agents, coding, and knowledge work. |
+| OpenAI | `text-embedding-3-small` | Yes | No | Embeddings and semantic search. |
+| OpenAI | `text-embedding-3-large` | Yes | No | Embeddings and semantic search. |
+| TypeSafe | `jev-1.13.0` | Yes | No | Structured decisions. |
+| OpenAI | `gpt-image-1` | Yes | No | Image generation and editing. |
+| OpenAI | `tts-1` | Yes | No | Text-to-speech. |
+| OpenAI | `tts-1-hd` | Yes | No | High-quality text-to-speech. |
+| OpenAI | `whisper-1` | Yes | No | Audio transcription. |
 
-“Supported in AI Proxy” means the model is in Major's allowed catalog. Requests must use an operation supported by that model, and upstream provider availability still applies. Legacy proxy routes remain in the catalog for compatibility; the proxy does not automatically redirect those requests to a successor.
-
-“Supported in Chat & Agents” means the model is eligible for those runtimes. The picker presents stable families and capability tiers rather than listing every concrete version. Older selections can remain valid even when they are no longer offered in the picker.
-
-For sessions using the Pi harness, saved Claude Opus 4.8, Sonnet 4.6, and Haiku 4.5 selections run on their 5.5 successors. Other harnesses preserve those pinned Claude versions. Saved Kimi K2 selections run on Kimi K3 in both harnesses.
-
-## Using proxy-only models
-
-
-Proxy-only models are available to applications through the [AI proxy](/learn/apps/ai-proxy), not as chat or agent model selections.
-
-- **Embeddings:** call `/openai/v1/embeddings` with `text-embedding-3-small` or `text-embedding-3-large`.
-- **Decisions:** call `/typesafe/v1/systemone` with `jev-1.13.0`, or use Bifrost's `/v1/decisions` format with `typesafe/jev-1.13.0`.
-- **Images:** use the OpenAI image generation or editing endpoints with `gpt-image-1`.
-- **Speech:** use the OpenAI speech endpoint with `tts-1` or `tts-1-hd`.
-- **Transcription:** use the OpenAI transcription endpoint with `whisper-1` and a multipart file upload.
-
-Use the model ID shown above on its native provider endpoint. For cross-provider requests, the routing prefixes are `anthropic/`, `openai/`, `gemini/`, `xai/`, and `typesafe/`. Kimi and MiniMax are served through Fireworks:
-
-| Model | Cross-provider route |
-| --- | --- |
-| `kimi-k3` | `fireworks/accounts/fireworks/models/kimi-k3` |
-| `kimi-k2.7-code` | `fireworks/accounts/fireworks/models/kimi-k2p7-code` |
-| `kimi-k2.6` | `fireworks/accounts/fireworks/models/kimi-k2p6` |
-| `minimax-m3` | `fireworks/accounts/fireworks/models/minimax-m3` |
-
-All inference requires an authorized Major token, enabled proxy access where applicable, and available spending capacity. Usage is metered through Major's existing billing.
+For usage details, see the [AI proxy docs](/learn/apps/ai-proxy).
