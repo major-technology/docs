@@ -1,6 +1,6 @@
 ---
 title: "Models"
-description: "Choose which model each Platform Agent tier uses for your organization."
+description: "Configure model tiers and see the models supported by the AI proxy, chats, and agents."
 ---
 
 In a [Platform Agent](/build/platform-agent) chat, people choose a tier, not a model. Admins decide which model each tier runs on in **Settings > Models**.
@@ -21,3 +21,29 @@ The change applies to your whole organization. A tier you haven't changed keeps 
 <Note>
 Tiers apply to Platform Agent chats. [Agents](/learn/agents/models) each use the model set on the agent.
 </Note>
+
+## Supported models
+
+The table lists the models currently offered in the chat and agent picker, plus proxy-only models. It is not an exhaustive list of model IDs accepted by the proxy; apps can request other models supported by the configured providers and endpoints.
+
+| Provider | Model | Supported in Apps | Supported in Chat & Agents | Best for |
+| --- | --- | --- | --- | --- |
+| Anthropic | `claude-opus-5-5` | Yes | Yes | Deep, multi-step reasoning. |
+| Anthropic | `claude-sonnet-5-5` | Yes | Yes | Everyday coding and analysis. |
+| Anthropic | `claude-haiku-5-5` | Yes | Yes | High-volume, lightweight tasks. |
+| OpenAI | `gpt-6.1-sol` | Yes | Yes | Complex coding and agentic work. |
+| OpenAI | `gpt-6-luna` | Yes | Yes | Focused, high-volume tasks. |
+| Google | `gemini-3.6-flash` | Yes | Yes | Sustained agentic and coding tasks. |
+| Google | `gemini-3.5-flash-lite` | Yes | Yes | Fast, high-throughput execution. |
+| Kimi | `kimi-k3` | Yes | Yes | Long-horizon agentic coding. |
+| MiniMax | `minimax-m3` | Yes | Yes | Long-horizon coding and agentic work. |
+| xAI | `grok-4.7` | Yes | Yes | Long-running agents, coding, and knowledge work. |
+| OpenAI | `text-embedding-3-small` | Yes | No | Embeddings and semantic search. |
+| OpenAI | `text-embedding-3-large` | Yes | No | Embeddings and semantic search. |
+| TypeSafe | `jev-1.13.0` | Yes | No | Structured decisions. |
+| OpenAI | `gpt-image-1` | Yes | No | Image generation and editing. |
+| OpenAI | `tts-1` | Yes | No | Text-to-speech. |
+| OpenAI | `tts-1-hd` | Yes | No | High-quality text-to-speech. |
+| OpenAI | `whisper-1` | Yes | No | Audio transcription. |
+
+For usage details, see the [AI proxy docs](/learn/apps/ai-proxy).
