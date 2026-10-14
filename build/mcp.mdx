@@ -100,6 +100,34 @@ An app's first deploy needs `major publish --slug <slug>` to choose its URL. See
 
 Your assistant does not load a separate tool for every connector. It describes what it needs to `search_resource_tool_catalog` (for example, "read-only SQL against Postgres"), gets back matching tools with their input schemas, and runs one with `execute_resource_tool`. See [Connectors](/learn/connectors/overview).
 
+## What `execute_resource_tool` and `sandbox_bash` can reach
+
+These two tools are broad, so here is exactly what each one can touch.
+
+### `execute_resource_tool`
+
+`execute_resource_tool` runs one tool from your organization's connector catalog. It reaches only connectors that an admin has configured in Major, and of those, only the ones your roles let you use. It cannot reach any system that isn't set up as a connector.
+
+| Connector type | Examples | Write actions it can take |
+| --- | --- | --- |
+| **Databases** | Postgres, MySQL, SQL Server, Snowflake, BigQuery, ClickHouse, DynamoDB | SQL that inserts, updates, or deletes rows or changes the schema |
+| **Internal APIs** | Your organization's REST and GraphQL APIs | `POST`, `PUT`, `PATCH`, and `DELETE` requests, and GraphQL mutations |
+| **SaaS connectors** | HubSpot, Salesforce, Gmail, Slack, Google Drive, Notion, GitHub | Creating, updating, sending, or deleting records, such as sending an email or a Slack message |
+| **Storage** | S3 and managed file storage | Uploading, overwriting, and deleting files |
+
+Whether a write succeeds also depends on the connector's own credentials. A database connector set up with a read-only user can only read. See the [connector reference](/reference/connectors) for every connector type.
+
+### `sandbox_bash`
+
+`sandbox_bash` runs shell commands inside the isolated edit sandbox of one app, agent, skill, or workflow. The sandbox is a dedicated container that holds only that item's workspace.
+
+- **Network scope:** public internet only. Major's private network and the cloud metadata endpoint are blocked.
+- **Connectors:** reachable only through Major's API, using the same access your roles give you. The sandbox holds no connector credentials.
+
+<Warning>
+Running `major publish` from `sandbox_bash` ships to production. For an app, it deploys the pushed commit to the app's live URL. For an agent, skill, or workflow, it makes the latest saved version the live one. Your client runs it like any other shell command, so use your client's tool approval settings if you want to confirm each `sandbox_bash` call.
+</Warning>
+
 ## Permissions
 
 The MCP server acts as you:
