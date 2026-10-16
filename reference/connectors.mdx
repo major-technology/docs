@@ -68,17 +68,21 @@ Don't see what you need? Use [Custom API](#generic-and-custom), [GraphQL](#gener
 | Connector | Description | Auth |
 | --- | --- | --- |
 | Slack | Send messages, work with channels, and call the Slack Web API. Set up through the Slack integration on the Connectors page. | Shared |
+| Slack (Personal) | Read and search Slack as yourself: your channels, DMs, and messages. Read-only: it never posts, and it uses your own Slack account rather than the Major bot. | Shared, per-user |
 | Gmail | Read, search, send, and draft emails. | Shared, per-user |
 | Google Calendar | Read and manage events across calendars. | Shared, per-user |
 | Google Drive | Search, read, and manage files. | Shared, per-user |
 | Google Sheets | Read, write, and format spreadsheets. | Shared |
-| Outlook | Read, search, send, and manage email. | Shared, per-user |
+| Outlook Mail | Read, search, send, and manage email. | Shared, per-user |
+| Outlook Calendar | Read, create, and manage events, including shared and delegated calendars. Choose **Read Only** or **Read & Write** access when you connect. Reached through the [HTTP proxy](#generic-and-custom). | Shared, per-user |
 | Microsoft Teams | Access Teams through the Microsoft Graph API. | Shared, per-user |
 | SharePoint | Access sites, lists, document libraries, and files. | Shared, per-user |
 | Notion | Read and write pages, databases, and blocks, and search a workspace. | Shared, per-user |
 | Linear | Access issues, projects, and more. | Shared, per-user |
 | Smartsheet | Access sheets, dashboards, and more. | Shared, per-user |
 | Zendesk | Read and update tickets, users, and comments, and search Zendesk Support. | Shared |
+
+{/* DOCS-UPDATER: please verify — Slack (Personal) (`slackuser`) shipped in mono-builder#2599 alongside the Pepper beta; confirm it is meant to be listed publicly in the Add Connector dialog for all orgs. */}
 
 ## Marketing and ads
 
