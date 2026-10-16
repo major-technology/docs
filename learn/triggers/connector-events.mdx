@@ -14,7 +14,7 @@ A connector event trigger starts a [workflow](/learn/workflows/overview) when on
 
 ## Supported connectors
 
-Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar, Google Drive, and Attio, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
+Events are available for Slack, Stripe, GitHub, Gmail, Outlook Mail, Outlook Calendar, Google Calendar, Google Drive, and Attio, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
 
 | Connector | Example events |
 | --- | --- |
@@ -22,6 +22,7 @@ Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar,
 | Stripe | `payment_intent.succeeded`, `checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted` |
 | GitHub | `issues.opened`, `pull_request.opened`, `push`, `release.published` |
 | Google Calendar | Event changed (created, edited, or cancelled) on one calendar |
+| Outlook Calendar | `event.changed` (created, updated, or deleted) on one calendar |
 | Google Drive | File changed |
 
 The connector must already be connected and configured in your organization. Ask the [Platform Agent](/build/platform-agent) which events a connector supports and what their payloads contain; it looks them up rather than guessing.
@@ -58,10 +59,12 @@ The connector must already be connected and configured in your organization. Ask
 | `config.options.events` | Yes | One or more event types, with no duplicates. |
 | `config.options.filter` | No | A CEL expression. Only events for which it's true start a run. |
 | `config.options.includeBotMessages` | No | Slack only. Include messages from bots and apps, which are excluded by default. |
-| `config.options.calendarId` | No | Google Calendar only. `primary` or a calendar id to watch. |
+| `config.options.calendarId` | No | Google Calendar and Outlook Calendar only. The calendar to watch. For Google Calendar, `primary` or a calendar id. For Outlook Calendar, a calendar id; leave it out to watch the account's default calendar. |
 | `input` | No | A projection that picks or reshapes the event into the workflow's input. |
 
-In the workflow editor, add a trigger, choose **Connector event**, pick the connected connector, and select events from the list. Some catalog connectors take one event per trigger and show extra **Event options** for it.
+In the workflow editor, add a trigger, choose **Connector event**, pick the connected connector, and select events from the list. Some catalog connectors take one event per trigger and show extra **Event options** for it. For Outlook Calendar, a **Calendar** dropdown lists the account's calendars; leave it on **Default calendar** to follow the account's default.
+
+Outlook Calendar event payloads include `changeType` (`created`, `updated`, or `deleted`) and `calendarId`. A deleted event can no longer be read from Microsoft, so its payload has only `id`, `changeType`, and `calendarId`.
 
 ## The event object
 
