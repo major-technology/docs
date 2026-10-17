@@ -44,6 +44,21 @@ You build agents by describing them. Ask the [Platform Agent](/build/platform-ag
 Drafts stay private to you until you publish. Published agents can be [shared](#sharing-and-access) with others in your organization. You can roll back by publishing an earlier version.
 </Note>
 
+## Browser access
+
+Turn on **Browser access** in the agent's Config tab, or set `browserSettings` in `agent.jsonc`, to let the agent browse the web:
+
+```jsonc
+"browserSettings": {
+  "enabled": true
+}
+```
+
+The agent's sessions then get a `browser` tool backed by a hosted, headless Chromium browser. The agent can open tabs, navigate, read page text, click, type, select, take screenshots, and inspect a page's network requests and console errors. There's no browser connector to add. The browser starts on the agent's first browser action, and cookies, storage, and open tabs carry over between sessions in the same chat.
+{/* DOCS-UPDATER: please verify — the browser tool's own description says a browser idle for 15 minutes "loses its tabs and login state", while mono-builder#2610 saves a Kernel profile per chat thread. Confirm which wins and whether to mention the 15-minute idle limit. */}
+
+Leave browser access off unless the agent's job needs the web. Browser time is billed to your organization's credits; see [Billing](/settings/billing#wallet--credits).
+
 ## Running an agent
 
 Start a new chat and pick your agent, and it runs with the prompt, connectors, skills, and permissions you configured. Agents can also run without a person in the loop:
