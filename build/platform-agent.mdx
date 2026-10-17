@@ -24,6 +24,7 @@ The Platform Agent is the AI assistant you chat with in the [Major web app](/lea
 | **Build skills** | Writes [skills](/learn/skills/overview) that agents load on demand. |
 | **Build workflows** | Builds [workflows](/learn/workflows/overview) and their [triggers](/learn/triggers/overview), and runs them to test. |
 | **Use what exists** | Calls your deployed apps' APIs, runs agents and workflows, and opens a deployed app in a side panel. |
+| **Browse the web** | Opens public web pages in a hosted browser to read, click, type, and take screenshots. Browser time is billed to your [credits](/settings/billing#wallet--credits). |
 | **Set things up** | Asks you to add a connector, sign in to one, or enter an app's environment variables when the work needs it. |
 
 ## How it works
@@ -36,6 +37,16 @@ The mode selector in the chat composer has two modes:
 
 - **Auto** - the Platform Agent works through the request and pauses only for approvals.
 - **Plan** - the Platform Agent researches and writes a plan first. It appears as a **Plan review** card; click **Accept plan** to let it proceed, or **Decline plan** to redirect it.
+
+### Questions
+
+When the Platform Agent needs a decision from you, it shows a question card with one or more questions and a set of options for each. Some options include a visual preview, such as a layout mockup, so you can compare them. Pick your options and click **Submit answers**. You can also:
+
+- **Attach files to an answer** - click **Attach files** under a question, or drop files on the card, to send them with that answer.
+- **Answer in your own words** - type in the chat composer while the card is open and click **Respond**. Your message is sent as the answer, along with any options you already picked. Questions you didn't pick an option for show as **Answered in chat**.
+- **Skip the questions** - open the menu next to **Respond** and choose **Skip questions and send** to send your message as a new instruction instead.
+
+Once answered, the card shows a summary of each question's answer and attached files, and marks any you skipped.
 
 ### Sandboxes
 
@@ -78,6 +89,7 @@ The Platform Agent uses the same tools and skills as the [Major MCP server](/bui
 | **Where** | The Major web app | Your own AI client |
 | **Approvals** | Permission request cards and your [tool permissions](/settings/tool-permissions) | Your client's own tool approval settings |
 | **Connector and env var setup** | Setup forms open in the chat | You get a link to open in Major |
+| **Hosted browser** | Available | Not available. The `browser` tool only runs inside Major chat sessions. |
 
 ## Next steps
 
