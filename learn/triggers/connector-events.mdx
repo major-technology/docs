@@ -123,6 +123,8 @@ If the workflow has an `input_schema`, the projected input is validated against 
 
 Connector event subscriptions are created when you **publish** the workflow, and removed when a publish drops the trigger. Until then the trigger is inert. Use **Run now** with sample input to test the workflow first.
 
+Deleting a connector also tears down every connector event trigger that listens to it, and the trigger stops starting runs. Events that still arrive for a deleted connector are ignored.
+
 ## Next steps
 
 <CardGroup cols={2}>

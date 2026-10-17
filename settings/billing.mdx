@@ -40,6 +40,7 @@ Team plans also enable **domain auto-enrollment** - new users who sign up with y
 
 Your organization has a wallet that holds available credits. Credits are spent during:
 - **Coding Sessions** - AI-powered app building and modifications
+- **Browser** - hosted web browser time used by the [Platform Agent](/build/platform-agent) and by agents with [browser access](/learn/agents/overview#browser-access), billed at cost ($0.06 per browser-hour). Usage is settled after the chat session ends.
 - **AI Proxy** - API requests through Major's managed LLM gateway
 - **App Compute** - running deployed applications
 
@@ -66,6 +67,9 @@ View your monthly spending broken down by category:
 - **App Compute** - deployed application infrastructure
 
 Go to **Organization Settings > Usage** to see a daily breakdown with charts and summary cards. You can navigate between months to track spending trends.
+
+On the agents dashboard under **Analytics**, agent spend is split into **Model**, **Compute**, and **Browser**.
+{/* DOCS-UPDATER: please verify — mono-builder#2600 adds a Browser slice to the Analytics agents spend chart. The diff doesn't show whether browser costs also appear as their own category in Organization Settings > Usage or are counted under Coding Sessions. */}
 
 ### Frontend App Usage Tracking
 
