@@ -32,11 +32,6 @@ The Platform Agent is the AI assistant you chat with in the [Major web app](/lea
 
 For complex, ambiguous, or long-running requests, the Platform Agent tells you its approach before it starts, or asks a question when there are meaningfully different ways to do the work.
 
-The mode selector in the chat composer has two modes:
-
-- **Auto** - the Platform Agent works through the request and pauses only for approvals.
-- **Plan** - the Platform Agent researches and writes a plan first. It appears as a **Plan review** card; click **Accept plan** to let it proceed, or **Decline plan** to redirect it.
-
 ### Sandboxes
 
 Apps, agents, skills, and workflows are each edited on a sandbox attached to the chat. Several can be attached at once, so one conversation can build an app and the agent it calls. A sandbox is held by one person at a time; if someone else is editing the same item, the Platform Agent tells you it is locked.
@@ -45,11 +40,11 @@ Chats you start from an item's editor are pinned to that item, and its sandbox s
 
 ### Tool cards
 
-Each action the Platform Agent takes appears in the conversation as a tool card, so you can see what it read, queried, edited, or ran. Plans, approvals, and setup requests appear as cards you act on directly.
+Each action the Platform Agent takes appears in the conversation as a tool card, so you can see what it read, queried, edited, or ran. Approvals, questions, and setup requests appear as cards you act on directly.
 
 ## Approvals
 
-When the Platform Agent wants to use a tool that needs your sign-off, it shows a **Permission request** card with the tool name, the reason, and the arguments it will send. Choose:
+When the Platform Agent wants to use a tool that needs your sign-off, and the chat is in **Manual** approvals or [auto review](#auto-and-manual) hands the call to you, it shows a **Permission request** card with the tool name, the reason, and the arguments it will send. Choose:
 
 | Button | Effect |
 | --- | --- |
@@ -60,6 +55,27 @@ When the Platform Agent wants to use a tool that needs your sign-off, it shows a
 By default, read-only connector tools and app `GET` requests run without asking, and tools that write ask first. Actions such as running an agent or a database migration always ask.
 
 Manage your saved rules, or set **always allow**, **ask**, or **always deny** for any tool ahead of time, on the [Tool Permissions](/settings/tool-permissions) page. When you chat with a specific agent, that agent's [tool permissions](/learn/agents/tool-permissions) apply instead of yours.
+
+### Auto and Manual
+
+The **Approvals** menu next to the send button sets who decides tool calls that would otherwise ask you:
+
+| Option | Behavior |
+| --- | --- |
+| **Auto** (default) | An auto reviewer decides each approval for you, so the Platform Agent can keep working without stopping. Calls it judges risky are denied, and the Platform Agent can then ask you about them. |
+| **Manual** | You get a **Permission request** card for each call and decide it yourself. |
+
+Every chat starts in **Auto**. In Auto, the reviewer looks at the call and the recent conversation and judges whether you would approve it. Calls that move your request forward run. A call is denied if it could leak data in a way you wouldn't expect, has nothing to do with what you're working on, or touches very sensitive data (such as writing to a production database) that you didn't clearly ask for. When a call is denied, the Platform Agent is told to take a safer route or to stop and ask you.
+
+Auto mode still sends some things to you:
+
+- Questions, connector setup and sign-in requests, and environment variable requests always go to you.
+- If the review fails or the call is too large to review, you get a **Permission request** card.
+- After three auto-denied calls in a row in a chat, the next call comes to you.
+
+Auto only covers calls that would otherwise ask. Tools you set to **always allow** still run, and tools set to **always deny** stay blocked.
+
+Only the person who owns a chat can switch it between Auto and Manual. On a shared edit chat that no one owns, anyone with access can switch it.
 
 ## Models
 
