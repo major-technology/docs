@@ -11,6 +11,8 @@ Tool permissions give you fine-grained control over what an agent is allowed to 
 | **Ask** | The agent must request approval before each use - interactively in chat, or routed to a Slack [approval channel](/learn/workflows/overview) when the agent runs unattended in a workflow. |
 | **Always deny** | The tool is blocked and hidden from the agent. |
 
+{/* DOCS-UPDATER: please verify — mono-builder#2641 auto-reviews any gated call that has a session when its chat thread is in auto mode, and every thread now defaults to auto. If agent runs (including unattended workflow runs) are affected too, **Ask** calls may be decided by the auto reviewer instead of reaching a person or the Slack approval channel. Confirm, then document it here or remove this note. */}
+
 ## Smart defaults
 
 When you add a connector or app to an agent, Major applies safe defaults automatically so you don't have to configure every tool by hand:

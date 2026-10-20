@@ -57,13 +57,11 @@ You can send follow-up messages while the AI is still working. Queued messages a
 
 When you send a new message while the AI is waiting for your approval or decision, the pending decision is automatically interrupted and the agent resumes immediately with your new message.
 
-## Plan Mode
+## Auto and Manual Approvals
 
-When you send a request, the AI starts in Plan Mode - it analyzes your codebase and proposes a set of changes before touching any code.
+Edit chats start in **Auto** approvals. An auto reviewer decides tool approvals for you and denies calls it judges risky, and the AI can then ask you about them. Switch to **Manual** to approve each call yourself. See [Auto and Manual](/build/platform-agent#auto-and-manual) for how the reviewer decides and what still comes to you.
 
-The plan appears in the **Plan** tab alongside Web, Code, and Logs. It includes a summary of what will change, which files are affected, and the implementation approach.
-
-From there you can approve the plan to let the AI start building, reject it to stay in Plan Mode with no changes made, or give feedback to have it revise. Once approved, the session switches to **Accept Edits** mode and you see changes appear in real-time in the code and preview panels.
+{/* DOCS-UPDATER: please verify — mono-builder#2641 adds the Approvals menu to the orchestrator composer and makes every chat thread default to auto. Confirm the app editor's chat shows the same menu. Plan Mode and the Plan tab were removed in the same PR. */}
 
 ## Preview & Inspection
 
