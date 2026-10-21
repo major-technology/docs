@@ -1,6 +1,6 @@
 ---
 title: "Models"
-description: "Choose which model each Platform Agent tier uses for your organization."
+description: "Choose which model each Platform Agent tier uses, bring your own provider API keys, and turn off model providers."
 ---
 
 In a [Platform Agent](/build/platform-agent) chat, people choose a tier, not a model. Admins decide which model each tier runs on in **Settings > Models**.
@@ -21,3 +21,62 @@ The change applies to your whole organization. A tier you haven't changed keeps 
 <Note>
 Tiers apply to Platform Agent chats. [Agents](/learn/agents/models) each use the model set on the agent.
 </Note>
+
+## Use your own provider API keys
+
+<Note>
+Available on the Enterprise plan. Only organization admins can manage keys.
+</Note>
+
+Enterprise organizations can run AI on their own provider accounts instead of Major's. Once you add a key for a provider, all of your organization's traffic to that provider runs on your key: Platform Agent chats, agents, editor previews, and deployed apps using the [AI proxy](/learn/apps/ai-proxy).
+
+Supported providers:
+
+| Provider | Covers |
+| --- | --- |
+| **Anthropic** | Claude models |
+| **OpenAI** | GPT models |
+| **Google** | Gemini models |
+| **xAI** | Grok models |
+| **Fireworks** | Kimi, MiniMax, Qwen, Z.ai, DeepSeek, and Llama |
+| **TypeSafe** | Jev, Major's safety screening. Not a chat model, so it never appears in model pickers. |
+
+Direct Meta (api.meta.ai) isn't supported. Use Llama through Fireworks instead.
+
+### Add a key
+
+1. Open **Settings > Models** and go to the **Provider API keys** tab.
+2. Choose a provider and paste your API key.
+3. Save. Major sends a one-token test call before saving, so a key that doesn't work is rejected right away.
+
+Keys are encrypted with your organization's encryption key. After saving, Major only ever shows a short hint of the key, never the full value. From the same tab you can **test**, **replace**, or **delete** a key, and see each key's status and the last 30 days of usage.
+
+### How billing works with your own key
+
+- Calls on your key don't use Major credits. Your provider bills you directly.
+- Major still records each call at the provider's list price, so **Spend** in analytics and chat details shows your full AI usage: credits for calls on Major's keys plus the list price of calls on your keys.
+- An empty Major wallet doesn't block calls your keys can serve.
+- An app's [AI proxy monthly limit](/learn/apps/ai-proxy#spending-limits-and-errors) counts both: its credit charges and the list price of its calls on your keys.
+
+### Your data stays on your provider accounts
+
+A request that starts on your key never falls back to Major's keys or to another provider. If the provider is down or rejects the request, the request fails instead of being rerouted.
+
+If a provider rejects your key (invalid, out of credits, over a spend limit, or suspended), requests fail with a clear error, for example *"Anthropic rejected your organization's API key… Contact your organization admin."* The key is marked as failing in **Settings > Models** until you replace it or fix it with the provider.
+
+## Turn off a model provider
+
+<Note>
+Available on the Enterprise plan. Only organization admins can turn providers on or off.
+</Note>
+
+Admins can turn off any model provider your organization shouldn't use. In **Settings > Models**, switch the provider off. The list shows only providers that have models available in your environment.
+
+When a provider is off:
+
+- Its models disappear from every model picker.
+- Requests to it are refused, including from apps using the AI proxy.
+- Chats and agents set to one of its models run on your organization's tier model instead. The agent editor shows a warning on affected agents.
+
+If a tier uses one of the provider's models, Major asks you to pick a replacement model for that tier before turning the provider off. At least one provider must stay on.
+
