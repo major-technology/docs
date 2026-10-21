@@ -1,9 +1,13 @@
 ---
 title: "AI proxy"
-description: "Call Anthropic, OpenAI, and Gemini from your app without API keys, billed to your Major credits."
+description: "Call Anthropic, OpenAI, and Gemini from your app without API keys, billed to your Major credits or your organization's own provider keys."
 ---
 
 The AI proxy lets your app call Anthropic, OpenAI, and Gemini through Major. You use each provider's official SDK as usual, but point it at the proxy and authenticate with the app's Major token instead of a provider API key. Usage is billed at cost against your organization's credits and shows up in the [usage dashboard](/settings/billing#usage-dashboard).
+
+<Note>
+On the Enterprise plan, admins can add the organization's own provider API keys in [Settings > Models](/settings/models#use-your-own-provider-api-keys). Calls to a provider with an organization key run on that key and don't use credits. Your code doesn't change: keep using `MAJOR_JWT_TOKEN`, never the provider key.
+</Note>
 
 ## Example requests
 
@@ -138,7 +142,12 @@ Each request is checked before it reaches the provider:
 | `spending_limit_exceeded` | 403 | The app reached its monthly spending limit. Raise the limit or wait for the next month. |
 | `insufficient_balance` | 403 | Your organization is out of credits. See [Billing](/settings/billing). |
 
-The monthly limit counts only this app's proxy usage and resets at the start of each month.
+The monthly limit counts only this app's proxy usage and resets at the start of each month. Calls that run on your organization's own provider keys count toward it at the provider's list price.
+
+If your organization uses its own key for a provider, two more cases can fail a request:
+
+- The provider rejected the organization's key (invalid, out of credits, over a spend limit, or suspended). The error names the provider and asks you to contact your organization admin. Requests on your own key never fall back to Major's keys.
+- An admin [turned off the provider](/settings/models#turn-off-a-model-provider). Requests to a turned-off provider are refused.
 
 <Note>
 Agents and the Platform Agent choose their models separately. See [agent models](/learn/agents/models) and [Settings > Models](/settings/models).
