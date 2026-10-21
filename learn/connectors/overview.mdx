@@ -35,9 +35,22 @@ Resource credentials are encrypted and never exposed to the client-side applicat
 When you configure a connector, you choose how it authenticates:
 
 - **Shared** - one set of credentials for everyone. The person setting up the connector provides them, and every app user and agent run uses that same account. Best for system-owned resources like a production database.
-- **Per-user** - each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors - typically OAuth services - support this.
+- **Per-user** - each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors - typically OAuth services - support this. The [connector reference](/reference/connectors) lists which ones do.
+
+For connectors that support it, **Per-user** is the default when you add one, and Shared is under **Advanced**. A per-user connector is named after its service (for example, "Gmail"), not after the person who created it.
 
 With a per-user connector, Major gates on the user's own authorization: anyone who opens an app or runs an agent without a connected account is redirected to a `/connect` page to complete OAuth, then returned where they were. Because the connector acts as whoever is using it, each person only touches data they're entitled to. Users manage the accounts they've authorized from [Connected Accounts](/settings/connected-accounts).
+
+### The connectors list
+
+The **Connectors** page groups connectors by type, for example "Gmail 3". Types you can sign in to yourself come first. Within each type, your personal connectors come first, then managed, shared, and ones you can't access. Each row shows its connection state on a second line:
+
+| Connector | States |
+| --- | --- |
+| Per-user | **Signed in as** your account, **Not signed in**, or **Sign-in expired** |
+| Shared | **Shared** (with the account it's connected as, when known), **Not set up**, or **Needs reconnecting** |
+
+When you haven't connected a per-user connector, its row has a **Sign in** button (**Reconnect** if your sign-in expired). It starts the OAuth flow and returns you to the list.
 
 <Card title="Per-user OAuth" icon="key" href="/learn/connectors/overview#shared-vs-per-user-connections">
   Full details on shared vs. per-user authentication modes.

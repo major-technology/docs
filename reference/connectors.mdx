@@ -15,6 +15,10 @@ The **Auth** column shows how each connector can authenticate:
 
 See [Shared vs. per-user connections](/learn/connectors/overview#shared-vs-per-user-connections) for details.
 
+When you add a connector that supports per-user sign-in, the Add Connector dialog starts on **Per-user**. Shared is available under **Advanced**.
+
+Salesforce, QuickBooks Online, and Gong record the account's tenant (for example, the Salesforce org or QuickBooks company) on the environment when the first person connects. With a per-user connector, everyone in that environment must sign in to the same tenant. Signing in to a different one is rejected.
+
 <Note>
 Don't see what you need? Use [Custom API](#generic-and-custom), [GraphQL](#generic-and-custom), or a [custom MCP server](#generic-and-custom), or click **Request it** in the Add Connector dialog.
 </Note>
@@ -42,20 +46,20 @@ Don't see what you need? Use [Custom API](#generic-and-custom), [GraphQL](#gener
 
 | Connector | Description | Auth |
 | --- | --- | --- |
-| Salesforce | Run SOQL queries, read and write sObjects, and explore metadata. | Shared |
-| HubSpot | Read and write contacts, companies, and deals, and search CRM objects. | Shared |
-| Attio | Read and write people, companies, lists, notes, and tasks. | Shared |
-| Microsoft Dynamics 365 | Access Dynamics 365 CRM data. | Shared |
+| Salesforce | Run SOQL queries, read and write sObjects, and explore metadata. | Shared, per-user |
+| HubSpot | Read and write contacts, companies, and deals, and search CRM objects. | Shared, per-user |
+| Attio | Read and write people, companies, lists, notes, and tasks. | Shared (OAuth or API key), per-user (OAuth) |
+| Microsoft Dynamics 365 | Access Dynamics 365 CRM data. | Shared, per-user |
 | Outreach | Manage prospects and sequences. | Shared |
-| Apollo | Prospecting, enrichment, and sequences in Apollo.io. | Shared |
-| ZoomInfo | Company, contact, and intent data. Available on request. | Shared |
+| Apollo | Prospecting, enrichment, and sequences in Apollo.io. | Shared, per-user |
+| ZoomInfo | Company, contact, and intent data. Available on request. | Shared, per-user |
 | Fireflies | Read meeting transcripts, summaries, and users, and upload audio. | Shared |
 
 ## Finance and operations
 
 | Connector | Description | Auth |
 | --- | --- | --- |
-| QuickBooks Online | Read customers, invoices, items, accounts, vendors, bills, and payments. | Shared |
+| QuickBooks Online | Read customers, invoices, items, accounts, vendors, bills, and payments. | Shared, per-user |
 | Stripe | Access customers, payments, subscriptions, invoices, and balance. | Shared |
 | Plaid | Link a bank account to pull transactions and balances. | Shared |
 | Acumatica | Access Acumatica ERP entities, Generic Inquiries, and actions. | Shared |
@@ -86,9 +90,9 @@ Don't see what you need? Use [Custom API](#generic-and-custom), [GraphQL](#gener
 | --- | --- | --- |
 | Google Analytics | Run GA4 reports and explore metadata. | Shared |
 | Google Search Console | Read search analytics, sitemaps, and URL inspection data. | Shared |
-| LinkedIn Marketing API | Access ad accounts, campaigns, creatives, and ad analytics. | Shared |
-| Meta Marketing | Access Meta (Facebook) campaigns, ads, insights, and lead forms. Available on request. | Shared |
-| TikTok Ads | Access ad accounts, campaigns, and ad reports. | Shared |
+| LinkedIn Marketing API | Access ad accounts, campaigns, creatives, and ad analytics. | Shared, per-user |
+| Meta Marketing | Access Meta (Facebook) campaigns, ads, insights, and lead forms. Available on request. | Shared, per-user |
+| TikTok Ads | Access ad accounts, campaigns, and ad reports. | Shared, per-user |
 | Snitchfeed (API) | Monitor X/Twitter and LinkedIn posts. | Shared |
 | Snitchfeed (MCP) | Use Snitchfeed's MCP server for mentions, listeners, feeds, and analytics. | Shared, per-user |
 
@@ -99,7 +103,7 @@ Don't see what you need? Use [Custom API](#generic-and-custom), [GraphQL](#gener
 | GitHub | Work with repositories, issues, pull requests, releases, and branches. | Shared |
 | AWS Lambda | Invoke and manage Lambda functions. | Shared (access keys or identity) |
 | AWS SQS | Send, receive, and manage queue messages. | Shared (access keys or identity) |
-| PostHog | Product analytics, feature flags, and experiments. | Shared |
+| PostHog | Product analytics, feature flags, and experiments. | Shared, per-user |
 | Langfuse | LLM observability, tracing, and prompts. | Shared |
 | Browserbase | Headless browser automation. | Shared |
 | Clerk | Call the Clerk Backend API to manage users and sessions. | Shared |
@@ -125,6 +129,8 @@ Google Drive and SharePoint are listed under [Productivity and communication](#p
 ## Catalog connectors
 
 In addition to the connectors above, the Add Connector dialog includes a catalog of more than 200 additional apps, such as Jira, Confluence, Asana, Airtable, monday, ClickUp, Zoom, Intercom, Gong, RingCentral, Shopify, Xero, Pipedrive, Greenhouse, Box, Dropbox, Google Ads, Datadog, Sentry, and GitLab. Search the dialog to find one. Catalog connectors use shared authentication and are reached through the [HTTP proxy](#generic-and-custom).
+
+{/* DOCS-UPDATER: please verify — mono-builder#2680 enables per-user OAuth for Gong on the shared OAuth framework, but this page lists Gong as a catalog (shared-only) connector. Confirm whether Gong also has a native connector that should get a row with "Shared, per-user". */}
 
 ## Major platform resources
 
