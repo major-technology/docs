@@ -1,6 +1,6 @@
 ---
 title: "Models"
-description: "Choose which model each Platform Agent tier uses for your organization, and connect your Claude organization for billing."
+description: "Choose which model each Platform Agent tier uses, bring your own provider API keys, and turn off model providers."
 ---
 
 In a [Platform Agent](/build/platform-agent) chat, people choose a tier, not a model. Admins decide which model each tier runs on in **Settings > Models**.
@@ -22,33 +22,61 @@ The change applies to your whole organization. A tier you haven't changed keeps 
 Tiers apply to Platform Agent chats. [Agents](/learn/agents/models) each use the model set on the agent.
 </Note>
 
-## Connect your Claude organization
+## Use your own provider API keys
 
 <Note>
-Available on the Enterprise plan, once Major has set up Claude billing for your organization. Contact Major to enable it. Only organization admins can connect or disconnect.
+Available on the Enterprise plan. Only organization admins can manage keys.
 </Note>
 
-Instead of paying for Anthropic models with Major credits, you can connect your Claude organization so Anthropic bills it directly for the Claude usage Major sends on your behalf. Major stores no API key for this: an admin of your Claude organization approves the connection once.
+Enterprise organizations can run AI on their own provider accounts instead of Major's. Once you add a key for a provider, all of your organization's traffic to that provider runs on your key: Platform Agent chats, agents, editor previews, and deployed apps using the [AI proxy](/learn/apps/ai-proxy).
 
-### Connect
+Supported providers:
 
-1. Open **Settings > Models**.
-2. On the **Anthropic** row, click **Connect your Claude organization**.
-3. Sign in to Claude and approve the connection. Only an Owner, Admin, or Billing member of the Claude organization can approve it.
-4. You return to **Settings > Models**, and the Anthropic row shows **Connected** with the last 30 days of usage.
+| Provider | Covers |
+| --- | --- |
+| **Anthropic** | Claude models |
+| **OpenAI** | GPT models |
+| **Google** | Gemini models |
+| **xAI** | Grok models |
+| **Fireworks** | Kimi, MiniMax, Qwen, Z.ai, DeepSeek, and Llama |
+| **TypeSafe** | Jev, Major's safety screening. Not a chat model, so it never appears in model pickers. |
 
-A Claude organization can be connected to only one Major organization. Your organization can use an Anthropic API key or a Claude organization connection, not both. Remove the Anthropic API key before you connect.
+Direct Meta (api.meta.ai) isn't supported. Use Llama through Fireworks instead.
 
-### How billing works with a connected Claude organization
+### Add a key
 
-- Claude calls from Platform Agent chats, agents, and apps using the [AI proxy](/learn/apps/ai-proxy) are billed to your Claude organization and don't use Major credits.
-- Major still records each call at Anthropic's list price, so usage stays visible in Major.
-- Calls never fall back to Major's credentials. If Anthropic can't bill your Claude organization (for example, it was disconnected in the Claude Console, its billing failed, it reached a spend limit, or it's suspended), the call fails and the Anthropic row shows the last error.
-- Message batches and messages that use Anthropic's code execution tool can't be billed to a connected Claude organization, so the AI proxy refuses them.
+1. Open **Settings > Models** and go to the **Provider API keys** tab.
+2. Choose a provider and paste your API key.
+3. Save. Major sends a one-token test call before saving, so a key that doesn't work is rejected right away.
 
-To see what Major costs you or set a spend cap, open the **Connected** menu and choose **Manage in Claude Console**.
+Keys are encrypted with your organization's encryption key. After saving, Major only ever shows a short hint of the key, never the full value. From the same tab you can **test**, **replace**, or **delete** a key, and see each key's status and the last 30 days of usage.
 
-### Disconnect
+### How billing works with your own key
 
-Open the **Connected** menu on the Anthropic row and choose **Disconnect**. Anthropic calls are billed in Major credits again. You can reconnect later.
-{/* DOCS-UPDATER: please verify — changes reach the AI proxy after a short delay (the proxy caches the check for about 2 minutes per the design doc); confirm whether to mention it. Also note docs PR #38 edits this page too, so this section may need to be rebased onto it. */}
+- Calls on your key don't use Major credits. Your provider bills you directly.
+- Major still records each call at the provider's list price, so **Spend** in analytics and chat details shows your full AI usage: credits for calls on Major's keys plus the list price of calls on your keys.
+- An empty Major wallet doesn't block calls your keys can serve.
+- An app's [AI proxy monthly limit](/learn/apps/ai-proxy#spending-limits-and-errors) counts both: its credit charges and the list price of its calls on your keys.
+
+### Your data stays on your provider accounts
+
+A request that starts on your key never falls back to Major's keys or to another provider. If the provider is down or rejects the request, the request fails instead of being rerouted.
+
+If a provider rejects your key (invalid, out of credits, over a spend limit, or suspended), requests fail with a clear error, for example *"Anthropic rejected your organization's API key… Contact your organization admin."* The key is marked as failing in **Settings > Models** until you replace it or fix it with the provider.
+
+## Turn off a model provider
+
+<Note>
+Available on the Enterprise plan. Only organization admins can turn providers on or off.
+</Note>
+
+Admins can turn off any model provider your organization shouldn't use. In **Settings > Models**, switch the provider off. The list shows only providers that have models available in your environment.
+
+When a provider is off:
+
+- Its models disappear from every model picker.
+- Requests to it are refused, including from apps using the AI proxy.
+- Chats and agents set to one of its models run on your organization's tier model instead. The agent editor shows a warning on affected agents.
+
+If a tier uses one of the provider's models, Major asks you to pick a replacement model for that tier before turning the provider off. At least one provider must stay on.
+
