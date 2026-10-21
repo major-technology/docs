@@ -9,7 +9,7 @@ Major provides granular access control at both the organization and application 
 
 | Role | Permissions |
 | --- | --- |
-| **Member** | View apps and connectors |
+| **Member** | Use the apps, agents, and connectors shared with them, and chat with the Platform Agent to ask questions and call those apps and connectors. Can't create or edit apps, agents, skills, workflows, or connectors. |
 | **Builder** | Create new apps, use resources in development |
 | **Admin** | Full control including user and resource management |
 
@@ -26,6 +26,15 @@ You can share access to your application with specific:
 - **Individuals**: Invite users by email.
 - **Groups**: Grant access to entire teams at once.
 
+When an app admin invites people, the share dialog can also give them access to the app's connectors, agents, and workflows. Check **Also share access to N related objects** to grant them. The list shows, for each invitee, only the objects they can't use yet, and the role each one grants:
+
+| App role | Connectors | Agents | Workflows |
+| --- | --- | --- | --- |
+| **View** | Not shared | User | User |
+| **Edit** or **Admin** | Use | User | User |
+
+This is optional and applies to individual users, not groups. Objects you aren't an admin of can only be shared by their admins.
+
 <Note>
 Deployed applications check the deployer's permissions when invoked. If you deploy an app without sufficient resource permissions, you'll be prompted to confirm the deployment.
 </Note>
@@ -41,12 +50,14 @@ Resource permissions control who can use connectors and at what level:
 | Role | Permissions |
 | --- | --- |
 | **Admin** | Configure and manage the resource settings |
-| **Builder** | Invoke resources in development and production (coding sessions, local dev, MCP, and deployed apps) |
+| **Use** | Query and use the connector: invoke it in development and production (chat, coding sessions, local dev, MCP, and deployed apps). This role used to be called **Builder**. |
 
 ### Sharing Access
 You can share access to connectors with specific:
 - **Individuals**: Invite users by email.
 - **Groups**: Grant access to entire teams at once.
+
+{/* DOCS-UPDATER: please verify — mono-builder#2660 marks the Use role as view-only, so it may now be grantable to Members (not only Builders). Confirm before documenting that Members can be given Use on a connector. */}
 
 ## Inviting Members
 
