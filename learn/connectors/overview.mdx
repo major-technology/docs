@@ -37,6 +37,8 @@ When you configure a connector, you choose how it authenticates:
 - **Shared** - one set of credentials for everyone. The person setting up the connector provides them, and every app user and agent run uses that same account. Best for system-owned resources like a production database.
 - **Per-user** - each person authorizes their own account (for example, their own Google Calendar) instead of a shared login. Only some connectors - typically OAuth services - support this.
 
+A new **Custom API** connector starts as **Shared**. Only its OAuth2 **authorization code** grant supports per-user, so choosing that grant switches the new connector to **Per-user**, and choosing a different grant or auth method switches it back to **Shared**.
+
 With a per-user connector, Major gates on the user's own authorization: anyone who opens an app or runs an agent without a connected account is redirected to a `/connect` page to complete OAuth, then returned where they were. Because the connector acts as whoever is using it, each person only touches data they're entitled to. Users manage the accounts they've authorized from [Connected Accounts](/settings/connected-accounts).
 
 <Card title="Per-user OAuth" icon="key" href="/learn/connectors/overview#shared-vs-per-user-connections">
@@ -61,6 +63,19 @@ You can also enable **global configuration** for a resource, which uses a single
 ## Resource context
 
 You can upload context files - database schemas, OpenAPI specs, API documentation, and more - to any connector. The AI assistant uses this context when writing queries and API calls against that resource, so it understands your data model without you having to explain it every time. If your app needs a connector that hasn't been set up yet, the AI will show a setup card in the chat - click it to configure the resource inline without leaving the editor.
+
+## Custom connector logos
+
+Custom API and Custom MCP connectors can show their own brand logo instead of the generic icon, everywhere the connector appears in Major. When you create one, Major looks for a logo in the background.
+
+Connector admins can change it from the **Logo** field in the connector's settings:
+{/* DOCS-UPDATER: please verify — mono-builder#2678's PR body calls this the connector's "General settings"; the diff renders the field in the settings Configuration tab. Confirm the tab name users see. */}
+
+- **Upload** - choose an image file (PNG, JPEG, WebP, GIF, SVG, or ICO, up to 1 MB).
+- **Search by URL** - find the logo automatically. For a Custom MCP connector, Major first uses the icons the MCP server advertises. Otherwise it uses the icon from the website of the connector URL's domain (for example, `acme.com` for `api.internal.acme.com`).
+- **Remove** - go back to the default icon. To replace a logo, remove it first and then upload or search again.
+
+Changes apply right away.
 
 ## Identity-based authentication
 
