@@ -127,6 +127,7 @@ Each node's output is stored under its id, so later nodes can read it: `{ "$stat
 | --- | --- |
 | `agent_call` | Runs an agent with a prompt. With an `output_schema`, the agent returns structured data that later nodes can branch on. |
 | `app_call` | Calls an endpoint on one of your deployed apps over HTTP (`GET`, `POST`, `PUT`, `PATCH`, or `DELETE`). The response body becomes the node's output. |
+| `pepper_call` | Sends a message to a person's Pepper, which tells them if it matters. Nothing comes back into the run. |
 | `router` | Branches on state. The first branch whose condition is true wins; otherwise the `default` targets run. A branch can start several nodes in parallel. |
 | `for_each` | Runs a loop body once per item in a list, in sequence or in parallel, and collects the results. |
 | `join` | Waits until every parallel branch leading into it has arrived, then continues. |
@@ -168,6 +169,8 @@ Workflows use Slack for two kinds of approval. Both need the Major Slack integra
 ## Sharing and access
 
 Workflows have their own roles: **User** can view and run the workflow and answer its approvals, **Editor** can also edit and publish, and **Admin** can also share and delete.
+
+You can share a workflow with individual people or with [groups](/settings/members-and-roles#groups). A workflow always keeps at least one Admin. Only an organization admin can remove or downgrade its last Admin, whether that's a person or a group.
 
 ## Next steps
 
