@@ -69,6 +69,17 @@ Pick a tier - **Smartest**, **Balanced**, or **Fastest** - from the model picker
 
 Files the Platform Agent writes in its working directory, such as notes, scripts, and intermediate results, persist for the conversation, so you can pick up where you left off.
 
+## Saved logins
+
+When the Platform Agent's hosted browser reaches a website's login page and has no login saved for that site, it shows a login card in the chat (or in Slack). The card opens a separate Major page where you enter the login's fields, such as email, username, password, or company ID. Major fills them into the login form. The AI never sees your password.
+
+- **Keep this login for future runs** is on by default. It saves the login, encrypted, so Major can sign in to that site again later. Turn it off to use the login once without saving it.
+- A saved login is tied to the exact site origin. `www.example.com` and `example.com` need separate logins.
+- Only your own chats can use your saved logins. Organization admins can't use them.
+
+Manage your logins under **Saved logins** in your user settings. You can add a label, edit fields, reveal saved values, or delete a login. Deleting a login doesn't sign Major out of websites it's already signed in to.
+{/* DOCS-UPDATER: please verify — browser access for the Platform Agent is documented in open docs PR #35, which isn't merged yet. Confirm the user settings path (`/account/saved-logins`) and whether login cards also work in agent chats or only in plain Platform Agent and Pepper chats (the diff says plain sessions only). */}
+
 ## Platform Agent and MCP
 
 The Platform Agent uses the same tools and skills as the [Major MCP server](/build/mcp). If you prefer to work in Claude Code, Codex, ChatGPT, Cursor, or another MCP client, connect it to Major and you get the same capabilities there. The main differences:

@@ -70,6 +70,7 @@ The Platform Agent uses the same skills, so your client and the web app build th
 | **Deployed apps** | `get_app_skill`, `do_get_request`, `do_requests` | Read a deployed app's API guide and call its endpoints. |
 | **Running** | `run_agent`, `run_workflow` | Start a run of an agent's published version, or run the latest saved draft of a workflow. |
 | **Data and config** | `setup_managed_database`, `run_migration`, `set_app_env_variables` | Create an app's [managed database](/learn/apps/managed-databases), run SQL migrations on it, and get a link to set an app's [environment variables](/learn/apps/environment-variables). |
+| **Access** | `list_subjects`, `list_access`, `set_access`, `list_subject_access` | Find users and groups, see who has access to an app, agent, skill, workflow, or connector, and grant, change, or remove a role on it. See [Managing access](#managing-access). |
 
 Tools that need secrets or credentials, such as `request_resource_setup` and `set_app_env_variables`, never take them from your assistant. They return a link that you open in Major to enter the values yourself.
 
@@ -99,6 +100,19 @@ An app's first deploy needs `major publish --slug <slug>` to choose its URL. See
 ### Connectors
 
 Your assistant does not load a separate tool for every connector. It describes what it needs to `search_resource_tool_catalog` (for example, "read-only SQL against Postgres"), gets back matching tools with their input schemas, and runs one with `execute_resource_tool`. See [Connectors](/learn/connectors/overview).
+
+### Managing access
+
+Ask your assistant who can reach something, or to share it, for example "Who has access to the ops dashboard?" or "Make the Support group an Editor on the triage agent."
+
+| Tool | Who can use it | What it does |
+| --- | --- | --- |
+| `list_subjects` | Builders and admins | Find users or groups by name or email, or list a group's members. |
+| `list_access` | Builders and admins | List the users and groups that hold a role on one app, agent, skill, workflow, or connector. |
+| `set_access` | Builders and admins | Grant, change, or remove a user's or group's role on one object. |
+| `list_subject_access` | Organization admins | List everything one user or group can reach, directly and through groups. |
+
+`list_access` and `set_access` only work on objects whose access you can manage, meaning you're their Admin or an organization admin. They follow the same rules as the share dialogs in the web app. A role must match the object type. Members and external users can only get User roles. An object always keeps at least one Admin unless an organization admin removes it. Removing a user's direct role doesn't remove access they have through a group. The [Platform Agent](/build/platform-agent) has the same tools. There, `set_access` asks for your approval before it runs.
 
 ## What `execute_resource_tool` and `sandbox_bash` can reach
 

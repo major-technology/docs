@@ -33,6 +33,21 @@ Calls an endpoint on one of your deployed [apps](/learn/apps/overview).
 
 The node's output is the response body. A body that isn't a JSON object is wrapped as `{ "body": ... }`.
 
+## pepper_call
+
+Sends a message to a person's Pepper, their personal Major agent. In the editor it's called **Send to Pepper**.
+{/* DOCS-UPDATER: please verify — Pepper isn't described anywhere else in the public docs yet. Confirm this node should be documented publicly, and whether "Send to Pepper" shows in the editor for orgs that have Pepper turned off. */}
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `prompt` | Yes | The message to send. Supports `{{ }}` interpolation. |
+
+A triggered run sends the prompt to the Pepper of the person who published the workflow. **Run now** and single-node runs send it to the Pepper of whoever ran them, so testing a workflow never reaches the publisher's Pepper.
+
+Pepper only tells its user, in its own chat, or decides the message doesn't need them. Anyone who can edit the workflow can change the prompt, so Pepper never acts on it: it won't send email, post messages, or change anything for anyone. Don't build a workflow that depends on Pepper doing something.
+
+The node's output is `{ "messageId": "..." }`. Nothing Pepper says comes back into the run. The node fails when Pepper is turned off.
+
 ## router
 
 Branches the run on state.
