@@ -70,6 +70,16 @@ For GCP services (BigQuery), you can authenticate via a service account JSON key
 
 Identity-based authentication is more secure and avoids storing long-lived credentials.
 
+## What uses a connector
+
+The **Used by** column on the **Connectors** page shows the apps, agents, and workflows that use each connector. It shows the first one by name, then a count of the rest (for example, `Customer Portal +5`). Click it to see the full list, with each item labeled **App**, **Agent**, or **Workflow** and linked. A connector that nothing uses shows **Not used**.
+
+- An **app** counts when its latest commit uses the connector, even if that commit isn't deployed yet.
+- An **agent** counts when the connector is attached to it.
+- A **workflow** counts when one of its live connector-event [triggers](/learn/triggers/connector-events) uses the connector.
+
+You only see the apps, agents, and workflows you have access to.
+
 ## Rate limiting
 
 Set hourly and daily invocation limits on any connector to protect downstream services from runaway usage. When a limit is reached, requests return `429 Too Many Requests` until the window resets. Configure limits when creating or editing a connector.
