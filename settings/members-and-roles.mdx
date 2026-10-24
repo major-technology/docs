@@ -13,6 +13,36 @@ Major provides granular access control at both the organization and application 
 | **Builder** | Create new apps, use resources in development |
 | **Admin** | Full control including user and resource management |
 
+Creating connectors is its own permission. Builder and Admin have it, so their access doesn't change. Without it, the **Add connector** button and the connector setup steps aren't available. You can still sign in to an existing [per-user connector](/settings/connected-accounts).
+
+### Custom roles
+
+<Note>
+Custom roles are available on the Enterprise plan.
+</Note>
+
+Admins can define their own organization roles under **Settings > Roles**. The page lists the default roles (Member, Builder, and Admin, which can't be changed) and your custom roles, with how many members hold each one.
+
+To create a role, click **New role**, give it a name, and choose its capabilities:
+
+| Capability | What it allows |
+| --- | --- |
+| **Chat with Major** | Start chats with Major. |
+| **Use the hosted browser** | Let Major browse websites for you. |
+| **Build apps, agents, and workflows** | Create and edit apps, agents, skills, and workflows. |
+| **Create connectors** | Add new connectors to the organization. |
+
+A role with no capabilities can only view the apps shared with its members. A custom role never grants organization admin.
+
+- **Assigning a role:** pick a custom role from a member's role badge on the **Members** page, or from the member sheet. Picking a default role again replaces the custom role. The organization owner's role can't be changed.
+- **Inviting:** a custom role can be chosen when you invite members.
+- **Auto-join:** the role that new members get when they join through your email domain or SSO can be a custom role.
+- **Seats:** a member with a custom role takes a Builder seat if the role can build apps, agents, and workflows or create connectors. Otherwise, they take a Member seat. Editing a role updates the seat of everyone who holds it.
+- **Moving members:** you can move everyone who holds a role, plus its pending invitations, to another role.
+- **Deleting a role:** choose the role its members and pending invitations move to. You can't delete the role new members auto-join with. Pick a different auto-join role first.
+
+{/* DOCS-UPDATER: please verify — the mono-builder#2710 PR body says a role "can't be deleted while anyone holds it" and that "invites can't carry a custom role yet", but the merged code moves holders and pending invitations to a replacement role on delete and adds custom roles to the invite dialog. This text follows the code. Also confirm where the auto-join ("Join as") setting lives in the UI. */}
+
 ## Application Permissions
 
 Each app has its own permission levels:
