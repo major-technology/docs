@@ -5,6 +5,8 @@ description: "Call Anthropic, OpenAI, and Gemini from your app without API keys,
 
 The AI proxy lets your app call Anthropic, OpenAI, and Gemini through Major. You use each provider's official SDK as usual, but point it at the proxy and authenticate with the app's Major token instead of a provider API key. Usage is billed at cost against your organization's credits and shows up in the [usage dashboard](/settings/billing#usage-dashboard).
 
+See Major's [supported-model catalog](/settings/models#supported-models) for chat models and app-only embedding, decision, image, and audio models. The proxy checks app authorization and spending limits; it does not restrict model IDs to that catalog.
+
 ## Example requests
 
 - "Add a Summarize button that uses Claude to summarize the selected ticket."
@@ -40,7 +42,7 @@ Two environment variables are available in the app's runtime, in the editor prev
 
 | Variable | Use |
 | --- | --- |
-| `MAJOR_AI_PROXY_URL` | Base URL of the proxy. Append the provider prefix: `/anthropic`, `/openai`, or `/genai`. |
+| `MAJOR_AI_PROXY_URL` | Base URL of the proxy. Append the provider prefix: `/anthropic`, `/openai`, `/genai`, or `/typesafe`. |
 | `MAJOR_JWT_TOKEN` | The app's token. Pass it as the SDK's `apiKey`. Requests without it are rejected. |
 
 Call the proxy from server code only, so the token never reaches the browser. Use the provider's own SDK, not a unified SDK, and never hard-code keys or proxy URLs.
@@ -71,7 +73,7 @@ const client = new OpenAI({
 });
 
 const completion = await client.chat.completions.create({
-  model: "gpt-4.1",
+  model: "gpt-6.1-sol",
   messages: [{ role: "user", content: "Classify this lead: ..." }],
 });
 ```
@@ -93,6 +95,40 @@ const response = await ai.models.generateContent({
 </CodeGroup>
 
 For Gemini, set `httpOptions.baseUrl` to the `/genai` prefix only. The SDK adds `/v1beta/models/...` itself. Streaming (`generateContentStream`) and token counting (`countTokens`) use the same client.
+
+### Embeddings and decisions
+
+Use the OpenAI client above for embeddings:
+
+```typescript
+const embedding = await client.embeddings.create({
+  model: "text-embedding-3-small", // or text-embedding-3-large
+  input: "Text to index for semantic search",
+});
+```
+
+Call TypeSafe Jev's native endpoint for structured decisions:
+
+```typescript
+const response = await fetch(process.env.MAJOR_AI_PROXY_URL + "/typesafe/v1/systemone", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.MAJOR_JWT_TOKEN}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "jev-1.13.0",
+    state: "The customer wants to cancel their subscription.",
+    questions: {
+      cancellation: { type: "noul", instructions: "Does the customer want to cancel?" },
+    },
+  }),
+});
+if (!response.ok) throw new Error(`Decision request failed: ${response.status}`);
+const decision = await response.json();
+```
+
+These models are available to app code through the proxy, not as Chat or Agent models.
 
 ### Images and audio
 
@@ -121,10 +157,13 @@ Only these endpoints are available. Any other path returns `endpoint_not_allowed
 | Provider | Endpoints |
 | --- | --- |
 | Anthropic | `/v1/messages`, `/v1/messages/count_tokens` |
-| OpenAI | `/v1/chat/completions`, `/v1/responses`, `/v1/audio/speech`, `/v1/audio/transcriptions`, `/v1/images/generations`, `/v1/images/edits`, `/v1/images/variations` |
+| OpenAI | `/v1/chat/completions`, `/v1/responses`, `/v1/embeddings`, `/v1/audio/speech`, `/v1/audio/transcriptions`, `/v1/images/generations`, `/v1/images/edits`, `/v1/images/variations` |
 | Gemini | `/v1beta/models/{model}:generateContent`, `:streamGenerateContent`, `:countTokens`, `:generateImages` |
+| TypeSafe | `/typesafe/v1/systemone`, or `/v1/decisions` using the Bifrost request format |
 
-Not supported: embeddings, video generation, file uploads, the OpenAI Assistants API, and Gemini cached contents, tuning, and the Live API.
+Choose a model that supports the requested operation and is available through the configured provider.
+
+Not supported: Gemini embeddings, video generation, file-storage APIs, the OpenAI Assistants API, and Gemini cached contents, tuning, and the Live API. Multipart uploads for supported image editing and transcription requests are allowed.
 
 ## Spending limits and errors
 
