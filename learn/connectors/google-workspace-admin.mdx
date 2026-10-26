@@ -1,0 +1,95 @@
+---
+title: "Google Workspace Admin"
+description: "Connect Google Workspace so agents, workflows, and apps can onboard and offboard employees."
+---
+
+The Google Workspace Admin connector lets Major run employee onboarding and offboarding in your Google Workspace domain:
+
+- Create, suspend, and delete users.
+- Add and remove users from groups.
+- Assign licenses.
+- Sign users out and revoke their app tokens.
+- Transfer Drive and Calendar ownership to a manager.
+- Set a departing user's Gmail auto-reply, forwarding, and delegates.
+
+It uses a Google Cloud service account with domain-wide delegation. You create the service account, authorize it in the Admin console, and upload its JSON key to Major. Calls go through the [HTTP proxy](/learn/connectors/proxy-fetch), so there is no generated client.
+
+You need a Google Workspace super admin and access to a Google Cloud project.
+
+## Set up
+
+### 1. Create a service account
+
+1. In the Google Cloud console, pick or create a project.
+2. Go to **IAM & Admin > Service Accounts** and click **Create service account**. Give it a name and click **Done**. You don't need to grant it any roles.
+3. Open the service account, then click **Show advanced settings**. Under **Domain-wide delegation**, copy the **Client ID**. You need it in step 4.
+
+### 2. Enable the APIs
+
+In the same project, go to **APIs & Services > Library** and enable:
+
+- **Admin SDK API** (covers the Directory, Data Transfer, and Reports APIs)
+- **Gmail API**
+- **Enterprise License Manager API**
+
+### 3. Create a JSON key
+
+1. Open the service account and go to the **Keys** tab.
+2. Click **Add key > Create new key**, choose **JSON**, and click **Create**.
+
+The key downloads once. Keep the file safe.
+
+### 4. Authorize the service account in the Admin console
+
+A super admin does this in the [Google Admin console](https://admin.google.com):
+
+1. Go to **Security > Access and data control > API controls**.
+2. Click **Manage Domain Wide Delegation**, then **Add new**.
+3. Paste the **Client ID** from step 1.
+4. In **OAuth scopes**, paste this comma-separated list:
+
+```
+https://www.googleapis.com/auth/admin.directory.user,https://www.googleapis.com/auth/admin.directory.user.security,https://www.googleapis.com/auth/admin.directory.group,https://www.googleapis.com/auth/admin.directory.group.member,https://www.googleapis.com/auth/admin.directory.orgunit,https://www.googleapis.com/auth/admin.directory.device.mobile.action,https://www.googleapis.com/auth/admin.datatransfer,https://www.googleapis.com/auth/admin.reports.audit.readonly,https://www.googleapis.com/auth/apps.licensing,https://www.googleapis.com/auth/gmail.settings.basic,https://www.googleapis.com/auth/gmail.settings.sharing
+```
+
+5. Click **Authorize**.
+
+Use this exact list. Major always requests these scopes, and Google rejects the request if any of them is not authorized. Changes can take up to 24 hours to apply, but usually take a few minutes.
+
+### 5. Add the connector in Major
+
+1. Go to **Connectors** and click **Add Connector**.
+2. Choose **Google Workspace Admin**.
+3. Upload the JSON key.
+4. Enter the email of a super admin in your domain. Admin and licensing calls act as this person.
+5. Save, then click **Test connection**.
+
+The test lists one user in your domain as the admin. If it passes, the key, delegation, scopes, and admin email are all correct.
+
+## Which user each call acts as
+
+| API | Acts as |
+| --- | --- |
+| Directory, Data Transfer, Reports (`admin.googleapis.com`) | The admin email you entered |
+| License Manager (`licensing.googleapis.com`) | The admin email you entered |
+| Gmail settings (`gmail.googleapis.com/gmail/v1/users/{email}/settings/...`) | The user in the URL |
+
+For Gmail, the user's email must be in the URL. `me` is not allowed. Only Gmail settings (auto-reply, forwarding, delegates) are allowed. The connector cannot read, search, or send mail, and it cannot run Google Vault exports.
+
+## Security
+
+The service account key can act as any user in your domain within the authorized scopes. Treat it like a password.
+
+- Only authorize the scope list above. Don't add more.
+- Writes in agents and workflows need approval before they run.
+- Delete or rotate the key in the Google Cloud console if it may have leaked. Upload the new key in Major.
+- To cut off access entirely, remove the client ID from **Manage Domain Wide Delegation** in the Admin console.
+
+## Troubleshooting
+
+| Error | Cause and fix |
+| --- | --- |
+| `unauthorized_client` | The client ID or scopes are not authorized in the Admin console. Check **Security > Access and data control > API controls > Manage Domain Wide Delegation**. The client ID must match the service account and the scopes must match the list above exactly. Wait a few minutes after changes. |
+| 403 from Google | The admin email is not a super admin, or an API is not enabled. Check the email, and that Admin SDK API, Gmail API, and Enterprise License Manager API are enabled in the Cloud project. |
+| **Create new key** is blocked in step 3 | Your Cloud organization enforces the `iam.disableServiceAccountKeyCreation` policy. An organization policy admin must allow key creation for this project. |
+| Gmail call fails with `auth_injection_failed` | The URL uses `me`, a value that is not an email, or a path outside `/settings/`. Put the user's email in the path. |
