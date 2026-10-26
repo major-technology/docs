@@ -91,4 +91,5 @@ The service account key can act as any user in your domain within the authorized
 | --- | --- |
 | `unauthorized_client` | The client ID or scopes are not authorized in the Admin console. Check **Security > Access and data control > API controls > Manage Domain Wide Delegation**. The client ID must match the service account and the scopes must match the list above exactly. Wait a few minutes after changes. |
 | 403 from Google | The admin email is not a super admin, or an API is not enabled. Check the email, and that Admin SDK API, Gmail API, and Enterprise License Manager API are enabled in the Cloud project. |
+| **Create new key** is blocked in step 3 | Your Cloud organization enforces the `iam.disableServiceAccountKeyCreation` policy. An organization policy admin must allow key creation for this project. |
 | Gmail call fails with `auth_injection_failed` | The URL uses `me`, a value that is not an email, or a path outside `/settings/`. Put the user's email in the path. |
