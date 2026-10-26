@@ -80,7 +80,8 @@
             "pages": [
               "learn/connectors/overview",
               "learn/connectors/resource-client",
-              "learn/connectors/proxy-fetch"
+              "learn/connectors/proxy-fetch",
+              "learn/connectors/google-workspace-admin"
             ]
           }
         ]
