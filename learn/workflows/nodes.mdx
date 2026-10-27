@@ -79,6 +79,64 @@ Pauses the run.
 | --- | --- | --- |
 | `duration_seconds` | Yes | How long to wait, in seconds. |
 
+## jev_noul, jev_choice, and jev_score
+
+Ask Jev (TypeSafe's judgment model) a question about some text, then branch on the answer with a `router`. Use them to filter, classify, or rate content. In the editor they're called **Jev yes/no**, **Jev choice**, and **Jev score**.
+
+All three take a `text` field: the text to judge. It supports `{{ }}` interpolation, so it's usually built from run state, for example `"{{trigger.input.email_body}}"`.
+{/* DOCS-UPDATER: please verify — mono-builder#2629 fails a Jev node when Jev isn't configured for the org, and truncates long text to Jev's input limit. Confirm whether to mention either, and the limit, publicly. Jev isn't described anywhere else in the public docs yet; it appears under Settings → Models in the app. */}
+
+### jev_noul
+
+Asks one or more yes/no questions.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `text` | Yes | The text to judge. |
+| `questions` | Yes | An object of `{ "<question_id>": "<yes/no question>" }`, with at least one entry. Question ids must be letters, digits, and underscores, and can't start with a digit. |
+
+The output is each question's yes-probability, from 0 to 1, under its id. For a node `judge` with a question `is_urgent`, branch with `judge.is_urgent > 0.5`.
+
+### jev_choice
+
+Picks one label from a list of options.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `text` | Yes | The text to judge. |
+| `question` | Yes | The question to answer, for example `"What is this email about?"`. |
+| `options` | Yes | An object of `{ "<label>": "<description>" }`, with at least two labels. Set a description to `null` to leave it out. |
+
+The output is `{ "choice": "<label>", "confidence": ..., "probabilities": { "<label>": ... } }`. Branch with, for example, `classify.choice == "billing"`.
+
+```jsonc
+{
+  "id": "classify",
+  "type": "jev_choice",
+  "config": {
+    "text": "{{trigger.input.email_body}}",
+    "question": "What is this email about?",
+    "options": {
+      "billing": "Payments, invoices, refunds",
+      "bug": "Something is broken",
+      "other": null
+    }
+  }
+}
+```
+
+### jev_score
+
+Rates the text on an ordered scale.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `text` | Yes | The text to judge. |
+| `question` | Yes | The question to answer, for example `"How urgent is this?"`. |
+| `levels` | Yes | A list of at least two level descriptions, lowest first. The level at position `i` is score `i`. Use `null` for a level with no description. |
+
+The output is `{ "score": ..., "confidence": ..., "probabilities": ... }`. `score` is the expected score from 0 to the last level's position, so it can fall between levels. Branch with, for example, `rate.score >= 1.5`.
+
 ## human_approval
 
 Asks a person to choose in Slack. Requires the Major Slack integration.

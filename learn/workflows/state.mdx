@@ -35,6 +35,9 @@ In a `$expr`, every node id is a variable, and a node that hasn't run yet is `nu
 | --- | --- |
 | `agent_call` | The shape of its `output_schema`, or `{ "result": "<final message text>" }` without one. |
 | `app_call` | The response body. A non-object body is wrapped as `{ "body": ... }`. |
+| `jev_noul` | Each question's yes-probability (0 to 1) under its question id. |
+| `jev_choice` | `{ "choice": "<label>", "confidence": ..., "probabilities": { ... } }`. |
+| `jev_score` | `{ "score": ..., "confidence": ..., "probabilities": ... }`. |
 | `human_approval` | `{ "choice": "...", "responded_by": "..." }`, plus `"timed_out": true` on timeout. |
 | `for_each` | `item` and `index` inside the loop body, and `results` after it exits. |
 | `router`, `join`, `wait` | Nothing worth referencing. |

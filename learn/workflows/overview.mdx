@@ -131,6 +131,7 @@ Each node's output is stored under its id, so later nodes can read it: `{ "$stat
 | `for_each` | Runs a loop body once per item in a list, in sequence or in parallel, and collects the results. |
 | `join` | Waits until every parallel branch leading into it has arrived, then continues. |
 | `wait` | Pauses the run for a fixed number of seconds. |
+| `jev_noul`, `jev_choice`, `jev_score` | Ask Jev (TypeSafe's judgment model) a yes/no, multiple-choice, or scoring question about some text, so a `router` can branch on the answer. |
 | `human_approval` | Posts a message with buttons to a Slack channel and waits for someone to click one, or for a timeout. |
 | `end` | Finishes the run with a `success` or `failure` status and an optional output. |
 
