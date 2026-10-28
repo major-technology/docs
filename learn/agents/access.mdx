@@ -24,6 +24,27 @@ The agent's owner or an Admin can grant access to:
 - **Individuals** - invite users by email.
 - **Groups** - grant access to an entire team at once (see [Groups](/settings/members-and-roles#groups)).
 
+### Saved logins
+
+An agent with browser access can have its own saved website logins. They belong to the agent, not to a person. Only that agent's runs fill them in, and an agent never uses anyone's personal saved logins.
+{/* DOCS-UPDATER: please verify — browser access and personal saved logins are documented in open docs PRs #35 and #40, which aren't merged yet. Link to /learn/agents/overview#browser-access once #35 lands. The roles below map the diff's `agent:edit` to Editor and `agent:use` to User; confirm the mapping. */}
+
+| Who | Can do |
+| --- | --- |
+| **Editor** or **Admin** | Add, edit, reveal, and delete the agent's logins under **Saved logins** in **Browser access** in the agent editor. |
+| **User** | Run the agent, which can sign in with the agent's saved logins. Users can see each login's site and identifier, but not its password. |
+
+When a run reaches a sign-in page and the agent has no login saved for that site, it shows a login card:
+
+- Someone with **Editor** access can save the login to the agent for future runs.
+- Someone with **User** access can enter the login to use once, without saving it.
+
+When you build an agent with the [Platform Agent](/build/platform-agent) or an [MCP client](/build/mcp), it can send you a link to save a login for the agent ahead of time. The page shows which site the login is saved for.
+
+<Note>
+Anyone who can run the agent can have it sign in as that account. Only save logins whose access is fine to share with everyone who has access to the agent.
+</Note>
+
 ## Skills
 
 [Skills](/learn/skills/overview) use the same three roles, so authorship can be separated from use:
