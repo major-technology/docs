@@ -37,6 +37,18 @@ Users can manage their connected accounts from **Settings > Connected Accounts**
 
 See [Per-User OAuth](/learn/connectors/overview#shared-vs-per-user-connections) for details on how this works.
 
+## Stop When Idle
+
+Apps built on the Vite-Hono template can stop their backend while nobody is using them. Open the app's **Scaling** tab and use the **Stop when idle** switch on the deployed app.
+{/* DOCS-UPDATER: please verify — the switch only shows for apps whose template is "Vite-Hono" (mono-builder#2759). The Vite-Hono template isn't described elsewhere in the public docs and appears to be rolled out per organization. Confirm it should be documented publicly now. The PR also lists a staging check (waypoint following the managed EndpointSlice) as still open. */}
+
+- When it's on, the backend stops after 15 minutes without traffic. While it's stopped, it costs nothing.
+- The next request starts it again. That first request takes a few seconds; requests after it are served as normal.
+- New Vite-Hono apps have it on by default. Turn it off to keep the backend always running.
+- Changing the switch redeploys the app.
+
+Next.js apps, and previews in the editor, are always on and don't show the switch.
+
 ## Version History
 
 View a complete history of your application's versions. Each version is linked to a commit, ensuring full traceability of changes.
