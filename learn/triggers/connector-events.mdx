@@ -14,7 +14,7 @@ A connector event trigger starts a [workflow](/learn/workflows/overview) when on
 
 ## Supported connectors
 
-Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar, Google Drive, and Attio, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
+Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar, Google Drive, Attio, and Linear, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
 
 | Connector | Example events |
 | --- | --- |
@@ -23,8 +23,19 @@ Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar,
 | GitHub | `issues.opened`, `pull_request.opened`, `push`, `release.published` |
 | Google Calendar | Event changed (created, edited, or cancelled) on one calendar |
 | Google Drive | File changed |
+| Linear | `issue.create`, `issue.update`, `comment.create`, `project_update.create`, `cycle.remove` |
 
 The connector must already be connected and configured in your organization. Ask the [Platform Agent](/build/platform-agent) which events a connector supports and what their payloads contain; it looks them up rather than guessing.
+
+### Linear
+
+Linear events are named `<resource>.<action>`, where the action is `create`, `update`, or `remove`. The resources are `issue`, `comment`, `issue_label`, `reaction`, `project`, `project_update`, `cycle`, `document`, `initiative`, `initiative_update`, `customer`, and `customer_need`.
+
+- Linear only lets workspace admins create webhooks. Set the Linear connector's permissions to **Admin** and connect it as a Linear workspace admin. Publishing fails on a connector set to **Read Only** or **Read & Write**, or one connected by someone who isn't a workspace admin.
+- On a per-user Linear connector, the person who publishes the workflow must be a workspace admin who connected with **Admin** permissions.
+- The trigger covers every public team in the workspace. Events from private teams aren't delivered.
+
+{/* DOCS-UPDATER: please verify — mono-builder#2792 says it hasn't been tested live against a Linear workspace yet. Also confirm the connector's permission preset is labeled "Admin" in the UI (the code checks for the `readonly` / `readwrite` presets and the error message says "set the resource's permissions to Admin"). */}
 
 ## How a connector event trigger is defined
 
