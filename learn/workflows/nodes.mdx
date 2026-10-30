@@ -30,8 +30,12 @@ Calls an endpoint on one of your deployed [apps](/learn/apps/overview).
 | `method` | Yes | `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`. |
 | `path` | Yes | The endpoint path, for example `/api/orders`. |
 | `input` | No | An object of values. Sent as query parameters for `GET` and `DELETE`, and as a JSON body otherwise. |
+| `max_retries` | No | How many times to retry a failed response, from `0` to `10`. Defaults to no retries. |
+| `retry_on` | No | Which failed responses to retry: `4xx` (default) retries only 4xx responses, `any` retries any non-2xx response. |
 
 The node's output is the response body. A body that isn't a JSON object is wrapped as `{ "body": ... }`.
+
+Retries back off exponentially, starting at 2 seconds and capped at 30 seconds between attempts. A call where the app never answers isn't retried. In the editor, set **Max retries** and **Retry on** in the node inspector.
 
 ## router
 

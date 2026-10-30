@@ -43,6 +43,11 @@ Your organization has a wallet that holds available credits. Credits are spent d
 - **AI Proxy** - API requests through Major's managed LLM gateway
 - **App Compute** - running deployed applications
 
+### App Compute
+
+Each deployed app is metered hourly, priced from its CPU and memory limits, and charged only for the minutes its server was running in that hour. An always-on app pays for the full hour. An app that [stops when idle](/learn/apps/deploying) pays nothing for the time it's stopped, and a frontend-only app with no server isn't charged for app compute.
+{/* DOCS-UPDATER: please verify — mono-builder#2814. The "stops when idle" link points to the Stop When Idle section that open docs PR #44 adds to learn/apps/deploying.mdx. Add the #stop-when-idle anchor once #44 merges. */}
+
 ### Overage Credits
 
 When your balance reaches zero, you can purchase additional credits (overage). Overage credits are applied to your wallet immediately.
