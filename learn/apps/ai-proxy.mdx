@@ -45,6 +45,11 @@ Two environment variables are available in the app's runtime, in the editor prev
 
 Call the proxy from server code only, so the token never reaches the browser. Use the provider's own SDK, not a unified SDK, and never hard-code keys or proxy URLs.
 
+<Note>
+The proxy only accepts requests that come from Major's network: the editor preview, deployed apps, and Major sandboxes. Requests from anywhere else, such as an app you run on your own machine, are rejected with `403`.
+</Note>
+{/* DOCS-UPDATER: please verify — mono-builder#2822 allows only Major's NAT egress IPs on the proxy host. Confirm that local `major app start` has no supported path to the proxy, and whether we want to name it here. */}
+
 <CodeGroup>
 
 ```typescript Anthropic
@@ -116,7 +121,8 @@ Image endpoints are stateless: input images live only in that request's body, an
 
 ## Supported endpoints
 
-Only these endpoints are available. Any other path returns `endpoint_not_allowed`.
+Only these endpoints are available. Requests to any other path are rejected.
+{/* DOCS-UPDATER: please verify — mono-builder#2823 now matches exact paths at the gateway, so other paths get a 404 there instead of the proxy's `endpoint_not_allowed` error. */}
 
 | Provider | Endpoints |
 | --- | --- |
