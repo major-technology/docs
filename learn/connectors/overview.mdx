@@ -26,8 +26,10 @@ See [Resource client](/learn/connectors/resource-client) for usage and error han
 3. Configure the connection details and credentials
 4. Attach the connector to your app via the web editor or `major resource manage`
 
+Connectors that call a URL you provide, such as Custom API, GraphQL, and custom MCP servers, must point at a public host. Major won't connect to loopback, private, or link-local addresses.
+
 <Note>
-Resource credentials are encrypted and never exposed to the client-side application code.
+Resource credentials are encrypted and never exposed to the client-side application code. When you delete a connector, Major permanently destroys its stored credentials, including every user's per-user credentials.
 </Note>
 
 ## Shared vs. per-user connections

@@ -81,4 +81,6 @@ Outside Next.js, for example in a [skill](/learn/skills/overview) script or plai
 - **Don't set `Authorization`.** The proxy injects the connector's credentials and strips any `Authorization` you send.
 - These request headers are always stripped: `Authorization`, `Cookie`, `Host`, `Forwarded`, `X-Forwarded-*`, `X-Real-Ip`, and anything starting with `X-Major-` or `X-Pd-`. The exception is `X-Major-Timeout-Ms`, which sets the timeout for one request.
 - The target URL must be one the connector allows, usually the service's API host.
+- The target must resolve to a public address. A request to a loopback, private, link-local, or other internal address, directly or through a redirect, fails with `403` and the error `destination_blocked`.
+- Redirects are followed for up to 10 hops. A redirect from `https` to `http` is refused.
 - Request and response bodies are limited to 50 MB. Timeouts are capped at 60 seconds.
