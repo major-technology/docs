@@ -20,6 +20,11 @@ Errors are automatically collected from your app's container runtime and organiz
 
 Errors from your application are automatically collected and aggregated - no additional configuration needed. Major captures runtime errors from your app code and surfaces them in the Errors panel.
 
+<Note>
+Major only accepts error reports sent from its own network, which covers deployed apps and the editor preview. Reports from an app you run on your own machine are rejected.
+</Note>
+{/* DOCS-UPDATER: please verify — mono-builder#2834 returns 403 for error ingest from outside Major's NAT. Confirm this means `local-dev` errors (see `major app errors list --environment local-dev`) are no longer collected from laptops. */}
+
 ## Ask AI to Fix
 
 Click the **Ask AI to fix** button on any error to send the full error details to the AI chat in the editor. The AI uses the message, stack trace, and context to:
