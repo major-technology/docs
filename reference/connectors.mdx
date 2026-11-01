@@ -131,6 +131,11 @@ Google Drive and SharePoint are listed under [Productivity and communication](#p
 | Pipedream Instance | Connect your own Pipedream account. | Shared |
 | HTTP proxy | Call any connected resource with a plain HTTP API through a drop-in `fetch` wrapper. See [Proxy fetch](/learn/connectors/proxy-fetch). Not a separate connector; available on connectors that support it. | Uses the connector's auth |
 
+<Note>
+The URL you give a Custom API or GraphQL connector must use `https` and must not include a port, not even `:443`. Calls to an `http://` URL or a URL with a port are refused.
+</Note>
+{/* DOCS-UPDATER: please verify — mono-builder#2851 limits every guarded outbound client to https on port 443, which should also cover custom MCP server URLs. Confirm MCP connections use the guarded client before naming MCP here. There is no save-time check yet, so a URL like this saves fine and only fails when it's called. */}
+
 ## Catalog connectors
 
 In addition to the connectors above, the Add Connector dialog includes a catalog of more than 200 additional apps, such as Jira, Confluence, Asana, Airtable, monday, ClickUp, Zoom, Intercom, Gong, RingCentral, Shopify, Xero, Pipedrive, Greenhouse, Box, Dropbox, Google Ads, Datadog, Sentry, and GitLab. Search the dialog to find one. Catalog connectors use shared authentication and are reached through the [HTTP proxy](#generic-and-custom).
