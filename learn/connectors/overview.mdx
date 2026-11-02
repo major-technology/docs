@@ -30,6 +30,14 @@ See [Resource client](/learn/connectors/resource-client) for usage and error han
 Resource credentials are encrypted and never exposed to the client-side application code.
 </Note>
 
+### Completing an OAuth or app-install connection
+
+When a connector uses OAuth (Google, HubSpot, Slack, and others) or a GitHub App install, Major only saves the grant if you finish the provider's consent screen in a browser that is signed in to Major as the same user who clicked **Connect**. If the browser is signed out of Major, signed in as someone else, or your session expired mid-flow, the connection is refused and you're asked to sign in to Major as the user who started it. Start the connection again from the browser you're signed in to.
+
+The same applies to the `/connect` links agents and apps send you: the link is safe to forward, because whoever opens it starts and completes their own connection.
+
+{/* DOCS-UPDATER: please verify — the Slack bot install path reports a mismatch as a generic invalid-state error rather than the "sign in as the user who started this connection" message, per mono-builder#2845. Confirm the wording users see in each flow. */}
+
 ## Shared vs. per-user connections
 
 When you configure a connector, you choose how it authenticates:
@@ -73,5 +81,13 @@ Identity-based authentication is more secure and avoids storing long-lived crede
 ## Rate limiting
 
 Set hourly and daily invocation limits on any connector to protect downstream services from runaway usage. When a limit is reached, requests return `429 Too Many Requests` until the window resets. Configure limits when creating or editing a connector.
+
+## Call screening
+
+Because connectors run on Major's servers, every connector call - from a generated client, a connector tool, or the [HTTP proxy](/learn/connectors/proxy-fetch) - is checked before it runs for attempts to attack Major's own infrastructure: running shell or client meta-commands on the host (for example `\!` in a Postgres query), reading the host's files, environment, or credentials, or reaching loopback, cloud-metadata, or private network addresses.
+
+Ordinary use of your data is never blocked by this check, however broad or destructive - reads, writes, deletes, and schema changes are governed by your permissions, not by screening. A call that is blocked returns `403 Forbidden` with the message "this call looks like an attempt to misuse the resource and was blocked", and is recorded as a failed invocation in the [Audit Log](/settings/audit-log). Screening applies to every organization and can't be turned off.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#2855 the screen adds one model round trip per call (p50 ~150ms, p95 ~1s); decide whether to mention the added latency publicly. */}
 
 Don't see the connector you need? Use [Custom API, GraphQL, or custom MCP](/reference/connectors) connectors, or click **Request it** in the Add Connector dialog to submit a request.
