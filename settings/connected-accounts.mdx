@@ -19,6 +19,8 @@ When you disconnect an account, you lose access to any app or agent feature that
 
 You usually don't visit this page to connect - apps prompt you when needed. If you open an app that uses a per-user connector and haven't authorized your account, Major redirects you to a `/connect` page to complete OAuth, then returns you to the app. Trying to invoke the connector before connecting returns an error asking you to finish authorizing.
 
+Finish the provider's sign-in in the same browser where you're signed in to Major. Major saves the authorization only for the Major user who started it, so if you're signed out of Major, signed in as a different user, or your session expired partway through, the connection is refused and you'll be asked to sign in to Major as the user who started it. Start again and it will go through.
+
 <Card title="Per-user OAuth" icon="key" href="/learn/connectors/overview#shared-vs-per-user-connections">
   How shared vs. per-user authentication modes work for connectors.
 </Card>
