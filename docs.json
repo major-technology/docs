@@ -98,6 +98,7 @@
         "pages": [
           "settings/members-and-roles",
           "settings/connected-accounts",
+          "settings/github-app",
           "settings/tool-permissions",
           "settings/models",
           "settings/audit-log",

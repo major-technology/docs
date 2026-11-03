@@ -1,0 +1,87 @@
+---
+title: "GitHub App"
+description: "Install the Major GitHub App so new app repositories are created in your own GitHub organization."
+---
+
+Every app is backed by a Git repository. By default, Major creates those repositories in Major's own GitHub organization. Install the Major GitHub App to have Major create new repositories inside **your** GitHub organization instead. We recommend this for better speed and security.
+
+Each Major organization links to exactly one GitHub organization.
+
+<Note>
+Only organization **Admins** can install or disconnect the GitHub App. Other members see a message asking them to contact an admin.
+</Note>
+
+## Install the GitHub App
+
+1. Go to **Settings** > **GitHub App**.
+2. Click **Install GitHub App**. GitHub opens in a new tab.
+3. Choose the GitHub **organization** to install the app on. Personal GitHub accounts are not supported.
+4. Choose which repositories the app can access, then click **Install**.
+5. GitHub redirects you back to Major, which saves the installation. You see a **GitHub app connected** confirmation.
+
+The **Configure GitHub App** card now shows a **Connected** badge, your GitHub organization name, and the installation ID.
+
+<Warning>
+The installation is tied to the Major organization you started it from. If GitHub redirects back to a different Major organization, the connection fails with "The installation was created for a different organization." Switch to the right organization and install again.
+</Warning>
+
+## What changes after you connect
+
+- **New apps** get their repository in your GitHub organization.
+- **Existing apps** keep their repository in Major's GitHub organization. Nothing is moved.
+- The **Repositories created in your GitHub** table lists each app whose repository lives in your GitHub organization, with a link to the repository.
+
+You still give people access to a repository through Major. `major app create` and `major app clone` add your GitHub username as a collaborator. See [`major user gitconfig`](/reference/cli/user#major-user-gitconfig).
+
+## Manage the installation
+
+Click **Manage on GitHub** to open the installation settings in your GitHub organization. From there you can change which repositories the app can access.
+
+<Warning>
+If you limit the app to selected repositories, make sure it keeps access to the repositories your Major apps use. Without access, the editor and CLI cannot work with those apps.
+</Warning>
+
+## Disconnect
+
+Click **Disconnect** on the **Configure GitHub App** card and confirm. Major uninstalls the app from your GitHub organization and unlinks it.
+
+After you disconnect:
+
+- Apps whose repositories live in your GitHub organization are no longer accessible by Major. The CLI and the web editor stop working for those apps.
+- The repositories themselves stay in your GitHub organization. Major does not delete them.
+- New apps are created in Major's GitHub organization again.
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="How is this different from the GitHub connector?">
+    - The **GitHub App** on this page controls where Major keeps your apps' code.
+    - The [GitHub connector](/reference/connectors) powers integrations where Major works with your existing repositories, such as code review or contribution analysis.
+
+    They are installed separately. Set up the one that fits your use case, or both.
+  </Accordion>
+  <Accordion title="Can I move my existing apps into my GitHub organization?">
+    Yes. Contact [support@major.build](mailto:support@major.build) and we can help you with that.
+  </Accordion>
+  <Accordion title="Can I install the app on my personal GitHub account?">
+    No. The app must be installed on a GitHub organization. If you install it on a personal account, Major rejects the installation.
+  </Accordion>
+  <Accordion title="Can I link more than one GitHub organization?">
+    No. Each Major organization links to exactly one GitHub organization. To switch, disconnect and install the app on the other organization.
+  </Accordion>
+  <Accordion title="Why can't I see the Install GitHub App button?">
+    Only organization **Admins** can install or disconnect the app. Ask an admin in your organization, or ask for the Admin role. See [Members & Roles](/settings/members-and-roles).
+  </Accordion>
+  <Accordion title="Does disconnecting delete my repositories?">
+    No. The repositories stay in your GitHub organization. Major loses access to them, so the CLI and the web editor stop working for those apps.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Apps overview" icon="window" href="/learn/apps/overview#source-control">
+    How app repositories and source control work.
+  </Card>
+  <Card title="Deploying" icon="rocket" href="/learn/apps/deploying">
+    How Major builds and deploys from your repository.
+  </Card>
+</CardGroup>
