@@ -63,7 +63,7 @@ major resource create
 
 ## major resource env-list
 
-List the environments available to the app and show which one is selected.
+List the environments in your organization and show which one is your current choice.
 
 ```bash
 major resource env-list [flags]
@@ -75,7 +75,10 @@ major resource env-list [flags]
 
 ## major resource env
 
-Show the app's current environment and switch to another one.
+Show your current environment and switch to another one.
+
+The environment is your [environment choice](/learn/apps/environments#your-environment-choice), shared by all your apps, the web editor, and MCP clients. Switching it here also reloads any app previews you have open in the web editor.
+{/* DOCS-UPDATER: please verify — mono-builder#2816 made the choice per user instead of per app; the CLI routes still take an app ID, so confirm the CLI output wording. */}
 
 ```bash
 major resource env [flags]
