@@ -30,6 +30,8 @@ You can share access to your application with specific:
 Deployed applications check the deployer's permissions when invoked. If you deploy an app without sufficient resource permissions, you'll be prompted to confirm the deployment.
 </Note>
 
+On the Enterprise plan, admins can also block every app in the organization from being made public. See [Disabling public apps](/learn/apps/deploying#disabling-public-apps).
+
 ## Agent and Skill Permissions
 
 Agents and skills have their own roles. See [Agent access](/learn/agents/access).
@@ -60,7 +62,12 @@ The dialog shows real-time progress for each email address (pending, sending, su
 
 ### Accepting an Invitation
 
-When you receive an invitation and sign up as a new user, your account is automatically added to the organization with the role specified in the invitation. You'll see a success confirmation and be redirected to your organization dashboard. No additional action is required to accept the invitation.
+When you receive an invitation and sign up as a new user, your account is added to the organization with the role specified in the invitation:
+
+- **Google or Microsoft sign-in**: you're added as soon as you sign up.
+- **Email and password**: you're added once you verify your email address. After signing up, Major shows a verify-your-email screen. Click the link in the verification email, and you're added to the organization and taken back to your invitation.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#3010, the verification link's callback returns invitees to /accept-invitation/:id; confirm what that page shows after the invitation has already been accepted (success confirmation and redirect to the dashboard?). */}
 
 ## Groups
 
