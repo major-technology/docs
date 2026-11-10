@@ -88,6 +88,12 @@ Auto only covers calls that would otherwise ask. Tools you set to **always allow
 
 Only the person who owns a chat can switch it between Auto and Manual. On a shared edit chat that no one owns, anyone with access can switch it.
 
+### Shell command screening
+
+Shell commands the Platform Agent or an agent runs on Major-hosted machines, in its own workspace or in an app sandbox, run without asking. Before each one runs, Major screens it for attempts to attack Major's infrastructure, such as reaching cloud-metadata addresses or internal services, sending the machine's credentials elsewhere, or escaping the container. Ordinary development is never blocked, even when it's destructive to the workspace itself. When a command is blocked, the agent is told so and continues without it.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#3026 the screen fails open (a command runs if the screen can't answer) but refuses a command too long to screen; decide whether either belongs in public docs. */}
+
 ## Models
 
 Pick a tier - **Smartest**, **Balanced**, or **Fastest** - from the model picker when you start a chat. Each tier maps to the model your organization configured for it. The model is fixed once the chat starts, and a chat with an agent uses that agent's model. Admins choose the model behind each tier in [Settings > Models](/settings/models).
