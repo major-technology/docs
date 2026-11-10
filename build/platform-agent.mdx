@@ -61,6 +61,12 @@ By default, read-only connector tools and app `GET` requests run without asking,
 
 Manage your saved rules, or set **always allow**, **ask**, or **always deny** for any tool ahead of time, on the [Tool Permissions](/settings/tool-permissions) page. When you chat with a specific agent, that agent's [tool permissions](/learn/agents/tool-permissions) apply instead of yours.
 
+### Shell command screening
+
+Shell commands the Platform Agent or an agent runs on Major-hosted machines, in its own workspace or in an app sandbox, run without asking. Before each one runs, Major screens it for attempts to attack Major's infrastructure, such as reaching cloud-metadata addresses or internal services, sending the machine's credentials elsewhere, or escaping the container. Ordinary development is never blocked, even when it's destructive to the workspace itself. When a command is blocked, the agent is told so and continues without it.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#3026 the screen fails open (a command runs if the screen can't answer) but refuses a command too long to screen; decide whether either belongs in public docs. */}
+
 ## Models
 
 Pick a tier - **Smartest**, **Balanced**, or **Fastest** - from the model picker when you start a chat. Each tier maps to the model your organization configured for it. The model is fixed once the chat starts, and a chat with an agent uses that agent's model. Admins choose the model behind each tier in [Settings > Models](/settings/models).

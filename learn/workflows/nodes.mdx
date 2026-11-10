@@ -33,6 +33,10 @@ Calls an endpoint on one of your deployed [apps](/learn/apps/overview).
 
 The node's output is the response body. A body that isn't a JSON object is wrapped as `{ "body": ... }`.
 
+In the workflow editor, pick the **Endpoint** from the endpoints Major extracted from the app's deployed API, or click **Enter manually** to type the method and path. If the endpoint's path has a parameter such as `{id}`, fill it in under **Path**. Edit `input` in the node's **Request body** field, or its **Query params** field for `GET` and `DELETE`.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#3025 the endpoint list comes from "the API spec extracted from its deployment"; confirm which apps have one (e.g. whether an app must be deployed first) and that the picker falls back to manual Method and Path when none is found. */}
+
 ## router
 
 Branches the run on state.
