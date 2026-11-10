@@ -140,6 +140,8 @@ A workflow can have up to 50 nodes. See [Nodes](/learn/workflows/nodes) for ever
 
 Ask the [Platform Agent](/build/platform-agent) in the web app, or any AI client connected through [MCP](/build/mcp). It looks up the agents and apps to use, drafts the definition, and runs it to test. The **Workflows** page in the web app shows the graph as it's built, and you can also add nodes and triggers there directly. To edit the file yourself, use the [CLI](/reference/cli/workflow).
 
+The editor highlights and completes [CEL](/learn/workflows/state#referencing-state) wherever a workflow holds it: `$expr` values in the **Definition** view and in trigger input projections, router branch conditions, and connector event filters. Completion suggests the CEL functions and the variables the expression can read: `trigger` and the node ids in a node, and only `event` in a trigger's input or filter.
+
 Like agents and skills, workflows have two separate steps:
 
 - **Save** writes the definition as a new immutable version. Saving validates the file first; if it fails, nothing is saved and you get the list of errors. Saving never changes what runs automatically.
