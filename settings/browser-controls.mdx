@@ -3,7 +3,7 @@ title: "Browser Controls"
 description: "Choose the sites Major's hosted browser can visit and what it can do there."
 ---
 
-The [Platform Agent and agents with browser access](/learn/agents/browser) can open web pages in a hosted browser. Browser Controls limit where that browser can go and what it can do there. You set them at three levels:
+Browser Controls limit where Major's [browser](/learn/agents/browser) can go and what it can do there. You set them at three levels:
 
 | Level | Where | Who can change it |
 | --- | --- | --- |
@@ -65,13 +65,7 @@ In the agent editor, open the agent's **Details** panel. Its blocked sites, allo
 "browserSettings": {
   "enabled": true,
   "deniedHosts": ["facebook.com", "*.facebook.com"],
-  "allowedHosts": [],
+  "allowedHosts": [], // empty = no allowlist
   "rules": ["Never send emails, only draft them"]
 }
 ```
-
-| Field | Description |
-| --- | --- |
-| `deniedHosts` | Blocked sites. |
-| `allowedHosts` | Only these sites. An empty list sets no allowlist. |
-| `rules` | Plain-English rules. |
