@@ -1,0 +1,129 @@
+---
+title: "Browser"
+description: "Let the Platform Agent and your agents open websites, click through them, and sign in, in a hosted browser."
+---
+
+Major can use a real web browser to get a task done: open public websites, read them, fill in forms, click through flows, and sign in. The browser runs in the cloud, not on your computer, and there's no connector to set up.
+
+The browser is available to:
+
+- **The [Platform Agent](/build/platform-agent)**, in your chats.
+- **[Agents](/learn/agents/overview)** that have **Browser access** turned on.
+
+Prefer a [connector](/learn/connectors/overview) when one exists for the service you need. It's faster and more reliable than clicking through a website. Use the browser for sites with no API, one-off lookups, or when you ask for it.
+
+## Example requests
+
+- "Find the pricing page for Acme and summarize their plans."
+- "Look up our company on the state business registry and tell me when the annual report is due."
+- "Sign in to our supplier portal and download last month's invoice."
+- "Draft a LinkedIn message to Jane Doe asking for a call next week."
+
+## What it can do
+
+The agent drives the browser one action at a time. It can:
+
+- Open pages in tabs and move between them.
+- Read a page's text, or its structure to find buttons, links, and fields.
+- Click, type, select options, and press keys.
+- Take screenshots of a page or a single element.
+- Inspect a page's network requests and console errors.
+- Sign in with a [saved login](#saved-logins).
+
+The agent can't see a live view of the browser, and you don't get a link to one either.
+
+Before it sends, posts, buys, submits a form, deletes something, or changes account settings, the agent confirms the exact recipient and content with you, unless you already gave both. Read-only browsing, such as searching or reading, needs no confirmation.
+
+### What it can't do
+
+- **Open Major apps.** The browser isn't signed in to Major, so a deployed app only shows its sign-in page. Session preview URLs are blocked. To check an app, the Platform Agent uses the app's preview and logs instead.
+- **Get past every check on its own.** The browser tries CAPTCHAs itself. For one-time codes sent to you by SMS or email, the agent asks you to send the code in the chat. For prompts like "approve on your phone", it tells you what the page is asking for and waits.
+- **Go where your [browser controls](/settings/browser-controls) don't allow.** Blocked sites, allowlists, and rules are checked before every action.
+
+## Turning it on for an agent
+
+Browser access is off for new agents. Turn it on in the agent editor's **Details** panel under **Browser access**, or set `browserSettings` in `agent.jsonc`:
+
+```jsonc
+"browserSettings": {
+  "enabled": true
+}
+```
+
+The agent's runs then get the `browser` tool. Like any other change, it applies after you save and publish the agent, and a run uses the version it started with. Leave browser access off unless the agent's job needs the web.
+
+The same `browserSettings` object holds the agent's own [browser controls](/settings/browser-controls#agent-controls).
+
+## Browser sessions and sign-ins
+
+A browser starts on the first browser action in a chat. Cookies and site sign-ins are kept in a browser profile, so a site you signed in to earlier is usually still signed in next time:
+
+- **Your chats** share one profile per person in each organization. A site you signed in to in one chat stays signed in in your other chats.
+- **An agent's runs** share one profile for that agent, whoever runs it. Your own profile is never used for an agent's runs.
+
+A browser with no activity for 5 minutes is shut down. The next browser action starts a new one from the saved profile, so sign-ins carry over, but open tabs don't.
+
+If two browsers use the same profile at the same time, the changes saved last win.
+
+## Saved logins
+
+When the browser reaches a sign-in page and has no login saved for that site, the agent shows a **login card** in the chat (or in Slack). The card opens a separate Major page where you enter the fields the site asks for, such as email, username, password, or company ID. Major fills them into the sign-in form. The AI never sees the values, and the agent never asks you to type a password into the chat.
+
+On the login page:
+
+- **Save this login** (**Save to** the agent's name, in an agent's chat) is on by default. It saves the login, encrypted, so Major can sign in to that site again later. Turn it off and click **Use login** to use it for this sign-in only, without saving it.
+- **Decline** tells the agent you won't provide the login.
+
+A few more things to know:
+
+- A saved login is tied to the exact site, scheme and host included. `www.example.com` and `example.com` need separate logins.
+- A login holds up to 6 fields. For multi-step sign-ins, the same login is used at each step. If a later step needs a field the login doesn't have, a new card asks for just that field and can add it to the login.
+- When you have more than one login for a site, the agent uses the one you named, or asks which account to use.
+- On a signup form, the agent doesn't make up a password. Major generates one, saves the new login, and fills it in for you.
+
+### Managing your saved logins
+
+Open **Account settings > Browser**. Your saved logins are listed under **Saved logins**. You can add one ahead of time, add a label, edit fields, reveal saved values, or delete a login. Deleting a login doesn't sign the browser out of sites it's already signed in to.
+
+Only your own chats can use your saved logins. Organization admins can't see or use them, and agents never use them.
+
+### An agent's saved logins
+
+An agent with browser access has its own saved logins. They belong to the agent, not to a person, and only that agent's runs fill them in.
+
+| Who | Can do |
+| --- | --- |
+| **Editor** or **Admin** of the agent | Add, edit, reveal, and delete the agent's logins under **Saved logins** in the agent's **Browser access** section. Save a login to the agent from a login card. |
+| **User** of the agent | Run the agent, which can sign in with its saved logins. From a login card, enter a login to use once, without saving it. |
+
+When you build an agent with the Platform Agent or an [MCP client](/build/mcp), it can send you a link to save a login to the agent ahead of time. The page shows which site the login is for, and you need edit access to the agent to save it.
+
+<Warning>
+Anyone who can run the agent can have it sign in as that account. Only save logins to an agent when that access is fine to share with everyone who can run it.
+</Warning>
+
+## Who can use the browser
+
+The browser is available to organization **Members**, **Builders**, and **Admins**. App viewers don't get it. In a [custom role](/settings/members-and-roles), it's the **Use the hosted browser** capability.
+{/* DOCS-UPDATER: please verify — custom roles (mono-builder#2710) and the App viewer role aren't documented on the public Members & Roles page yet, so this links to the page in general. */}
+
+Any member can save logins for themselves.
+
+The browser only runs in Major chats and agent runs. An MCP client like Claude Code or Cursor doesn't get the `browser` tool.
+
+## Billing
+
+Browser time is billed to your organization's [credits](/settings/billing#wallet--credits) at cost, for as long as the browser runs: **$0.48 per browser-hour**. A browser shuts down after 5 minutes without activity, so a short task costs a few cents. Usage is settled after the chat session ends.
+
+On the agents dashboard under **Analytics**, agent spend is split into **Model**, **Compute**, and **Browser**.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Browser Controls" icon="shield-check" href="/settings/browser-controls">
+    Choose which sites the browser can visit and what it can do there.
+  </Card>
+  <Card title="Agents" icon="robot" href="/learn/agents/overview">
+    Build an agent and give it browser access.
+  </Card>
+</CardGroup>

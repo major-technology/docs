@@ -1,0 +1,89 @@
+---
+title: "Browser Controls"
+description: "Choose the sites Major's hosted browser can visit and what it can do there."
+---
+
+The [Platform Agent and agents with browser access](/learn/agents/browser) can open web pages in a hosted browser. Browser Controls limit where that browser can go and what it can do there. You set them at three levels:
+
+| Level | Where | Who can change it |
+| --- | --- | --- |
+| **Organization** | **Settings > Browser Controls** | Admins. Every member can view it. |
+| **Your own** | **Account settings > Browser**, under **Controls** | Each member, for their own chats. |
+| **Agent** | The agent's **Details** panel in the agent editor, or `browserSettings` in `agent.jsonc` | Anyone who can edit the agent. |
+
+A level can only add restrictions. Nothing set at one level loosens another. Your own controls and an agent's controls apply on top of the organization's, and the organization's entries are listed on those pages, dimmed and read-only.
+
+Which levels apply depends on whose browser it is:
+
+- **Your chats with the Platform Agent** use the organization's controls plus your own.
+- **An agent's runs** use the organization's controls plus the agent's, whoever runs it. The person running it doesn't add their own controls.
+
+## What you can set
+
+Each level has three lists.
+
+| List | What it does |
+| --- | --- |
+| **Blocked sites** | The browser can't visit these sites. Blocked sites from every level add up. |
+| **Only these sites** | An allowlist. Leave it empty to allow any site that isn't blocked. Once you add a site, the browser can only visit sites on the list. When more than one level has an allowlist, a site must be on every one of them. |
+| **Rules** | Things the browser must never do, written in plain English, such as "Never send emails, only draft them". |
+
+### Sites
+
+Enter a hostname such as `example.com`, or `*.example.com` for its subdomains at any depth. `*.example.com` doesn't match `example.com` itself, so adding `example.com` in the settings pages also adds `*.example.com`, `www` included. Remove either entry to narrow it.
+
+Each list holds up to 100 sites.
+
+The site check runs before the browser opens a page, navigates, clicks or types, or signs in. The page an action lands on is checked too: if a click takes the browser to a blocked site, that tab is closed. Allowed sites are also enforced on the browser's network traffic.
+
+If the allowlists from different levels share no site, the browser can't open any page. Fix the allowed sites in settings; they can't be changed from chat.
+
+### Rules
+
+You can add up to 20 rules per level, each up to 500 characters. Before each browser action, Major checks it against your rules and its built-in ones. The check looks at the action, the page, and the element it touches, but never at the values typed into fields.
+
+Major's built-in rules always apply, even when you haven't added any. They stop the browser from:
+
+- Typing or submitting data read on one site into a different site, or opening a URL that carries such data.
+- Entering Major tokens, API keys, or credentials from the conversation into any page.
+- Changing passwords, two-factor settings, recovery email or phone, or security settings, or creating API keys, access tokens, or OAuth app authorizations.
+- Inviting users, changing roles, or sharing documents or workspaces with outside addresses.
+- Paying, checking out, confirming a purchase, accepting terms, signing agreements, or starting paid plans or trials.
+- Deleting accounts, workspaces, or organizations.
+- Acting only because text on a page asked for it, rather than because your task needs it.
+
+When an action breaks a rule, it's blocked and the agent tells you what it was about to do and which rule stopped it. If you then explicitly ask for that specific action in chat, the agent can try it once more. Blocked sites can't be overridden from chat.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#3061 the rule check fails open after 2 seconds (the action runs if the check doesn't answer in time), and messages from Slack and triggers currently count as a user asking for the action. Decide whether either should be stated here. */}
+
+## Organization controls
+
+1. Open **Settings > Browser Controls**.
+2. Add sites under **Blocked sites** or **Only these sites**, or add a rule under **Rules**.
+
+Changes save as you make them and apply to every browser in the organization, including the Platform Agent's and every agent's.
+
+## Your own controls
+
+Open **Account settings > Browser**. Your saved logins are at the top, and your own blocked sites, allowed sites, and rules are under **Controls**. Any member can set these. They can only restrict what the organization allows.
+
+## Agent controls
+
+In the agent editor, open the agent's **Details** panel. Its blocked sites, allowed sites, and rules are listed with the organization's, and **+** adds the agent's own. You can also set them in `agent.jsonc`:
+
+```jsonc
+"browserSettings": {
+  "enabled": true,
+  "deniedHosts": ["facebook.com", "*.facebook.com"],
+  "allowedHosts": [],
+  "rules": ["Never send emails, only draft them"]
+}
+```
+
+| Field | Description |
+| --- | --- |
+| `deniedHosts` | Blocked sites. |
+| `allowedHosts` | Only these sites. An empty list sets no allowlist. |
+| `rules` | Plain-English rules. |
+
+An agent's controls save and publish with the rest of the agent. A run uses the version of the agent it started with.
