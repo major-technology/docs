@@ -24,11 +24,13 @@ Each level has three lists.
 
 | List | What it does |
 | --- | --- |
-| **Blocked sites** | The browser can't visit these sites. A site blocked at any level is blocked everywhere. |
+| **Blocked sites** | The browser can't visit these sites. A blocked site stays blocked even if another level allows it. |
 | **Only these sites** | An allowlist. Leave it empty to allow any site that isn't blocked. If more than one level has an allowlist, a site must be on all of them. |
 | **Rules** | Things the browser must never do, written in plain English, such as "Never send emails, only draft them". |
 
 ### Sites
+
+`example.com` matches only that site. Use `*.example.com` for its subdomains; add both to cover the whole domain.
 
 The site check runs before the browser opens a page, navigates, clicks or types, or signs in. The page an action lands on is checked too: if a click takes the browser to a blocked site, that tab is closed. Allowed sites are also enforced on the browser's network traffic.
 
@@ -69,3 +71,5 @@ In the agent editor, open the agent's **Details** panel. Its blocked sites, allo
   "rules": ["Never send emails, only draft them"]
 }
 ```
+
+Changes apply when you publish the agent. A run in progress keeps the version it started with.
