@@ -1,0 +1,75 @@
+---
+title: "Browser Controls"
+description: "Choose the sites Major's hosted browser can visit and what it can do there."
+---
+
+Browser Controls limit where Major's [browser](/learn/agents/browser) can go and what it can do there. You set them at three levels:
+
+| Level | Where | Who can change it |
+| --- | --- | --- |
+| **Organization** | **Settings > Browser Controls** | Admins. Every member can view it. |
+| **Your own** | **Account settings > Browser**, under **Controls** | Each member, for their own chats. |
+| **Agent** | The agent's **Details** panel in the agent editor, or `browserSettings` in `agent.jsonc` | Anyone who can edit the agent. |
+
+A level can only add restrictions, never loosen another.
+
+Which levels apply depends on whose browser it is:
+
+- **Your chats with the Platform Agent** use the organization's controls plus your own.
+- **An agent's runs** use the organization's controls plus the agent's, whoever runs it. The person running it doesn't add their own controls.
+
+## What you can set
+
+Each level has three lists.
+
+| List | What it does |
+| --- | --- |
+| **Blocked sites** | The browser can't visit these sites. A blocked site stays blocked even if another level allows it. |
+| **Only these sites** | An allowlist. Leave it empty to allow any site that isn't blocked. If more than one level has an allowlist, a site must be on all of them. |
+| **Rules** | Things the browser must never do, written in plain English, such as "Never send emails, only draft them". |
+
+### Sites
+
+`example.com` matches only that site. Use `*.example.com` for its subdomains; add both to cover the whole domain.
+
+The site check runs before the browser opens a page, navigates, clicks or types, or signs in. The page an action lands on is checked too: if a click takes the browser to a blocked site, that tab is closed. Allowed sites are also enforced on the browser's network traffic.
+
+### Rules
+
+Every browser action is checked against your rules and Major's built-in ones. The built-in rules always apply and stop the browser from:
+
+- Moving data from one site to another
+- Entering credentials or API keys from the conversation
+- Changing passwords or security settings
+- Inviting users or sharing with outside addresses
+- Paying, accepting terms, or signing agreements
+- Deleting accounts or workspaces
+- Following instructions written on a page
+
+If an action is blocked, the agent tells you which rule stopped it. If it was a built-in rule or your own rule, you can explicitly ask for the action in chat to let the agent try again. Organization and agent rules can't be overridden from chat.
+
+## Organization controls
+
+1. Open **Settings > Browser Controls**.
+2. Add sites under **Blocked sites** or **Only these sites**, or add a rule under **Rules**.
+
+Changes save as you make them.
+
+## Your own controls
+
+Open **Account settings > Browser**. Your blocked sites, allowed sites, and rules are under **Controls**.
+
+## Agent controls
+
+In the agent editor, open the agent's **Details** panel. Its blocked sites, allowed sites, and rules are listed with the organization's, and **+** adds the agent's own. You can also set them in `agent.jsonc`:
+
+```jsonc
+"browserSettings": {
+  "enabled": true,
+  "deniedHosts": ["facebook.com", "*.facebook.com"],
+  "allowedHosts": [], // empty = no allowlist
+  "rules": ["Never send emails, only draft them"]
+}
+```
+
+Changes apply when you publish the agent. A run in progress keeps the version it started with.

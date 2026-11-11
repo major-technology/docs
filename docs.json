@@ -47,6 +47,7 @@
               "learn/agents/overview",
               "learn/agents/models",
               "learn/agents/tool-permissions",
+              "learn/agents/browser",
               "learn/agents/external-channels",
               "learn/agents/access"
             ]
@@ -100,6 +101,7 @@
           "settings/connected-accounts",
           "settings/github-app",
           "settings/tool-permissions",
+          "settings/browser-controls",
           "settings/models",
           "settings/audit-log",
           "settings/billing"

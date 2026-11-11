@@ -12,7 +12,7 @@ Don't confuse this with [tool permissions](/learn/agents/tool-permissions): RBAC
 | Role | Can do |
 | --- | --- |
 | **User** | Run the agent and start chats with it. |
-| **Editor** | Everything a User can, plus edit the definition (prompt, model, connectors, apps, skills, env vars, tool permissions) and publish. |
+| **Editor** | Everything a User can, plus edit the definition (prompt, model, connectors, apps, skills, env vars, tool permissions, browser access) and publish, and manage the agent's saved logins. |
 | **Admin** | Everything an Editor can, plus share the agent with others. |
 
 Creating a new agent requires the organization-level **app-creation** permission (Builder role or higher), the same permission used to create apps.
@@ -23,6 +23,10 @@ The agent's owner or an Admin can grant access to:
 
 - **Individuals** - invite users by email.
 - **Groups** - grant access to an entire team at once (see [Groups](/settings/members-and-roles#groups)).
+
+### Saved logins
+
+Editors and Admins manage an agent's saved website logins. Users can run the agent with them but can't see the passwords. See [An agent's saved logins](/learn/agents/browser#an-agents-saved-logins).
 
 ## Skills
 
