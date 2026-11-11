@@ -25,6 +25,8 @@ The Platform Agent is the AI assistant you chat with in the [Major web app](/lea
 | **Build workflows** | Builds [workflows](/learn/workflows/overview) and their [triggers](/learn/triggers/overview), and runs them to test. |
 | **Use what exists** | Calls your deployed apps' APIs, runs agents and workflows, and opens a deployed app in a side panel. |
 | **Browse the web** | Opens websites in a hosted [browser](/learn/agents/browser) to read, click, type, sign in, and take screenshots, within your organization's [browser controls](/settings/browser-controls). |
+
+| **Check activity and clean up** | Reports how much your apps, agents, and workflows were used over the last 90 days (active minutes for an app; runs and failed runs for an agent or workflow), and deletes an app, agent, or workflow when you ask. Deleting needs your approval and the same permission as deleting it in the web app. |
 | **Set things up** | Asks you to add a connector, sign in to one, or enter an app's environment variables when the work needs it. |
 
 ## How it works
@@ -63,7 +65,7 @@ When the Platform Agent wants to use a tool that needs your sign-off, and the ch
 | **Deny** | Block this call. The Platform Agent is told it was denied. |
 | **Always approve** | Run this call and save an always-allow rule for this tool in your chats. Offered for connector tools and app endpoints. |
 
-By default, read-only connector tools and app `GET` requests run without asking, and tools that write ask first. Actions such as running an agent or a database migration always ask.
+By default, read-only connector tools and app `GET` requests run without asking, and tools that write ask first. Actions such as running an agent, running a database migration, or deleting an app, agent, or workflow always ask.
 
 Manage your saved rules, or set **always allow**, **ask**, or **always deny** for any tool ahead of time, on the [Tool Permissions](/settings/tool-permissions) page. When you chat with a specific agent, that agent's [tool permissions](/learn/agents/tool-permissions) apply instead of yours.
 

@@ -67,7 +67,7 @@ The Platform Agent uses the same skills, so your client and the web app build th
 | **App wiring** | `sandbox_add-resource-client`, `sandbox_remove-resource-client`, `sandbox_add-agent-client`, `sandbox_remove-agent-client` | Add or remove a connector or an agent client in an app. |
 | **Connectors** | `search_resource_tool_catalog`, `execute_resource_tool` | Find a connector tool by describing what you need, then run it against one of your connectors. |
 | **Connector setup** | `search_connector_types`, `request_resource_setup` | Find connector types and get a prefilled link to set up a new connector. |
-| **Deployed apps** | `get_app_skill`, `do_get_request`, `do_requests` | Read a deployed app's API guide and call its endpoints. |
+| **Deployed apps** | `get_app_skill`, `do_get_request`, `do_requests` | Read a deployed app's API guide and call its endpoints. Redirects from the app aren't followed: the call returns the `3xx` status and its `Location` header. |
 | **Agent logins** | `request_agent_login` | Get a link where someone with edit access to an agent saves a website login for it, so the agent's [browser](/learn/agents/browser) can sign in to that site. |
 | **Running** | `run_agent`, `run_workflow` | Start a run of an agent's published version, or run the latest saved draft of a workflow. |
 | **Environments** | `get_environment`, `set_environment` | See or switch the [environment](/learn/apps/environments#your-environment-choice) your connector calls and app previews use. Only shown in organizations with more than one environment. |

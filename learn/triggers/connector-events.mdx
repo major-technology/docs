@@ -39,6 +39,21 @@ Linear events are named `<resource>.<action>`, where the action is `create`, `up
 
 {/* DOCS-UPDATER: please verify — mono-builder#2792 says it hasn't been tested live against a Linear workspace yet. Also confirm the connector's permission preset is labeled "Admin" in the UI (the code checks for the `readonly` / `readwrite` presets and the error message says "set the resource's permissions to Admin"). */}
 
+### GitHub with your own GitHub App or GitHub Enterprise
+
+GitHub connectors that use Major's managed GitHub App need no setup for triggers. If the connector uses your own GitHub App, which every GitHub Enterprise connector does, set up the App's webhook before you publish a workflow with a GitHub trigger:
+
+1. Open the GitHub connector's settings in Major and find the **Triggers** section. It shows the connector's webhook URL.
+2. In your GitHub App's settings, under **Webhook**, check **Active** and set **Webhook URL** to that URL.
+3. Set a webhook secret in GitHub, then paste the same secret into the **Triggers** section in Major and save.
+4. In the GitHub App, select the event types that can trigger Major workflows.
+
+Major only accepts deliveries signed with the connector's own secret. If no secret is saved, publishing a workflow with a GitHub trigger on that connector fails. Triggers always use the secret from your organization's default environment.
+
+<Note>
+If the secret in GitHub doesn't match the one saved in Major, deliveries are dropped without an error, so GitHub's **Recent Deliveries** still shows them as successful. If a trigger never fires, check the secret first.
+</Note>
+
 ## How a connector event trigger is defined
 
 ```jsonc
