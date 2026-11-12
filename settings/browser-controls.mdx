@@ -25,14 +25,14 @@ Each level has three lists.
 | List | What it does |
 | --- | --- |
 | **Blocked sites** | The browser can't visit these sites. A blocked site stays blocked even if another level allows it. |
-| **Only these sites** | An allowlist. Leave it empty to allow any site that isn't blocked. If more than one level has an allowlist, a site must be on all of them. |
+| **Only these sites** | An allowlist. Leave it empty to allow any site that isn't blocked. Once you add a site, the browser can only reach sites on the list, including the ones pages load images and scripts from, such as a CDN or sign-in provider. Add those too. If more than one level has an allowlist, a site must be on all of them. |
 | **Rules** | Things the browser must never do, written in plain English, such as "Never send emails, only draft them". |
 
 ### Sites
 
 `example.com` matches only that site. Use `*.example.com` for its subdomains; add both to cover the whole domain.
 
-The site check runs before the browser opens a page, navigates, clicks or types, or signs in. The page an action lands on is checked too: if a click takes the browser to a blocked site, that tab is closed. Allowed sites are also enforced on the browser's network traffic.
+The site check runs before the browser opens a page, navigates, clicks or types, or signs in. The page an action lands on is checked too: if a click or a redirect takes the browser to a blocked site, that tab is closed and the agent is told which blocked site it reached. Allowed sites are also enforced on all of the browser's network traffic, so a page whose images or scripts come from a site that isn't on your allowlist may load without them. For example, with only `*.wikipedia.org` allowed, images served from `upload.wikimedia.org` don't load.
 
 ### Rules
 

@@ -118,6 +118,9 @@ These two tools are broad, so here is exactly what each one can touch.
 
 Whether a write succeeds also depends on the connector's own credentials. A database connector set up with a read-only user can only read. See the [connector reference](/reference/connectors) for every connector type.
 
+For PostgreSQL, MySQL, SQL Server, and ClickHouse, a query's result returned to the AI is capped at 1 MB. A larger result fails with `result exceeds 1 MB; add a LIMIT or select fewer columns`. Add a `LIMIT`, select fewer columns, or page through the rows. Queries that apps run through the [resource client](/learn/connectors/resource-client) aren't affected by this cap.
+{/* DOCS-UPDATER: please verify — mono-builder#3075 caps the MCP query tools (`*_query` and the read/write invoke tool) for these four databases at 1 MB via capToolResult; the app Invoke path streams rows uncapped. Confirm the Platform Agent's connector tools go through the same handlers. */}
+
 ### `sandbox_bash`
 
 `sandbox_bash` runs shell commands inside the isolated edit sandbox of one app, agent, skill, or workflow. The sandbox is a dedicated container that holds only that item's workspace.
