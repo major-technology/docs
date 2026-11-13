@@ -67,10 +67,12 @@ The Platform Agent uses the same skills, so your client and the web app build th
 | **App wiring** | `sandbox_add-resource-client`, `sandbox_remove-resource-client`, `sandbox_add-agent-client`, `sandbox_remove-agent-client` | Add or remove a connector or an agent client in an app. |
 | **Connectors** | `search_resource_tool_catalog`, `execute_resource_tool` | Find a connector tool by describing what you need, then run it against one of your connectors. |
 | **Connector setup** | `search_connector_types`, `request_resource_setup` | Find connector types and get a prefilled link to set up a new connector. |
-| **Deployed apps** | `get_app_skill`, `do_get_request`, `do_requests` | Read a deployed app's API guide and call its endpoints. |
+| **Deployed apps** | `get_app_skill`, `do_get_request`, `do_requests` | Read a deployed app's API guide and call its endpoints. Redirects from the app aren't followed: the call returns the `3xx` status and its `Location` header. |
 | **Agent logins** | `request_agent_login` | Get a link where someone with edit access to an agent saves a website login for it, so the agent's [browser](/learn/agents/browser) can sign in to that site. |
 | **Running** | `run_agent`, `run_workflow` | Start a run of an agent's published version, or run the latest saved draft of a workflow. |
+| **Environments** | `get_environment`, `set_environment` | See or switch the [environment](/learn/apps/environments#your-environment-choice) your connector calls and app previews use. Only shown in organizations with more than one environment. |
 | **Data and config** | `setup_managed_database`, `run_migration`, `set_app_env_variables` | Create an app's [managed database](/learn/apps/managed-databases), run SQL migrations on it, and get a link to set an app's [environment variables](/learn/apps/environment-variables). |
+| **Access** | `list_subjects`, `list_access`, `set_access`, `list_subject_access` | Find users and groups, see who has access to an app, agent, skill, workflow, or connector, and grant, change, or remove a role on it. See [Managing access](#managing-access). |
 
 Tools that need secrets or credentials, such as `request_resource_setup` and `set_app_env_variables`, never take them from your assistant. They return a link that you open in Major to enter the values yourself.
 
@@ -101,6 +103,19 @@ An app's first deploy needs `major publish --slug <slug>` to choose its URL. See
 
 Your assistant does not load a separate tool for every connector. It describes what it needs to `search_resource_tool_catalog` (for example, "read-only SQL against Postgres"), gets back matching tools with their input schemas, and runs one with `execute_resource_tool`. See [Connectors](/learn/connectors/overview).
 
+### Managing access
+
+Ask your assistant who can reach something, or to share it, for example "Who has access to the ops dashboard?" or "Make the Support group an Editor on the triage agent."
+
+| Tool | Who can use it | What it does |
+| --- | --- | --- |
+| `list_subjects` | Builders and admins | Find users or groups by name or email, or list a group's members. |
+| `list_access` | Builders and admins | List the users and groups that hold a role on one app, agent, skill, workflow, or connector. |
+| `set_access` | Builders and admins | Grant, change, or remove a user's or group's role on one object. |
+| `list_subject_access` | Organization admins | List everything one user or group can reach, directly and through groups. |
+
+`list_access` and `set_access` only work on objects whose access you can manage, meaning you're their Admin or an organization admin. They follow the same rules as the share dialogs in the web app. A role must match the object type. Members and external users can only get User roles. An object always keeps at least one Admin unless an organization admin removes it. Removing a user's direct role doesn't remove access they have through a group. The [Platform Agent](/build/platform-agent) has the same tools. There, `set_access` asks for your approval before it runs.
+
 ## What `execute_resource_tool` and `sandbox_bash` can reach
 
 These two tools are broad, so here is exactly what each one can touch.
@@ -117,6 +132,9 @@ These two tools are broad, so here is exactly what each one can touch.
 | **Storage** | S3 and managed file storage | Uploading, overwriting, and deleting files |
 
 Whether a write succeeds also depends on the connector's own credentials. A database connector set up with a read-only user can only read. See the [connector reference](/reference/connectors) for every connector type.
+
+For PostgreSQL, MySQL, SQL Server, and ClickHouse, a query's result returned to the AI is capped at 1 MB. A larger result fails with `result exceeds 1 MB; add a LIMIT or select fewer columns`. Add a `LIMIT`, select fewer columns, or page through the rows. Queries that apps run through the [resource client](/learn/connectors/resource-client) aren't affected by this cap.
+{/* DOCS-UPDATER: please verify — mono-builder#3075 caps the MCP query tools (`*_query` and the read/write invoke tool) for these four databases at 1 MB via capToolResult; the app Invoke path streams rows uncapped. Confirm the Platform Agent's connector tools go through the same handlers. */}
 
 ### `sandbox_bash`
 

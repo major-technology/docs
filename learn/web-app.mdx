@@ -9,7 +9,7 @@ The Major web app at [app.major.build](https://app.major.build) is where you cha
 
 | Item | What it's for |
 | --- | --- |
-| **Build** | The home page. Start a chat with the Platform Agent to build an app, agent, skill, or workflow, or to ask a question about your data. Members without build access see **Chat** here instead. |
+| **Build** | The home page. Start a chat with the Platform Agent to build an app, agent, skill, or workflow, or to ask a question about your data. Members without build access see **Chat** here instead. They can still start a chat with the Platform Agent to ask questions and use the apps and connectors shared with them, but it can't build or edit anything for them. |
 | **Apps** | Every app you can access. Open one to use it or edit it in the [editor](/learn/apps/editor). **Monitoring** under Apps shows runtime [errors](/learn/apps/errors) from deployed apps. |
 | **Agents** | The agent library. Open an agent to chat with it or edit it. **Skills** under Agents lists your [skills](/learn/skills/overview). |
 | **Workflows** | Your [workflows](/learn/workflows/overview), their triggers, and their run history. |
@@ -17,6 +17,14 @@ The Major web app at [app.major.build](https://app.major.build) is where you cha
 | **Analytics** | Organization usage dashboards (admins). The [audit log](/settings/audit-log) sits under it. Builders who aren't admins see **Audit log** on its own. |
 
 Items you don't have permission for are hidden. See [Members & roles](/settings/members-and-roles).
+
+## Libraries
+
+The **Apps**, **Agents**, **Skills**, and **Workflows** pages each list every item you can access, with pinned items first.
+
+On **Apps**, the default sort is **Recently opened by you**: the apps you most recently opened or edited come first, and apps you've never opened come last. Use the sort menu to switch to another order, such as **Created at (newest first)**, **Most used (last 7 days)**, or **Name (A to Z)**.
+
+{/* DOCS-UPDATER: please verify — mono-builder#2906 says pinned items come first; confirm pinned apps still lead when the Apps list is sorted by "Recently opened by you" (mono-builder#2909). */}
 
 ## Chat
 
@@ -28,13 +36,13 @@ Chat is the main way to work in Major. Describe what you want and the Platform A
 
 ## Search
 
-Open the command palette from the search button at the top of the sidebar to jump to any app, agent, workflow, or conversation.
+Open the command palette from the search button at the top of the sidebar to jump to any app, agent, workflow, or conversation. Search a workflow by name to open it, or search **Workflows** to open the Workflows page.
 
 ## Settings
 
 Open your account menu at the bottom of the sidebar to reach two areas:
 
 - **Account settings** - your profile, [connected accounts](/settings/connected-accounts), personal [tool permissions](/settings/tool-permissions), and the **Browser** tab with your [saved logins](/learn/agents/browser#saved-logins) and your own [browser controls](/settings/browser-controls#your-own-controls).
-- **Organization settings** - members, groups and invites, billing and usage, [environments](/learn/apps/environments), [domains](/learn/apps/domains), branding, [models](/settings/models), [browser controls](/settings/browser-controls), MCP, API tokens, and GitHub.
+- **Organization settings** - members, groups and invites, billing and usage, [referrals](/settings/billing#referrals), [environments](/learn/apps/environments), [domains](/learn/apps/domains), branding, [models](/settings/models), [browser controls](/settings/browser-controls), MCP, API tokens, and GitHub.
 
-The same menu switches between organizations if you belong to more than one.
+The same menu switches between organizations if you belong to more than one. You can also create a new organization from it, unless your company's email domain already has an organization on Major. In that case, ask that organization's owner or an admin to invite you. See [Joining your company's organization](/settings/members-and-roles#joining-your-companys-organization).

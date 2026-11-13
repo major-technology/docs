@@ -14,7 +14,13 @@ If no `.major/config.json` is found, the commands fail and tell you to create or
 | `major validate` | Check the files against the server's rules. | Run the app's `lint` script. |
 | `major publish` | Publish the latest saved version. | Deploy the pushed commit on the default branch. |
 
-All four commands accept `--json` to print one JSON result.
+All four commands accept `--json` to print one JSON result. If a command fails with `--json`, stdout stays empty and the failure is printed as one JSON line on stderr:
+
+```json
+{"error": "skill bundle is invalid: ...", "statusCode": 400, "invalid": true}
+```
+
+`statusCode` is the HTTP status when Major's API refused the request, and is omitted otherwise. `invalid` is `true` when the files themselves were rejected (by local checks or by the server's validation), so scripts can tell a bad bundle apart from an outage.
 
 <Note>
 For an app, `major push` and `major publish` require you to be checked out on the repository's default branch. The CLI never switches branches or force-pushes.
@@ -58,7 +64,7 @@ major push [flags]
 | `-m`, `--message` | Version notes. For an app, the commit message for all uncommitted changes. |
 | `--json` | Print one JSON result. |
 
-- **Agent, skill, or workflow:** uploads the folder as a new unpublished version and prints its version number. `-m` sets the version notes (workflows do not store notes). Nothing changes for users until you run `major publish`.
+- **Agent, skill, or workflow:** uploads the folder as a new unpublished version and prints its version number. `-m` sets the version notes (workflows do not store notes). Nothing changes for users until you run `major publish`. If nothing changed since your last push from this folder, push uploads nothing, saves no new version, and reports the current version as unchanged. Running `major pull` resets this check.
 - **App:** pushes local commits to the default branch.
   - With uncommitted changes and `-m`, push stages every change in the repository (`git add -A`), commits with `-m` as the message, then pushes.
   - With uncommitted changes and no `-m`, push fails and commits nothing.

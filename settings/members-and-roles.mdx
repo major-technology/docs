@@ -9,9 +9,39 @@ Major provides granular access control at both the organization and application 
 
 | Role | Permissions |
 | --- | --- |
-| **Member** | View apps and connectors |
+| **Member** | Use the apps, agents, and connectors shared with them, and chat with the Platform Agent to ask questions and call those apps and connectors. Can't create or edit apps, agents, skills, workflows, or connectors. |
 | **Builder** | Create new apps, use resources in development |
 | **Admin** | Full control including user and resource management |
+
+Creating connectors is its own permission. Builder and Admin have it, so their access doesn't change. Without it, the **Add connector** button and the connector setup steps aren't available. You can still sign in to an existing [per-user connector](/settings/connected-accounts).
+
+### Custom roles
+
+<Note>
+Custom roles are available on the Enterprise plan.
+</Note>
+
+Admins can define their own organization roles under **Settings > Roles**. The page lists the default roles (Member, Builder, and Admin, which can't be changed) and your custom roles, with how many members hold each one.
+
+To create a role, click **New role**, give it a name, and choose its capabilities:
+
+| Capability | What it allows |
+| --- | --- |
+| **Chat with Major** | Start chats with Major. |
+| **Use the hosted browser** | Let Major browse websites for you. |
+| **Build apps, agents, and workflows** | Create and edit apps, agents, skills, and workflows. |
+| **Create connectors** | Add new connectors to the organization. |
+
+A role with no capabilities can only view the apps shared with its members. A custom role never grants organization admin.
+
+- **Assigning a role:** pick a custom role from a member's role badge on the **Members** page, or from the member sheet. Picking a default role again replaces the custom role. The organization owner's role can't be changed.
+- **Inviting:** a custom role can be chosen when you invite members.
+- **Auto-join:** the role that new members get when they join through your email domain or SSO can be a custom role.
+- **Seats:** a member with a custom role takes a Builder seat if the role can build apps, agents, and workflows or create connectors. Otherwise, they take a Member seat. Editing a role updates the seat of everyone who holds it.
+- **Moving members:** you can move everyone who holds a role, plus its pending invitations, to another role.
+- **Deleting a role:** choose the role its members and pending invitations move to. You can't delete the role new members auto-join with. Pick a different auto-join role first.
+
+{/* DOCS-UPDATER: please verify — the mono-builder#2710 PR body says a role "can't be deleted while anyone holds it" and that "invites can't carry a custom role yet", but the merged code moves holders and pending invitations to a replacement role on delete and adds custom roles to the invite dialog. This text follows the code. Also confirm where the auto-join ("Join as") setting lives in the UI. */}
 
 ## Application Permissions
 
@@ -26,9 +56,20 @@ You can share access to your application with specific:
 - **Individuals**: Invite users by email.
 - **Groups**: Grant access to entire teams at once.
 
+When an app admin invites people, the share dialog can also give them access to the app's connectors, agents, and workflows. Check **Also share access to N related objects** to grant them. The list shows, for each invitee, only the objects they can't use yet, and the role each one grants:
+
+| App role | Connectors | Agents | Workflows |
+| --- | --- | --- | --- |
+| **View** | Not shared | User | User |
+| **Edit** or **Admin** | Use | User | User |
+
+This is optional and applies to individual users, not groups. Objects you aren't an admin of can only be shared by their admins.
+
 <Note>
 Deployed applications check the deployer's permissions when invoked. If you deploy an app without sufficient resource permissions, you'll be prompted to confirm the deployment.
 </Note>
+
+On the Enterprise plan, admins can also block every app in the organization from being made public. See [Disabling public apps](/learn/apps/deploying#disabling-public-apps).
 
 ## Agent and Skill Permissions
 
@@ -41,12 +82,14 @@ Resource permissions control who can use connectors and at what level:
 | Role | Permissions |
 | --- | --- |
 | **Admin** | Configure and manage the resource settings |
-| **Builder** | Invoke resources in development and production (coding sessions, local dev, MCP, and deployed apps) |
+| **Use** | Query and use the connector: invoke it in development and production (chat, coding sessions, local dev, MCP, and deployed apps). This role used to be called **Builder**. |
 
 ### Sharing Access
 You can share access to connectors with specific:
 - **Individuals**: Invite users by email.
 - **Groups**: Grant access to entire teams at once.
+
+{/* DOCS-UPDATER: please verify — mono-builder#2660 marks the Use role as view-only, so it may now be grantable to Members (not only Builders). Confirm before documenting that Members can be given Use on a connector. */}
 
 ## Inviting Members
 
@@ -60,7 +103,25 @@ The dialog shows real-time progress for each email address (pending, sending, su
 
 ### Accepting an Invitation
 
-When you receive an invitation and sign up as a new user, your account is automatically added to the organization with the role specified in the invitation. You'll see a success confirmation and be redirected to your organization dashboard. No additional action is required to accept the invitation.
+When you receive an invitation and sign up as a new user, your account is added to the organization with the role specified in the invitation:
+
+- **Google or Microsoft sign-in**: you're added as soon as you sign up.
+- **Email and password**: you're added once you verify your email address. After signing up, Major shows a verify-your-email screen. Click the link in the verification email, and you're added to the organization and taken back to your invitation.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#3010, the verification link's callback returns invitees to /accept-invitation/:id; confirm what that page shows after the invitation has already been accepted (success confirmation and redirect to the dashboard?). */}
+
+### Joining your company's organization
+
+Each company gets one organization on Major. If you sign up with a work email and your email domain already belongs to an organization, you don't get a new organization of your own:
+
+- If that organization has domain auto-enrollment turned on, you're added to it automatically. If you sign up with an email and password, this happens once you verify your email address.
+- Otherwise, you see a page saying the organization is already on Major. Ask your organization's owner or an admin to [invite you](#inviting-members), then accept the invitation.
+
+An organization's domain is the domain set on the organization. If none is set, it's the domain of its owner's verified email address, or an admin's if the organization has no owner. Personal email providers such as Gmail and Outlook never count as a company domain.
+
+If your company isn't on Major yet and you sign up with an email and password, Major creates your new organization once you verify your email address.
+
+{/* DOCS-UPDATER: please verify — per mono-builder#2861, Major staff are exempt from the one-organization-per-company rule, and while sign-ups are paused only people joining an existing organization (or at the domain of an organization on a paid plan or active trial) can sign up. Both are left out here on purpose; confirm that's right. */}
 
 ## Groups
 

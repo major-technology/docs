@@ -24,7 +24,9 @@ The Platform Agent is the AI assistant you chat with in the [Major web app](/lea
 | **Build skills** | Writes [skills](/learn/skills/overview) that agents load on demand. |
 | **Build workflows** | Builds [workflows](/learn/workflows/overview) and their [triggers](/learn/triggers/overview), and runs them to test. |
 | **Use what exists** | Calls your deployed apps' APIs, runs agents and workflows, and opens a deployed app in a side panel. |
+| **Show results visually** | Answers with a small interactive UI in the chat, such as stat tiles, a chart, or a table you can filter, when that's clearer than text. The UI holds its data inline and never calls your systems. In Slack, you get the text answer and a link to see the UI in Major. |
 | **Browse the web** | Opens websites in a hosted [browser](/learn/agents/browser) to read, click, type, sign in, and take screenshots, within your organization's [browser controls](/settings/browser-controls). |
+| **Check activity and clean up** | Reports how much your apps, agents, and workflows were used over the last 90 days (active minutes for an app; runs and failed runs for an agent or workflow), and deletes an app, agent, or workflow when you ask. Deleting needs your approval and the same permission as deleting it in the web app. |
 | **Set things up** | Asks you to add a connector, sign in to one, or enter an app's environment variables when the work needs it. |
 
 ## How it works
@@ -33,10 +35,15 @@ The Platform Agent is the AI assistant you chat with in the [Major web app](/lea
 
 For complex, ambiguous, or long-running requests, the Platform Agent tells you its approach before it starts, or asks a question when there are meaningfully different ways to do the work.
 
-The mode selector in the chat composer has two modes:
+### Questions
 
-- **Auto** - the Platform Agent works through the request and pauses only for approvals.
-- **Plan** - the Platform Agent researches and writes a plan first. It appears as a **Plan review** card; click **Accept plan** to let it proceed, or **Decline plan** to redirect it.
+When the Platform Agent needs a decision from you, it shows a question card with one or more questions and a set of options for each. Some options include a visual preview, such as a layout mockup, so you can compare them. Pick your options and click **Submit answers**. You can also:
+
+- **Attach files to an answer** - click **Attach files** under a question, or drop files on the card, to send them with that answer.
+- **Answer in your own words** - type in the chat composer while the card is open and click **Respond**. Your message is sent as the answer, along with any options you already picked. Questions you didn't pick an option for show as **Answered in chat**.
+- **Skip the questions** - open the menu next to **Respond** and choose **Skip questions and send** to send your message as a new instruction instead.
+
+Once answered, the card shows a summary of each question's answer and attached files, and marks any you skipped.
 
 ### Sandboxes
 
@@ -46,11 +53,11 @@ Chats you start from an item's editor are pinned to that item, and its sandbox s
 
 ### Tool cards
 
-Each action the Platform Agent takes appears in the conversation as a tool card, so you can see what it read, queried, edited, or ran. Plans, approvals, and setup requests appear as cards you act on directly.
+Each action the Platform Agent takes appears in the conversation as a tool card, so you can see what it read, queried, edited, or ran. Approvals, questions, and setup requests appear as cards you act on directly.
 
 ## Approvals
 
-When the Platform Agent wants to use a tool that needs your sign-off, it shows a **Permission request** card with the tool name, the reason, and the arguments it will send. Choose:
+When the Platform Agent wants to use a tool that needs your sign-off, and the chat is in **Manual** approvals or [auto review](#auto-and-manual) hands the call to you, it shows a **Permission request** card with the tool name, the reason, and the arguments it will send. Choose:
 
 | Button | Effect |
 | --- | --- |
@@ -58,9 +65,35 @@ When the Platform Agent wants to use a tool that needs your sign-off, it shows a
 | **Deny** | Block this call. The Platform Agent is told it was denied. |
 | **Always approve** | Run this call and save an always-allow rule for this tool in your chats. Offered for connector tools and app endpoints. |
 
-By default, read-only connector tools and app `GET` requests run without asking, and tools that write ask first. Actions such as running an agent or a database migration always ask.
+By default, read-only connector tools and app `GET` requests run without asking, and tools that write ask first. Actions such as running an agent, running a database migration, or deleting an app, agent, or workflow always ask.
 
 Manage your saved rules, or set **always allow**, **ask**, or **always deny** for any tool ahead of time, on the [Tool Permissions](/settings/tool-permissions) page. When you chat with a specific agent, that agent's [tool permissions](/learn/agents/tool-permissions) apply instead of yours.
+
+### Auto and Manual
+
+The **Approvals** menu next to the send button sets who decides tool calls that would otherwise ask you:
+
+| Option | Behavior |
+| --- | --- |
+| **Auto** (default) | An auto reviewer decides each approval for you, so the Platform Agent can keep working without stopping. Calls it judges risky are denied, and the Platform Agent can then ask you about them. |
+| **Manual** | You get a **Permission request** card for each call and decide it yourself. |
+
+Every chat starts in **Auto**. In Auto, the reviewer looks at the call and the recent conversation and judges whether you would approve it. Calls that move your request forward run. A call is denied if it could leak data in a way you wouldn't expect, has nothing to do with what you're working on, or touches very sensitive data (such as writing to a production database) that you didn't clearly ask for. When a call is denied, the Platform Agent is told to take a safer route or to stop and ask you.
+
+Auto mode still sends some things to you:
+
+- Questions, connector setup and sign-in requests, and environment variable requests always go to you.
+- If the review fails or the call is too large to review, you get a **Permission request** card.
+- After three auto-denied calls in a row in a chat, the next call comes to you.
+
+Auto only covers calls that would otherwise ask. Tools you set to **always allow** still run, and tools set to **always deny** stay blocked.
+
+Only the person who owns a chat can switch it between Auto and Manual. On a shared edit chat that no one owns, anyone with access can switch it.
+
+## Shell command screening
+
+Shell commands the Platform Agent or an agent runs on Major-hosted machines, in its own workspace or in an app sandbox, run without asking. Before each one runs, Major screens it for attempts to attack Major's infrastructure, such as reaching cloud-metadata addresses or internal services, sending the machine's credentials elsewhere, or escaping the container. Ordinary development is never blocked, even when it's destructive to the workspace itself. When a command is blocked, the agent is told so and continues without it. Connector calls get a similar check; see [Call screening](/learn/connectors/overview#call-screening).
+{/* DOCS-UPDATER: please verify — per mono-builder#3026 the screen fails open (a command runs if the screen can't answer) but refuses a command too long to screen; decide whether either belongs in public docs. */}
 
 ## Models
 

@@ -83,6 +83,10 @@ try {
 }
 ```
 
+<Note>
+In a deployed app, resource calls made while handling a request use a token that lasts 20 minutes from when the request reached the app. If a handler runs longer, for example a long cron job or a workflow `app_call`, its later resource calls fail with a 401 error that says the token expired. Each failure is also logged to the app's [Errors](/learn/apps/errors) panel. Finish resource work within 20 minutes, or save progress and pick it up on the next run.
+</Note>
+
 ### Error Response Structure
 
 When `result.ok` is `false`, the response follows this structure:

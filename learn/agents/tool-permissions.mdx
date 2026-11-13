@@ -11,6 +11,8 @@ Tool permissions give you fine-grained control over what an agent is allowed to 
 | **Ask** | The agent must request approval before each use - interactively in chat, or routed to a Slack [approval channel](/learn/workflows/overview) when the agent runs unattended in a workflow. |
 | **Always deny** | The tool is blocked and hidden from the agent. |
 
+{/* DOCS-UPDATER: please verify — mono-builder#2641 auto-reviews any gated call that has a session when its chat thread is in auto mode, and every thread now defaults to auto. If agent runs (including unattended workflow runs) are affected too, **Ask** calls may be decided by the auto reviewer instead of reaching a person or the Slack approval channel. Confirm, then document it here or remove this note. */}
+
 ## Smart defaults
 
 When you add a connector or app to an agent, Major applies safe defaults automatically so you don't have to configure every tool by hand:
@@ -24,6 +26,10 @@ You only need to change a default when you want tighter or looser control than t
 
 - **Connector tools** - each tool a connector exposes (for example, `slack_post_message` or `gmail_search_threads`).
 - **App endpoints** - each route of a deployed app's API, identified by method and path (for example, `POST /api/invoices`).
+
+<Note>
+The read-only PostgreSQL tool is `postgresql_query` (previously `postgresql_psql`). It runs one SQL statement, such as `SELECT`, `SHOW`, or `EXPLAIN`, in a read-only transaction. psql backslash commands like `\d` aren't supported, so agents inspect schemas with `information_schema` or `pg_catalog` queries. Decisions you set on `postgresql_psql` carry over to `postgresql_query`. Writes still go through `postgresql_invoke`.
+</Note>
 
 ## Enforcement
 

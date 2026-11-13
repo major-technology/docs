@@ -21,6 +21,26 @@ The **Share** button lets you manage access to your app with granular role-based
 
 Deploy apps publicly (no authentication required) or privately (auth-gated). Public apps are accessible to anyone with the URL. Private apps require users to sign in and have the appropriate permissions.
 
+### Disabling public apps
+
+<Note>
+Available on the Enterprise plan. Only organization admins can change this setting.
+</Note>
+
+Organization admins can block every app in the organization from being made public:
+
+1. Go to **Organization Settings > Organization**.
+2. Turn on **Disable public apps**.
+3. Review the list of apps that will be made private, then click **Disable public apps** to confirm.
+
+Turning the setting on makes every public app in the organization private right away. While it's on:
+
+- No app can be made public. The **Public access** toggle is hidden from the app's share panel, and the **Access** filter is hidden from the apps library.
+- Requests to make an app public fail with the error "Your organization has disabled public apps."
+
+Turning the setting back off lets apps be made public again, but doesn't make any app public on its own. You can turn it off even if your organization is no longer on the Enterprise plan.
+{/* DOCS-UPDATER: please verify — mono-builder#3013 hides the Public access toggle in the share panel; confirm whether the Publish panel's public access toggle (described above) is the same control and is also hidden. Also confirm the settings tab name "Organization Settings > Organization". */}
+
 ## Login Redirects
 
 When a user visits a private app while logged out, Major redirects them to sign in. After they log in, they're redirected back to the app they originally visited. This works with both custom slug-based hostnames (e.g., `my-app.apps.prod.major.build`) and hash-based hostnames.
@@ -36,6 +56,17 @@ If your app uses resources configured for **per-user** authentication, Major aut
 Users can manage their connected accounts from **Settings > Connected Accounts**.
 
 See [Per-User OAuth](/learn/connectors/overview#shared-vs-per-user-connections) for details on how this works.
+
+## Stop When Idle
+
+Apps built on the Vite-Hono template can stop their backend while nobody is using them. Open the app's **Scaling** tab and use the **Stop when idle** switch on the deployed app.
+
+- When it's on, the backend stops after 15 minutes without traffic. While it's stopped, it costs nothing.
+- The next request starts it again. That first request takes a few seconds; requests after it are served as normal.
+- New Vite-Hono apps have it on by default. Turn it off to keep the backend always running.
+- Changing the switch redeploys the app.
+
+Next.js apps, and previews in the editor, are always on and don't show the switch.
 
 ## Version History
 

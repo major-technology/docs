@@ -14,17 +14,43 @@ A connector event trigger starts a [workflow](/learn/workflows/overview) when on
 
 ## Supported connectors
 
-Events are available for Slack, Stripe, GitHub, Gmail, Outlook, Google Calendar, Google Drive, and Attio, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
+Events are available for Slack, Stripe, GitHub, Gmail, Outlook Mail, Outlook Calendar, Google Calendar, Google Drive, Attio, and Linear, as well as many other connectors from the [connector catalog](/reference/connectors). For example:
 
 | Connector | Example events |
 | --- | --- |
 | Slack | `message`, `app_mention`, `block_actions`, `view_submission` |
+| Slack (Personal) | `message` in any channel, private channel, DM, or group DM the connected user is in |
 | Stripe | `payment_intent.succeeded`, `checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted` |
 | GitHub | `issues.opened`, `pull_request.opened`, `push`, `release.published` |
 | Google Calendar | Event changed (created, edited, or cancelled) on one calendar |
+| Outlook Calendar | `event.changed` (created, updated, or deleted) on one calendar |
 | Google Drive | File changed |
+| Linear | `issue.create`, `issue.update`, `comment.create`, `project_update.create`, `cycle.remove` |
 
 The connector must already be connected and configured in your organization. Ask the [Platform Agent](/build/platform-agent) which events a connector supports and what their payloads contain; it looks them up rather than guessing.
+
+### Linear
+
+Linear events are named `<resource>.<action>`, where the action is `create`, `update`, or `remove`. The resources are `issue`, `comment`, `issue_label`, `reaction`, `project`, `project_update`, `cycle`, `document`, `initiative`, `initiative_update`, `customer`, and `customer_need`.
+
+- Linear only lets workspace admins create webhooks. Set the Linear connector's permissions to **Admin** and connect it as a Linear workspace admin. Publishing fails on a connector set to **Read Only** or **Read & Write**, or one connected by someone who isn't a workspace admin.
+- On a per-user Linear connector, the person who publishes the workflow must be a workspace admin who connected with **Admin** permissions.
+- The trigger covers every public team in the workspace. Events from private teams aren't delivered.
+
+### GitHub with your own GitHub App or GitHub Enterprise
+
+GitHub connectors that use Major's managed GitHub App need no setup for triggers. If the connector uses your own GitHub App, which every GitHub Enterprise connector does, set up the App's webhook before you publish a workflow with a GitHub trigger:
+
+1. Open the GitHub connector's settings in Major and find the **Triggers** section. It shows the connector's webhook URL.
+2. In your GitHub App's settings, under **Webhook**, check **Active** and set **Webhook URL** to that URL.
+3. Set a webhook secret in GitHub, then paste the same secret into the **Triggers** section in Major and save.
+4. In the GitHub App, select the event types that can trigger Major workflows.
+
+Major only accepts deliveries signed with the connector's own secret. If no secret is saved, publishing a workflow with a GitHub trigger on that connector fails. Triggers always use the secret from your organization's default environment.
+
+<Note>
+If the secret in GitHub doesn't match the one saved in Major, deliveries are dropped without an error, so GitHub's **Recent Deliveries** still shows them as successful. If a trigger never fires, check the secret first.
+</Note>
 
 ## How a connector event trigger is defined
 
@@ -57,11 +83,14 @@ The connector must already be connected and configured in your organization. Ask
 | `config.resource_id` | Yes | The id of the connected resource to listen to. If you have two Stripe accounts connected, this picks which one. |
 | `config.options.events` | Yes | One or more event types, with no duplicates. |
 | `config.options.filter` | No | A CEL expression. Only events for which it's true start a run. |
+| `config.options.includeAppMessages` | No | Slack (Personal) only. Include messages posted by apps and bots, which are excluded by default. In the editor this is **Include app messages**. |
 | `config.options.includeBotMessages` | No | Slack only. Include messages from bots and apps, which are excluded by default. |
-| `config.options.calendarId` | No | Google Calendar only. `primary` or a calendar id to watch. |
+| `config.options.calendarId` | No | Google Calendar and Outlook Calendar only. The calendar to watch. For Google Calendar, `primary` or a calendar id. For Outlook Calendar, a calendar id; leave it out to watch the account's default calendar. |
 | `input` | No | A projection that picks or reshapes the event into the workflow's input. |
 
-In the workflow editor, add a trigger, choose **Connector event**, pick the connected connector, and select events from the list. Some catalog connectors take one event per trigger and show extra **Event options** for it.
+In the workflow editor, add a trigger, choose **Connector event**, pick the connected connector, and select events from the list. Some catalog connectors take one event per trigger and show extra **Event options** for it. For Outlook Calendar, a **Calendar** dropdown lists the account's calendars; leave it on **Default calendar** to follow the account's default.
+
+Outlook Calendar event payloads include `changeType` (`created`, `updated`, or `deleted`) and `calendarId`. A deleted event can no longer be read from Microsoft, so its payload has only `id`, `changeType`, and `calendarId`.
 
 ## The event object
 
@@ -97,7 +126,7 @@ The filter is a boolean [CEL](https://cel.dev) expression. Guard optional fields
 ```
 
 <Warning>
-If you turn on **Include bot messages** for Slack, a workflow that posts to the same channel can trigger itself. Use a narrow filter that excludes the messages your workflow posts.
+If you turn on **Include bot messages** for Slack, or **Include app messages** for Slack (Personal), a workflow that posts to the same channel can trigger itself. Use a narrow filter that excludes the messages your workflow posts.
 </Warning>
 
 ## Shaping the input
@@ -119,9 +148,17 @@ One `input` applies to every event the trigger subscribes to; there are no per-e
 
 If the workflow has an `input_schema`, the projected input is validated against it. When a filter or projection fails to evaluate, or the input fails validation, the run is recorded as failed with the reason, and no nodes run.
 
+## Per-user connectors
+
+Per-user connectors such as Gmail, Google Calendar, Outlook Mail, Outlook Calendar, and Slack (Personal) can back a connector event trigger on any workflow. The trigger watches the account of the person who published (deployed) the workflow, the same identity its runs act as. For example, a Gmail trigger watches the deployer's mailbox, and a Slack (Personal) trigger fires only for messages in conversations the deployer is in.
+
+When someone else takes over and republishes the workflow, the trigger moves to the new deployer's account. If the new deployer hasn't connected that account yet, the trigger shows an error in its settings until they sign in.
+
 ## Publishing
 
 Connector event subscriptions are created when you **publish** the workflow, and removed when a publish drops the trigger. Until then the trigger is inert. Use **Run now** with sample input to test the workflow first.
+
+Deleting a connector also tears down every connector event trigger that listens to it, and the trigger stops starting runs. Events that still arrive for a deleted connector are ignored.
 
 ## Next steps
 
