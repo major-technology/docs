@@ -127,7 +127,6 @@ Each node's output is stored under its id, so later nodes can read it: `{ "$stat
 | --- | --- |
 | `agent_call` | Runs an agent with a prompt. With an `output_schema`, the agent returns structured data that later nodes can branch on. |
 | `app_call` | Calls an endpoint on one of your deployed apps over HTTP (`GET`, `POST`, `PUT`, `PATCH`, or `DELETE`). The response body becomes the node's output. |
-| `pepper_call` | Sends a message to a person's Pepper, which tells them if it matters. Nothing comes back into the run. |
 | `router` | Branches on state. The first branch whose condition is true wins; otherwise the `default` targets run. A branch can start several nodes in parallel. |
 | `for_each` | Runs a loop body once per item in a list, in sequence or in parallel, and collects the results. |
 | `join` | Waits until every parallel branch leading into it has arrived, then continues. |
