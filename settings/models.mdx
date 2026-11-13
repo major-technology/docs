@@ -1,6 +1,6 @@
 ---
 title: "Models"
-description: "Choose which model each Platform Agent tier uses, bring your own provider API keys, and turn off model providers."
+description: "Choose which model each Platform Agent tier uses, bring your own provider API keys or Claude organization, and turn off model providers."
 ---
 
 In a [Platform Agent](/build/platform-agent) chat, people choose a tier, not a model. Admins decide which model each tier runs on in **Settings > Models**.
@@ -63,6 +63,37 @@ Keys are encrypted with your organization's encryption key. After saving, Major 
 A request that starts on your key never falls back to Major's keys or to another provider. If the provider is down or rejects the request, the request fails instead of being rerouted.
 
 If a provider rejects your key (invalid, out of credits, over a spend limit, or suspended), requests fail with a clear error, for example *"Anthropic rejected your organization's API key… Contact your organization admin."* The key is marked as failing in **Settings > Models** until you replace it or fix it with the provider.
+
+## Connect your Claude organization
+
+<Note>
+Available on the Enterprise plan, once Major has set up Claude billing for your organization. Contact Major to enable it. Only organization admins can connect or disconnect.
+</Note>
+
+Instead of paying for Anthropic models with Major credits, you can connect your Claude organization so Anthropic bills it directly for the Claude usage Major sends on your behalf. Major stores no API key for this: an admin of your Claude organization approves the connection once.
+
+### Connect
+
+1. Open **Settings > Models**.
+2. On the **Anthropic** row, click **Connect your Claude organization**.
+3. Sign in to Claude and approve the connection. Only an Owner, Admin, or Billing member of the Claude organization can approve it.
+4. You return to **Settings > Models**, and the Anthropic row shows **Connected** with the last 30 days of usage.
+
+A Claude organization can be connected to only one Major organization. Your organization can use an Anthropic API key or a Claude organization connection, not both. Remove the Anthropic API key before you connect.
+
+### How billing works with a connected Claude organization
+
+- Claude calls from Platform Agent chats, agents, and apps using the [AI proxy](/learn/apps/ai-proxy) are billed to your Claude organization and don't use Major credits.
+- Major still records each call at Anthropic's list price, so usage stays visible in Major.
+- Calls never fall back to Major's credentials. If Anthropic can't bill your Claude organization (for example, it was disconnected in the Claude Console, its billing failed, it reached a spend limit, or it's suspended), the call fails and the Anthropic row shows the last error.
+- Message batches and messages that use Anthropic's code execution tool can't be billed to a connected Claude organization, so the AI proxy refuses them.
+
+To see what Major costs you or set a spend cap, open the **Connected** menu and choose **Manage in Claude Console**.
+
+### Disconnect
+
+Open the **Connected** menu on the Anthropic row and choose **Disconnect**. Anthropic calls are billed in Major credits again. You can reconnect later.
+{/* DOCS-UPDATER: please verify — changes reach the AI proxy after a short delay (the proxy caches the check for about 2 minutes); confirm whether to mention it. */}
 
 ## Turn off a model provider
 
