@@ -152,11 +152,11 @@ If the workflow has an `input_schema`, the projected input is validated against 
 
 ## Per-user connectors
 
-Per-user connectors such as Gmail, Google Calendar, Outlook, and Slack (Personal) can back a connector event trigger on any workflow. The trigger watches the account of the person who published (deployed) the workflow, the same identity its runs act as. For example, a Gmail trigger watches the deployer's mailbox, and a Slack (Personal) trigger fires only for messages in conversations the deployer is in.
+Per-user connectors such as Gmail, Google Calendar, Outlook Mail, Outlook Calendar, and Slack (Personal) can back a connector event trigger on any workflow. The trigger watches the account of the person who published (deployed) the workflow, the same identity its runs act as. For example, a Gmail trigger watches the deployer's mailbox, and a Slack (Personal) trigger fires only for messages in conversations the deployer is in.
 
 When someone else takes over and republishes the workflow, the trigger moves to the new deployer's account. If the new deployer hasn't connected that account yet, the trigger shows an error in its settings until they sign in.
 
-{/* DOCS-UPDATER: please verify — the Slack (Personal) trigger (mono-builder#2721) depends on rollout steps (signing secret, Event Subscriptions on the Slack (Personal) app). Confirm it's live before merging. Slack (Personal) itself is listed in open docs PR #34. */}
+{/* DOCS-UPDATER: please verify — the Slack (Personal) trigger (mono-builder#2721) depends on rollout steps (signing secret, Event Subscriptions on the Slack (Personal) app). Confirm it's live before merging. */}
 
 ## Publishing
 

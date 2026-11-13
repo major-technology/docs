@@ -26,7 +26,6 @@ The Platform Agent is the AI assistant you chat with in the [Major web app](/lea
 | **Use what exists** | Calls your deployed apps' APIs, runs agents and workflows, and opens a deployed app in a side panel. |
 | **Show results visually** | Answers with a small interactive UI in the chat, such as stat tiles, a chart, or a table you can filter, when that's clearer than text. The UI holds its data inline and never calls your systems. In Slack, you get the text answer and a link to see the UI in Major. |
 | **Browse the web** | Opens websites in a hosted [browser](/learn/agents/browser) to read, click, type, sign in, and take screenshots, within your organization's [browser controls](/settings/browser-controls). |
-
 | **Check activity and clean up** | Reports how much your apps, agents, and workflows were used over the last 90 days (active minutes for an app; runs and failed runs for an agent or workflow), and deletes an app, agent, or workflow when you ask. Deleting needs your approval and the same permission as deleting it in the web app. |
 | **Set things up** | Asks you to add a connector, sign in to one, or enter an app's environment variables when the work needs it. |
 
@@ -91,10 +90,9 @@ Auto only covers calls that would otherwise ask. Tools you set to **always allow
 
 Only the person who owns a chat can switch it between Auto and Manual. On a shared edit chat that no one owns, anyone with access can switch it.
 
-### Shell command screening
+## Shell command screening
 
-Shell commands the Platform Agent or an agent runs on Major-hosted machines, in its own workspace or in an app sandbox, run without asking. Before each one runs, Major screens it for attempts to attack Major's infrastructure, such as reaching cloud-metadata addresses or internal services, sending the machine's credentials elsewhere, or escaping the container. Ordinary development is never blocked, even when it's destructive to the workspace itself. When a command is blocked, the agent is told so and continues without it.
-
+Shell commands the Platform Agent or an agent runs on Major-hosted machines, in its own workspace or in an app sandbox, run without asking. Before each one runs, Major screens it for attempts to attack Major's infrastructure, such as reaching cloud-metadata addresses or internal services, sending the machine's credentials elsewhere, or escaping the container. Ordinary development is never blocked, even when it's destructive to the workspace itself. When a command is blocked, the agent is told so and continues without it. Connector calls get a similar check; see [Call screening](/learn/connectors/overview#call-screening).
 {/* DOCS-UPDATER: please verify — per mono-builder#3026 the screen fails open (a command runs if the screen can't answer) but refuses a command too long to screen; decide whether either belongs in public docs. */}
 
 ## Models
@@ -104,17 +102,6 @@ Pick a tier - **Smartest**, **Balanced**, or **Fastest** - from the model picker
 ## Conversation files
 
 Files the Platform Agent writes in its working directory, such as notes, scripts, and intermediate results, persist for the conversation, so you can pick up where you left off.
-
-## Saved logins
-
-When the Platform Agent's hosted browser reaches a website's login page and has no login saved for that site, it shows a login card in the chat (or in Slack). The card opens a separate Major page where you enter the login's fields, such as email, username, password, or company ID. Major fills them into the login form. The AI never sees your password.
-
-- **Keep this login for future runs** is on by default. It saves the login, encrypted, so Major can sign in to that site again later. Turn it off to use the login once without saving it.
-- A saved login is tied to the exact site origin. `www.example.com` and `example.com` need separate logins.
-- Only your own chats can use your saved logins. Organization admins can't use them.
-
-Manage your logins under **Saved logins** in your user settings. You can add a label, edit fields, reveal saved values, or delete a login. Deleting a login doesn't sign Major out of websites it's already signed in to.
-{/* DOCS-UPDATER: please verify — browser access for the Platform Agent is documented in open docs PR #35, which isn't merged yet. Confirm the user settings path (`/account/saved-logins`) and whether login cards also work in agent chats or only in plain Platform Agent and Pepper chats (the diff says plain sessions only). */}
 
 ## Platform Agent and MCP
 
