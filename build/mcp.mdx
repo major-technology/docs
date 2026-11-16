@@ -53,6 +53,7 @@ The plugin also installs skills that teach your assistant how to build on Major.
 | `using-webhooks` | Receiving webhooks in a deployed app |
 | `using-frontend-data-table` | Building table views in an app's frontend |
 | `debug-issue` | Investigating errors, failed calls, and broken behavior |
+| `app-performance` | Speeding up a slow app: measuring where the time goes, fixing slow queries, adding caching, and resizing the app's CPU and memory |
 
 The Platform Agent uses the same skills, so your client and the web app build things the same way.
 
@@ -71,6 +72,7 @@ The Platform Agent uses the same skills, so your client and the web app build th
 | **Agent logins** | `request_agent_login` | Get a link where someone with edit access to an agent saves a website login for it, so the agent's [browser](/learn/agents/browser) can sign in to that site. |
 | **Running** | `run_agent`, `run_workflow` | Start a run of an agent's published version, or run the latest saved draft of a workflow. |
 | **Environments** | `get_environment`, `set_environment` | See or switch the [environment](/learn/apps/environments#your-environment-choice) your connector calls and app previews use. Only shown in organizations with more than one environment. |
+| **App scaling** | `get_app_scaling`, `set_app_scaling` | See a deployed app's CPU and memory limits, the lowest and highest values they can be set to, its cost estimate, recent scaling events, and its CPU and memory use over the last day. Change its CPU or memory limit, autoscaling, or [stop-when-idle](/learn/apps/deploying#stop-when-idle) setting. Both need edit access to the app. Apps are billed on their limits, and changing a limit or the stop-when-idle setting redeploys the app. |
 | **Data and config** | `setup_managed_database`, `run_migration`, `set_app_env_variables` | Create an app's [managed database](/learn/apps/managed-databases), run SQL migrations on it, and get a link to set an app's [environment variables](/learn/apps/environment-variables). |
 | **Access** | `list_subjects`, `list_access`, `set_access`, `list_subject_access` | Find users and groups, see who has access to an app, agent, skill, workflow, or connector, and grant, change, or remove a role on it. See [Managing access](#managing-access). |
 
@@ -152,7 +154,7 @@ Running `major publish` from `sandbox_bash` ships to production. For an app, it 
 The MCP server acts as you:
 
 - **Scoped to your organization.** Every call runs in the organization you approved when you connected.
-- **Scoped to your roles.** `list` returns only what you can access, and each tool checks your access to the item it touches. Creating things, starting sandboxes, running agents and workflows, and connector setup require permission to build in the organization. Members without it see only the connector, deployed-app, and listing tools. See [Members & roles](/settings/members-and-roles).
+- **Scoped to your roles.** `list` returns only what you can access, and each tool checks your access to the item it touches. Creating things, starting sandboxes, running agents and workflows, changing app scaling, and connector setup require permission to build in the organization. Members without it see only the connector, deployed-app, and listing tools. See [Members & roles](/settings/members-and-roles).
 - **Approvals happen in your client.** Your personal [tool permissions](/settings/tool-permissions) apply to Platform Agent chats in the web app, not to MCP clients. Use your client's own tool approval settings to control what runs without asking.
 
 ## Next steps
