@@ -11,16 +11,30 @@ If you want an external event to start work in Major, use a [webhook trigger](/l
 
 ## Setup
 
-Create an API route in your app under the `/api/webhook/` path:
+Create a route in your app's backend under the `/api/webhook/` path. The backend already serves everything under `/api`, so a route at `/webhook/stripe` answers `/api/webhook/stripe`:
 
 ```typescript
-// src/app/api/webhook/stripe/route.ts
-export async function POST(request: Request) {
-  const body = await request.json();
-  // Handle the webhook payload
-  return new Response("OK", { status: 200 });
+// backend/src/routes/webhooks.ts
+import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
+
+const stripeWebhookRoute = createRoute({
+  method: "post",
+  path: "/webhook/stripe",
+  responses: {
+    200: { description: "Received", content: { "text/plain": { schema: z.string() } } },
+  },
+});
+
+export function registerWebhookRoutes(app: OpenAPIHono) {
+  app.openapi(stripeWebhookRoute, async (c) => {
+    const body = await c.req.text(); // the raw body, for signature checks
+    // Verify and handle the webhook payload
+    return c.text("OK", 200);
+  });
 }
 ```
+
+Register it in `backend/src/app.ts` with `registerWebhookRoutes(app)`. In a Next.js app, put the handler in `src/app/api/webhook/stripe/route.ts` as `export async function POST(request: Request)`.
 
 ## Security
 

@@ -14,15 +14,17 @@ Prefer the resource client when it covers what you need, since it gives you type
 
 ## Create a proxy fetch
 
-In a Next.js app, import from `@major-tech/resource-client/next` and call it from server code (Server Components, Route Handlers, Server Actions):
+Call it from your app's backend (`backend/src/`), never from frontend code:
 
 ```typescript
-import { createProxyFetch } from "@major-tech/resource-client/next";
+import { createProxyFetch } from "@major-tech/resource-client";
+import { tryGetContext } from "hono/context-storage";
 
 const proxyFetch = createProxyFetch({
   baseUrl: process.env.MAJOR_API_BASE_URL!,
   resourceId: process.env.HUBSPOT_RESOURCE_ID!,
   majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+  getUserJwt: () => tryGetContext()?.req.header("x-major-user-jwt"),
 });
 
 const res = await proxyFetch("https://api.hubapi.com/crm/v3/objects/contacts", {
@@ -39,6 +41,7 @@ const data = await res.json();
 | `baseUrl` | Yes | The Major API base URL. Use `process.env.MAJOR_API_BASE_URL`. |
 | `resourceId` | Yes | The connector's id. |
 | `majorJwtToken` | Yes | The app's token. Use `process.env.MAJOR_JWT_TOKEN`. |
+| `getUserJwt` | No | Returns the signed-in user's token, so [per-user connectors](#per-user-connectors) act as that user. |
 | `timeoutMs` | No | Default request timeout. Maximum 60000. |
 | `fetch` | No | A custom `fetch` implementation. Defaults to `globalThis.fetch`. |
 
@@ -52,12 +55,14 @@ Hand the proxy fetch to any SDK that accepts one. The SDK may insist on an API k
 
 ```typescript
 import Stripe from "stripe";
-import { createProxyFetch } from "@major-tech/resource-client/next";
+import { createProxyFetch } from "@major-tech/resource-client";
+import { tryGetContext } from "hono/context-storage";
 
 const proxyFetch = createProxyFetch({
   baseUrl: process.env.MAJOR_API_BASE_URL!,
   resourceId: process.env.STRIPE_RESOURCE_ID!,
   majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+  getUserJwt: () => tryGetContext()?.req.header("x-major-user-jwt"),
 });
 
 const stripe = new Stripe("sk_unused_proxy_injects_real_key", {
@@ -69,11 +74,11 @@ const customers = await stripe.customers.list({ limit: 10 });
 
 ## Per-user connectors
 
-For connectors that use [per-user connections](/learn/connectors/overview#shared-vs-per-user-connections) (such as Gmail, Google Calendar, or Google Drive), the `/next` entry forwards the signed-in user's identity automatically, so each request uses that user's connected account.
+For connectors that use [per-user connections](/learn/connectors/overview#shared-vs-per-user-connections) (such as Gmail, Google Calendar, or Google Drive), `getUserJwt` forwards the signed-in user's identity, so each request uses that user's connected account. The example reads it from the current request with `hono/context-storage`, which the app template already sets up.
 
 Outside a user request, such as a background job, there is no user to forward, and calls to per-user connectors fail. Shared connectors keep working.
 
-Outside Next.js, for example in a [skill](/learn/skills/overview) script or plain Node, import `createProxyFetch` from `@major-tech/resource-client` (the package root). It has no Next.js dependency and takes an optional `getUserJwt` function if you have a user token to forward.
+In a Next.js app, import `createProxyFetch` from `@major-tech/resource-client/next` instead and leave out `getUserJwt`: that entry forwards the user automatically. Call it only from server code (Server Components, Route Handlers, Server Actions). In a [skill](/learn/skills/overview) script or plain Node, use the package root and pass `getUserJwt` only if you have a user token to forward.
 
 ## Headers and limits
 - **Don't set `Authorization`.** The proxy injects the connector's credentials and strips any `Authorization` you send.

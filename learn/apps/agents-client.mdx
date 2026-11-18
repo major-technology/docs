@@ -7,20 +7,20 @@ description: "Start and manage agent runs from your app's server code with @majo
 
 ## Add an agent to your app
 
-Each agent your app calls gets a generated client in the app's `clients/` folder (`src/clients/` if the app has a `src` directory). The client is bound to the agent's id and reads the app's credentials from the environment, so there is nothing to configure.
+Each agent your app calls gets a generated client in the backend's `backend/src/clients/` folder. In a Next.js app it goes in `clients/` (`src/clients/` if the app has a `src` directory). The client is bound to the agent's id and reads the app's credentials from the environment, so there is nothing to configure.
 
 <Tabs>
   <Tab title="Platform Agent or MCP">
     Ask for it: "Use the support-bot agent from this app." The client is generated for you and the import line is added to your code.
   </Tab>
   <Tab title="Locally">
-    From the app's root, with the agent's id (find it with [`major agent list`](/reference/cli/agent)):
+    From the app's `backend/` folder, with the agent's id (find it with [`major agent list`](/reference/cli/agent)):
 
     ```bash
-    npx @major-tech/agents-client add <agent-id> support-bot "Handles support tickets"
+    npx @major-tech/agents-client add <agent-id> support-bot "Handles support tickets" --framework hono
     ```
 
-    This records the agent in `agents.json` and writes `clients/supportBot.ts`. Remove it with `npx @major-tech/agents-client remove support-bot`, and list configured agents with `npx @major-tech/agents-client list`.
+    This records the agent in `agents.json` and writes `src/clients/supportBot.ts`. In a Next.js app, run it from the root with `--framework nextjs`; it writes `clients/supportBot.ts`. Remove it with `npx @major-tech/agents-client remove support-bot`, and list configured agents with `npx @major-tech/agents-client list`.
   </Tab>
 </Tabs>
 
@@ -38,7 +38,7 @@ To stop calling an agent, delete the code that uses it and remove its client.
 
 ## Server code only
 
-Use the client in Server Components, Server Actions, and Route Handlers, never in client components. It sends the app's `MAJOR_JWT_TOKEN`, which must not reach the browser. The same credentials are injected while you build and after you deploy, so you can test the whole loop in the editor preview.
+Use the client in your backend's routes, never in frontend code. Have the frontend call your own `/api` route, which calls the agent. In a Next.js app, use it in Server Components, Server Actions, and Route Handlers, never in client components. It sends the app's `MAJOR_JWT_TOKEN`, which must not reach the browser. The same credentials are injected while you build and after you deploy, so you can test the whole loop in the editor preview.
 
 ## Start a run
 
