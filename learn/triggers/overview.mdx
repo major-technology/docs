@@ -37,6 +37,30 @@ A workflow can have any number of triggers, of any mix of types. Each trigger ha
 ]
 ```
 
+### Name each run
+
+Schedules, connector events, and webhooks can also set an optional `run_name`. It names each run in run history, so a run started by an email can read "Email from Jane Doe: Refund request" instead of the trigger's type. Use `{{trigger.input.<field>}}` placeholders to fill in values from the run's input:
+
+```jsonc
+{
+  "id": "support_email",
+  "type": "connector-event",
+  "config": { "connector_type": "gmail", "resource_id": "…", "options": { "events": ["message.received"] } },
+  "input": {
+    "from": { "$expr": "event.json.headers.From" },
+    "subject": { "$expr": "event.json.headers.Subject" }
+  },
+  "run_name": "Email from {{trigger.input.from}}: {{trigger.input.subject}}"
+}
+```
+
+In the workflow editor, this is the trigger's **Run name (optional)** field.
+
+- The template must be a single line of at most 200 characters. Its only placeholders are `{{trigger.input.<field>}}`; anything else fails validation when you save.
+- Placeholders read the trigger's `input` after it's projected, not the raw event. A missing or null value renders empty, and objects and arrays render as JSON.
+- A name never makes a run fail. Line breaks collapse to spaces, and names longer than 100 characters are cut with `…`.
+- Runs started with **Run now**, single-node test runs, and runs from before a trigger had a `run_name` have no name. They're shown by their start time.
+
 ## Triggers only fire when published
 
 Saving a workflow never turns its triggers on. **Publish** is what makes them live: schedules start firing, connector event subscriptions are set up, and webhook URLs start accepting calls. A trigger in a saved but unpublished version is inert.
@@ -49,7 +73,7 @@ To pause a live workflow, remove its trigger (or comment it out in the JSONC), s
 
 ## What a triggered run uses
 
-Triggered runs always run the **published** version and always call deployed apps. They run as the person who last published the workflow, so agents and app calls use that person's access. Each run appears in the workflow's run history, labeled with the trigger that started it.
+Triggered runs always run the **published** version and always call deployed apps. They run as the person who last published the workflow, so agents and app calls use that person's access. Each run appears in the workflow's run history, labeled with the trigger that started it, or with its [run name](#name-each-run) if the trigger sets one.
 
 ## Next steps
 
