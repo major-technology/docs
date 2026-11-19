@@ -59,14 +59,14 @@ See [Per-User OAuth](/learn/connectors/overview#shared-vs-per-user-connections) 
 
 ## Stop When Idle
 
-Apps built on the Vite-Hono template can stop their backend while nobody is using them. Open the app's **Scaling** tab and use the **Stop when idle** switch on the deployed app.
+Any deployed app can stop its server while nobody is using it. Open the app's **Scaling** tab and use the **Stop when idle** switch on the deployed app.
 
-- When it's on, the backend stops after 15 minutes without traffic. While it's stopped, it costs nothing.
-- The next request starts it again. That first request takes a few seconds; requests after it are served as normal.
-- New Vite-Hono apps have it on by default. Turn it off to keep the backend always running.
+- When it's on, the app's server stops after 15 minutes without traffic. While it's stopped, it costs nothing.
+- The next request starts it again. That first request waits a few seconds; requests after it are served as normal. In a Next.js app, the server renders pages too, so the first page load after a stop waits, not only API calls.
+- New Vite-Hono apps have it on by default. Next.js apps start with it off; turn it on to opt in. Turn it off to keep the server always running.
 - Changing the switch redeploys the app.
 
-Next.js apps, and previews in the editor, are always on and don't show the switch.
+Previews in the editor are always on and don't show the switch.
 
 ## Version History
 

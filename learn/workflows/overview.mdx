@@ -161,6 +161,17 @@ You can also run a single node on its own to test it, with stand-in outputs for 
 
 Every run is recorded in the workflow's run history with a per-node trace: status, resolved input, output, and any error. Runs execute as the person who last published the workflow (or its creator, before the first publish), so agents and apps use that person's access.
 
+### Run history
+
+The **Runs** panel on the workflow page and in the editor lists runs newest first and loads more as you scroll.
+
+- **Search** matches run names (see [Name each run](/learn/triggers/overview#name-each-run)).
+- **Filter** narrows the list by **Trigger** (any published trigger by name, or **Manual**) and by **Started** (**Any time**, **Yesterday**, **Last week**, or a custom date range down to the hour). Active filters show as chips. When filters are on and no run is selected, the panel opens the newest matching run.
+- Each row names the trigger that fired the run. A run with a name is titled by it, with its start time underneath.
+- Drag the panel's edge to resize it. The width is remembered.
+
+A run's graph starts with the trigger that fired it. Click the trigger node, or **Trigger** in the run header, to open **Trigger details**: the trigger's name and type, details such as the scheduled time or the connector event that fired, the CEL filter if the trigger has one, and the **Workflow input** the run received. If the run failed before any node ran, for example in the filter or input validation, the error is shown here. A node's failure stays on that node.
+
 ## Approvals in Slack
 
 Workflows use Slack for two kinds of approval. Both need the Major Slack integration installed for your organization.
