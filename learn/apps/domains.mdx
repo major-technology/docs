@@ -98,4 +98,4 @@ A few configurations are intentionally not available today:
 - **Apex domains.** You can use `dashboard.acme.com` but not `acme.com` itself as an app URL.
 - **Multi-level subdomains.** `api.acme.com` works; `api.v2.acme.com` does not - the wildcard certificate covers exactly one level.
 - **Bring-your-own certificates.** All certificates are issued by Major via Let's Encrypt.
-- **Frontend-only (Vite) apps.** Custom domains are available for full-stack (Next.js) apps only.
+- **Legacy frontend-only Vite apps.** Custom domains are available for apps with a backend: Vite-Hono apps (the default for new apps) and Next.js apps.

@@ -13,7 +13,7 @@ The `@major-tech/resource-client` package provides a type-safe, zero-dependency 
 
 ## Client Generation
 
-You typically do not need to instantiate clients manually. Major generates singleton instances for you, which are available at `src/clients/` (or `client/`).
+You typically do not need to instantiate clients manually. Major generates singleton instances for you, which are available in the backend at `backend/src/clients/` (`clients/` or `src/clients/` in a Next.js app). Use them only from backend code, never from the frontend.
 
 ### Using the CLI
 
@@ -29,7 +29,7 @@ If you are developing in the Major Web Editor, the Major AI assistant will autom
 
 ## Per-connector usage
 
-Each connector type has a specific client class with a tailored `invoke` function signature. In the web editor, the Major AI assistant wires up the right client and its arguments as you build, and the generated client in `src/clients/` reflects the exact signature for your resource.
+Each connector type has a specific client class with a tailored `invoke` function signature. In the web editor, the Major AI assistant wires up the right client and its arguments as you build, and the generated client in `backend/src/clients/` reflects the exact signature for your resource.
 
 <Card title="Connectors" icon="server" href="/learn/connectors/overview">
   Browse all available connectors with setup and client documentation.
