@@ -3,7 +3,7 @@ title: "major workflow"
 description: "Create, clone, and list file-based workflows from the CLI."
 ---
 
-`major workflow` manages [workflows](/learn/workflows/overview) as local folders. A workflow folder holds a single definition file named `<workflowId>.jsonc`, plus a `.major/config.json` that links the folder to the workflow. Once you have a folder, edit the definition and use [`major validate`, `major push`, and `major publish`](/reference/cli/sync) to save and release changes.
+`major workflow` manages [workflows](/learn/workflows/overview) as local folders. A workflow folder holds its definition file, `workflow.jsonc`, a `.major/config.json` that links the folder to the workflow, and a folder under `functions/` for each of the workflow's [functions](/learn/workflows/nodes#function). Once you have a folder, edit the definition and use [`major validate`, `major push`, and `major publish`](/reference/cli/sync) to save and release changes.
 
 The workflow's label comes from its definition, so `major workflow create` does not take a name.
 
@@ -45,3 +45,51 @@ major workflow clone [flags]
 | --- | --- |
 | `--id` | Workflow ID. Required with `--non-interactive`. |
 | `--dir` | New directory. Defaults to the workflow ID. |
+
+{/* DOCS-UPDATER: please verify — cli#223 renamed the definition file from `<workflowId>.jsonc` to `workflow.jsonc`. Confirm whether folders cloned with an older CLI need to be re-cloned (or the file renamed) before `major push` works with CLI 1.0.26. */}
+
+## Functions
+
+`major function` manages a workflow's [functions](/learn/workflows/nodes#function). Each function is a folder of its own under the workflow's `functions/` folder, with its own `.major/config.json`. Use [`major validate`, `major push`, and `major publish`](/reference/cli/sync) in the workflow folder to act on every function and the workflow together, or inside a function's folder to act on that function alone.
+
+Every `major function` subcommand accepts `--json` to print one JSON result.
+
+### major function create
+
+Create a function and its folder. The folder name is the function's slug, so it must start with a lowercase letter and contain only lowercase letters, digits, and hyphens. Inside a workflow folder, create it under `functions/` so the workflow's push, validate, and publish include it. The new folder has a starter `index.ts`, `function.json`, and `package.json`.
+
+```bash
+major function create functions/score-leads
+```
+
+| Flag | Description |
+| --- | --- |
+| `--workflow` | Workflow ID. Defaults to the enclosing workflow folder. |
+
+Create functions with this command, not by hand: a folder under `functions/` without its own `.major/config.json` fails the workflow's `major push`. Renaming a folder doesn't rename the function; create a new one and move the code.
+
+### major function list
+
+List a workflow's functions, with their IDs, latest saved version, and published version.
+
+```bash
+major function list [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--workflow` | Workflow ID. Defaults to the enclosing workflow folder. |
+
+### major function clone
+
+Download a function's latest saved version into a new local folder. Without `--id`, you pick from the workflow's saved functions.
+
+```bash
+major function clone [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `--id` | Function ID. Required with `--non-interactive`. |
+| `--dir` | New directory. Defaults to the function ID. |
+| `--workflow` | Workflow to choose a function from. Defaults to the enclosing workflow folder. |

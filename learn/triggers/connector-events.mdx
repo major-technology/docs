@@ -26,6 +26,7 @@ Events are available for Slack, Stripe, GitHub, Gmail, Outlook Mail, Outlook Cal
 | Outlook Calendar | `event.changed` (created, updated, or deleted) on one calendar |
 | Google Drive | File changed |
 | Linear | `issue.create`, `issue.update`, `comment.create`, `project_update.create`, `cycle.remove` |
+| Jira Service Management | `request.created`, `request.status_changed` |
 
 The connector must already be connected and configured in your organization. Ask the [Platform Agent](/build/platform-agent) which events a connector supports and what their payloads contain; it looks them up rather than guessing.
 
@@ -36,6 +37,23 @@ Linear events are named `<resource>.<action>`, where the action is `create`, `up
 - Linear only lets workspace admins create webhooks. Set the Linear connector's permissions to **Admin** and connect it as a Linear workspace admin. Publishing fails on a connector set to **Read Only** or **Read & Write**, or one connected by someone who isn't a workspace admin.
 - On a per-user Linear connector, the person who publishes the workflow must be a workspace admin who connected with **Admin** permissions.
 - The trigger covers every public team in the workspace. Events from private teams aren't delivered.
+
+### Jira Service Management
+
+The Jira Service Management catalog connector (listed as **Jira Service Desk** in the Add Connector dialog) has two events for customer requests:
+
+- **Request created** (`request.created`): a customer request is created on the selected site.
+- **Request status changed** (`request.status_changed`): a customer request's status changes.
+
+Both take one option, **Cloud ID** (`cloudId`), the Atlassian site to watch. Major checks for new events every five minutes, so a run can start up to five minutes after the change. Requests from before you published the trigger don't start runs.
+
+The payload includes `issueId`, `issueKey`, `serviceDeskId`, `requestTypeId`, `createdDate`, `currentStatus`, `reporter`, and `requestFieldValues`. To watch one service desk or request type, filter on them, for example `event.json.serviceDeskId == '3'`.
+
+<Note>
+Each check reads every customer request the connected account can see, so on a large help desk checks can be slow or hit Atlassian's rate limits.
+</Note>
+
+{/* DOCS-UPDATER: please verify — from mono-builder#3175, which notes the events weren't yet tested against a live JSM site. Confirm the connector shows as "Jira Service Desk" in the dialog and that `connector_type` is `p_jira_service_desk`. */}
 
 ### GitHub with your own GitHub App or GitHub Enterprise
 

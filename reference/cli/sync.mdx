@@ -32,9 +32,12 @@ For an app, `major push` and `major publish` require you to be checked out on th
 | --- | --- |
 | Agent | `prompt.md` and exactly one of `agent.jsonc` or `agent.json`. |
 | Skill | `SKILL.md` at the root, plus every other file in the folder except `tsconfig.json` at the root, `.DS_Store`, `Thumbs.db`, and anything under `.major`, `.git`, `node_modules`, or `__MACOSX`. |
-| Workflow | One file named `<workflowId>.jsonc`. |
+| Workflow | `workflow.jsonc` at the root, plus every [function](/learn/workflows/nodes#function) folder under `functions/`. `node_modules` and build output aren't included. |
+| Function | `index.ts` and `function.json` at the root, plus every other file in the folder except `.DS_Store`, `Thumbs.db`, build output, and anything under `.major`, `.git`, `node_modules`, or `__MACOSX`. |
 
 Symlinks are rejected. Other files in the folder are left alone.
+
+In a workflow folder, `major validate`, `major push`, and `major publish` first run on every function under `functions/`, in parallel, then on the workflow. If a function fails, the command stops and names it. A folder under `functions/` that isn't a function workspace fails the command; create functions with [`major function create`](/reference/cli/workflow#functions). Run the same commands inside `functions/<slug>/` to act on that one function alone. Publishing a function on its own changes the live workflow right away.
 
 ## major pull
 

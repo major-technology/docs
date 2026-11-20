@@ -41,6 +41,45 @@ In the workflow editor, pick the **Endpoint** from the endpoints Major extracted
 
 {/* DOCS-UPDATER: please verify — per mono-builder#3025 the endpoint list comes from "the API spec extracted from its deployment"; confirm which apps have one (e.g. whether an app must be deployed first) and that the picker falls back to manual Method and Path when none is found. */}
 
+## function
+
+Runs a TypeScript function that belongs to the workflow. Use it for compute the workflow needs, such as transforming data, scoring, formatting, or reading and writing a connected resource, when there's no existing app endpoint that should own the logic.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `function` | Yes | The function's slug: the name of its folder under `functions/`. Lowercase letters, digits, and hyphens, starting with a letter, up to 63 characters. |
+| `input` | No | An object of values passed to the function as its argument. Resolves like any node's input, so it can use `$state` and `$expr`. |
+| `max_retries` | No | How many times to retry a call that throws or times out, from `0` to `10`. Retries back off exponentially. |
+
+```jsonc
+{
+  "id": "score_leads",
+  "type": "function",
+  "label": "Score leads",
+  "config": {
+    "function": "score-leads",
+    "input": { "leads": { "$state": "fetch_leads.rows" } },
+    "max_retries": 2
+  }
+}
+```
+
+Each function lives in its own folder, `functions/<slug>/`, next to the workflow's definition file:
+
+| File | Description |
+| --- | --- |
+| `index.ts` | The function: `export default async function (input) { ... }`. JSON in, JSON out. |
+| `function.json` | Required. An object with optional `label`, `description`, `input_schema`, and `output_schema`. A schema that's present is checked on every call, and input or output that doesn't match fails the node. |
+| `package.json` | The function's own npm dependencies. They're bundled into the function when it's saved. |
+
+The node's output is the function's return value. A return value that isn't a JSON object is wrapped as `{ "body": ... }`.
+
+- A call times out after 30 seconds. Split long work across a `for_each`.
+- A function calls connected resources as the run's user: the person who published the workflow on a triggered run. Ask the [Platform Agent](/build/platform-agent) to add a resource client to the function rather than writing client or auth code by hand.
+- Functions are versioned on their own. Saving the workflow saves every function under `functions/`, and publishing the workflow publishes them. A published run uses each function's **published** version, and **Run now** uses each function's latest saved version. Publishing a single function changes the live workflow right away, and rolling the workflow back to an earlier version doesn't roll its functions back.
+
+{/* DOCS-UPDATER: please verify — from mono-builder#3104 and cli#222. The 30-second limit is the function runner's default (FUNCTION_TIMEOUT_MS); confirm it isn't overridden in prod. The node has no entry in the editor's Add node menu yet, so it's added through the Platform Agent, the Definition view, or the CLI; confirm that's intended before saying so. */}
+
 ## router
 
 Branches the run on state.
